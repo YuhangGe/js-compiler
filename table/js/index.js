@@ -58,6 +58,8 @@ window.onload=function(){
 	
 	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5,g6],g_root);	
 	//AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);	
-	document.body.innerHTML=	AnalysisTableCreator.Create();
+	var result=AnalysisTableCreator.Create();
+	$.dprint(result);
+	document.body.innerHTML=AnalysisTableCreator._output_table();
 	
 }

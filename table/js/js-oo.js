@@ -22,7 +22,7 @@ Student.prototype.sayHi=function(msg){
 	this.callBase('sayHi',msg);
 	alert("I'm a student of "+this.School);
 }
-$.inherits(Student,Person);
+$.inherit(Student,Person);
 
 window.onload=function(){
 	var xiaoming=new Student("MingXiao",20,"Nanjing University");

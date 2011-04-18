@@ -85,6 +85,10 @@ _ATCreator.prototype.Create = function(){
     //return this._output_table();
 
 }
+_ATCreator.prototype._create_grammar = function(){
+	return null;
+}
+
 /**
  * 使用后继关系项集表生成LR(1)分析表
  */

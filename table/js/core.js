@@ -19,34 +19,38 @@ function Symbol(name, type){
     this.Type = type;
 }
 
-Symbol._auto_increment_id = 0;
+Symbol._auto_increment_id = 0;//为每个Symbol赋以一个自动增加的id，用于快速比较两个Sybmol是否相等
 
 Symbol.prototype.Equals = function(symbol){
     return this._id === symbol._id;// this.Name==symbol.Name && this.Type===symbol.Type;
 }
+
+//Symbol的三种类型的枚举
 Symbol.TERMINATOR = 0;
 Symbol.NONTERMINAL = 1;
 Symbol.END = 2;
+
+
 Symbol.ENDSYMBOL = new Symbol('#', Symbol.END);
 /**
  * 终结符
  * @param {String} value
  */
 function Terminator(name){
-    this.initializeBase(Symbol, [name, Symbol.TERMINATOR]);
+    this.base(name, Symbol.TERMINATOR);
 }
 
-makeInherits(Terminator, Symbol);
+$.inherit(Terminator, Symbol);
 
 /**
  * 非终结符
  * @param {String} name
  */
 function Nonterminal(name){
-    this.initializeBase(Symbol, [name, Symbol.NONTERMINAL]);
+    this.base(name, Symbol.NONTERMINAL);
 }
 
-makeInherits(Nonterminal, Symbol);
+$.inherit(Nonterminal, Symbol);
 
 
 /**********************************
@@ -90,7 +94,7 @@ ItemSet.prototype.AddItem = function(item){
 ItemSet.prototype.Display = function(){
     Debug.print("--------" + this.Id + "-----------");
     for (var i = 0; i < this.Items.length; i++) {
-        Debug.print(this.Items[i]);
+        $.dprint(this.Items[i]);
     }
 }
 
