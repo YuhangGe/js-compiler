@@ -1,6 +1,6 @@
 /**
  * @author Abraham
- * 依赖utility.js
+ * 
  */
 function _table_action(){
 	this._table=new Array();
@@ -62,9 +62,9 @@ ACCEPTACTION=new function(){
 /**
  * 移入
  */
-function ShiftAction(value){
-	this.Value=value;
-	this.Type=ACTION.SHIFT;
+function Action(value,type){
+	this.value=value;
+	this.type=type;
 }
 
 /**
@@ -80,8 +80,8 @@ function ReduceAction(value){
 
 function Symbol(name,type){
 	this._id=Symbol._auto_increment_id++;
-	this.Name=name;
-	this.Type=type;
+	this.name=name;
+	this.type=type;
 }
 Symbol._auto_increment_id=0;
 
@@ -112,20 +112,4 @@ $.inherit(Nonterminal,Symbol);
 
 
 
-
-
-//分析栈
-LR_ONE_STACK = new Array();
-
-/**
- * 储存于分析栈中的元素
- * @param {State} state 
- * @param {Terminator|Nonterminal} symbol
- * @param {Number|Operator} value
- */
-function StackElement(state,symbol,value){
-	this.State=state;
-	this.Symbol=symbol;
-	this.Value=value;
-}
 

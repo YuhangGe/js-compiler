@@ -81,6 +81,7 @@ g6={
 		};
 	}
 }
-LR_ONE_GRAMMAR_TABLE=new Array(null,g1,g2,g3,g4,g5,g6);
+
+LR_GRAMMARS=new Array(null,g1,g2,g3,g4,g5,g6);
 
 

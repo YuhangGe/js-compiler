@@ -3,7 +3,8 @@
  */
 function check(){
 	var text=$.$("input").value;
-	JSCompiler.Check(text);
+	JSCompiler=new LR_Engine(new Lexer(text));
+	JSCompiler.compile();
 }
 
 
