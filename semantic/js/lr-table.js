@@ -15,6 +15,8 @@ Abe.Table.Action.ACCEPT=2;
 Abe.Table.Action.ACC=new Abe.Table.Action(0,Abe.Table.Action.ACCEPT);
 
 
+
+
 Abe.Table.State=function(value){
 	this.vlaue=value;
 	this._action=new Array();
@@ -55,15 +57,34 @@ Abe.Table.State.prototype={
 }
 
 Abe.Table.LR_Table=  function(){
-	this.endIndex=5;//#在表中的索引
 	
 	this.states=new Array();
 	
+	this.initIndex();
 	this.initTable();
 }
 
+Abe.Table.LR_Table.prototype.initIndex=function(){
+	this._symbols={
+		'+':0,
+		'-':1,
+		'*':2,
+		'/':3
+	};
+	var s={};
+	
+	S.UNDEF=-1;//未定义
+	s.END=5;
+	s.num=4;
+
+	s.get=function(value){
+		return this._symbols[value];
+	}
+	this.SYMBOLS=s;
+}
 
 Abe.Table.LR_Table.prototype.initTable=function(){
+	
 	for(var i=0;i<=11;i++)
 		this.states[i]=new State(i);
 	
@@ -99,3 +120,13 @@ Abe.Table.LR_Table.prototype.initTable=function(){
  	this.states[11].quickAddReduce([0,5],[1,5],[3,5],[5,5]);
 }
 LR_TABLE=new Abe.Table.LR_Table();
+
+/**
+ * @param {number} symbolIndex 该token在分析表中的索引，如果是-1，表示词法器(lexer)没有直接得到，交给table查询
+ * @parma {anything} value 
+ */
+Abe.Table.Token=function(symbolIndex,value){
+	this.symbolIndex=symbolIndex;
+	this.value=value;
+}
+Abe.Table.Token.END=new Abe.Table.Token(LR_TABLE.SYMBOLS.END,'#');

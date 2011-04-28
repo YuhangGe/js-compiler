@@ -36,24 +36,24 @@ Abe.Lexer.prototype={
 		while(this._cur_ch===' ' || this._cur_ch==='\t')
 			this.get_next_ch();
 		if(this._cur_ch===null)
-			return Abe.Token.EOF;
+			return null;
 			
 		var word=this._cur_ch;
 		if(this.is_digit(word)===true){
 			while(this.get_next_ch()!==null && this.is_digit(this._cur_ch)===true ){
 				word+=this._cur_ch;
 			}
-			return new Abe.Token(6,Number(word),Abe.Global.NUM);
+			return new Abe.Table.Token(LR_TABLE.SYMBOLS.Num,Number(word));
 		}
-		if(this.is_letter(word)===true){
-			while(this.get_next_ch()!==null && this.is_letter(this._cur_ch)===true ){
-				word+=this._cur_ch;
-			}
-			if(Abe.Token.KEYWORDS[word]!=null)
-				return Abe.Token.KEYWORDS[word];
-			else
-				return new Abe.Token(word,Abe.Global.ID);
-		}
-		return new Abe.Token(Table.getId(this._cur_ch),this._cur_ch,Abe.GLobal.OTHER);	
+		// if(this.is_letter(word)===true){
+			// while(this.get_next_ch()!==null && this.is_letter(this._cur_ch)===true ){
+				// word+=this._cur_ch;
+			// }
+			// if(Abe.Token.KEYWORDS[word]!=null)
+				// return Abe.Token.KEYWORDS[word];
+			// else
+				// return new Abe.Table.Token(LR_TABLE.word,Abe.Global.ID);
+		// }
+		return new Abe.Token(LR_TABLE.SYMBOLS.UNDEF,this._cur_ch);	
 	}
 }
