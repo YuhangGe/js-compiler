@@ -1,87 +1,87 @@
 /**
  * @author Abraham
  */
-g1={
-	//E:=E+T | E:=E-T
-	Left:LR_ONE_NONTERMINALS['E'],
-	Reduce:function(){
-		var t=LR_ONE_STACK.pop();//T
-		var op=LR_ONE_STACK.pop();//+
-		var e=LR_ONE_STACK.pop();//E
-		var value=t.Value+e.Value;
-		if(op.Value==='-')
-			value=e.Value-t.Value;
+LR_GRAMMARS=new Array();
+LR_GRAMMARS[0]= {
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//T
+		var p1=Abe.LR_Stack.pop();//+
+		var p2=Abe.LR_Stack.pop();//E
+		var value=calc_plus_minus(p0.value,p1.value,p2.value);
 		return {
-			'Symbol': this.Left,
-			'Value': value
-		};
+			symbolIndex:LR_TABLE.SYMBOLS.E,
+			value:value
+		}
 	}
 }
-g2={
+
+function calc_plus_minus(n1,op,n2) {
+	if(op==='+')
+		return n2+n1;
+	else
+		return n2-n1;
+}
+
+LR_GRAMMARS[1]= {
 	//E:=T
-	Left:LR_ONE_NONTERMINALS['E'],
-	Reduce:function(){
-		var t=LR_ONE_STACK.pop();//T
+	reduce: function() {
+		//$.dprint("E:=T");
+		var p0=Abe.LR_Stack.pop();//T
 		return {
-			'Symbol': this.Left,
-			'Value': t.Value
-		};
+			symbolIndex:LR_TABLE.SYMBOLS.E,
+			value:p0.value
+		}
 	}
 }
-g3={
+LR_GRAMMARS[2]= {
 	//T:=T*F | T:=T/F
-	Left:LR_ONE_NONTERMINALS['T'],
-	Reduce:function(){
-		var f=LR_ONE_STACK.pop();//F
-		var op=LR_ONE_STACK.pop();//*
-		var t=LR_ONE_STACK.pop();//T
-		var value;
-		if(op.Value==='/')
-			value=t.Value/f.Value;
-		else
-			value=f.Value*t.Value;
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//F
+		var p1=Abe.LR_Stack.pop();//*
+		var p2=Abe.LR_Stack.pop();//T
+		var v=calc_mul_div(p0.value,p1.value,p2.value);
 		return {
-			'Symbol': this.Left,
-			'Value': value
+			symbolIndex:LR_TABLE.SYMBOLS.T,
+			value:v
 		};
 	}
 }
-g4={
+
+function calc_mul_div(n1,op,n2){
+	if(op==='*')
+		return n2*n1;
+	else
+		return n2/n1;
+}
+LR_GRAMMARS[3]= {
 	//T:=F
-	Left:LR_ONE_NONTERMINALS['T'],
-	Reduce:function(){
-		var f=LR_ONE_STACK.pop();//F
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//F
 		return {
-			'Symbol': this.Left,
-			'Value': f.Value
+			symbolIndex: LR_TABLE.SYMBOLS.T,
+			value: p0.value
 		};
 	}
 }
-g5={
+LR_GRAMMARS[4]= {
 	//F:=(E)
-	Left:LR_ONE_NONTERMINALS['F'],
-	Reduce:function(){
-		LR_ONE_STACK.pop();//)
-		var e=LR_ONE_STACK.pop();//E
-		LR_ONE_STACK.pop();//(
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//)
+		var p1=Abe.LR_Stack.pop();//E
+		var p2=Abe.LR_Stack.pop();//(
 		return {
-			'Symbol': this.Left,
-			'Value': e.Value
+			symbolIndex: LR_TABLE.SYMBOLS.F,
+			value: p1.value
 		};
 	}
 }
-g6={
-	//F:=i
-	Left:LR_ONE_NONTERMINALS['F'],
-	Reduce:function(){
-		var i=LR_ONE_STACK.pop();//i
+LR_GRAMMARS[5]= {
+	//F:=num
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//num
 		return {
-			'Symbol': this.Left,
-			'Value': i.Value
+			symbolIndex: LR_TABLE.SYMBOLS.F,
+			value: p0.value
 		};
 	}
 }
-
-LR_GRAMMARS=new Array(null,g1,g2,g3,g4,g5,g6);
-
-

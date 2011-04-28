@@ -39,11 +39,15 @@ Abe.Lexer.prototype={
 			return null;
 			
 		var word=this._cur_ch;
+		var rtn=null;
 		if(this.is_digit(word)===true){
 			while(this.get_next_ch()!==null && this.is_digit(this._cur_ch)===true ){
 				word+=this._cur_ch;
 			}
-			return new Abe.Table.Token(LR_TABLE.SYMBOLS.Num,Number(word));
+			rtn= new Abe.Table.Token(LR_TABLE.SYMBOLS.num,Number(word));
+		}else{
+			rtn= new Abe.Table.Token(LR_TABLE.SYMBOLS.UNDEF,this._cur_ch);	
+			this.get_next_ch();
 		}
 		// if(this.is_letter(word)===true){
 			// while(this.get_next_ch()!==null && this.is_letter(this._cur_ch)===true ){
@@ -54,6 +58,7 @@ Abe.Lexer.prototype={
 			// else
 				// return new Abe.Table.Token(LR_TABLE.word,Abe.Global.ID);
 		// }
-		return new Abe.Token(LR_TABLE.SYMBOLS.UNDEF,this._cur_ch);	
+	
+		return rtn;
 	}
 }

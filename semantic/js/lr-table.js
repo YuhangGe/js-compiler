@@ -2,12 +2,20 @@
  * @author Abraham
  * 依赖core.js
  */
-
+Abe={};
 Abe.Table= {}//Abe.Table命名空间
 
 Abe.Table.Action=function(value,type){
 	this.value=value;
 	this.type=type;
+}
+Abe.Table.Action.prototype.toString=function(){
+	if(this.type===Abe.Table.Action.SHIFT)
+		return 'S'+this.value;
+	else if(this.type===Abe.Table.Action.REDUCE)
+		return 'r'+this.value;
+	else
+		return "Accept"
 }
 Abe.Table.Action.SHIFT=0;
 Abe.Table.Action.REDUCE=1;
@@ -23,6 +31,9 @@ Abe.Table.State=function(value){
 	this._goto=new Array();
 }
 Abe.Table.State.prototype={
+	toString:function(){
+		return 'state'+this.value;
+	},
 	getAction:function(index){
 		return this._action[index];
 	},
@@ -63,30 +74,35 @@ Abe.Table.LR_Table=  function(){
 	this.initIndex();
 	this.initTable();
 }
+Abe.Table.LR_Table.prototype.getSymbolIndex=function(value){
 
+	return this._symbols[value];
+}
 Abe.Table.LR_Table.prototype.initIndex=function(){
 	this._symbols={
 		'+':0,
-		'-':1,
-		'*':2,
-		'/':3
+		'-':0,
+		'*':1,
+		'/':1,
+		'(':2,
+		')':3
 	};
 	var s={};
 	
-	S.UNDEF=-1;//未定义
+	s.UNDEF=-1;//未定义
 	s.END=5;
 	s.num=4;
-
-	s.get=function(value){
-		return this._symbols[value];
-	}
+	s.E=0;
+	s.T=1;
+	s.F=2;
+	
 	this.SYMBOLS=s;
 }
 
 Abe.Table.LR_Table.prototype.initTable=function(){
 	
 	for(var i=0;i<=11;i++)
-		this.states[i]=new State(i);
+		this.states[i]=new Abe.Table.State(i);
 	
 	this.states[0].quickAddShift([2,4],[4,5]);
 	this.states[0].quickAddGoto([0,1],[1,2],[2,3]);
@@ -99,7 +115,7 @@ Abe.Table.LR_Table.prototype.initTable=function(){
 	
 	this.states[3].quickAddReduce([0,4],[1,4],[3,4],[5,4]);
 	
-	this.states[4].quickAddShift([1,7]);
+	this.states[4].quickAddShift([2,4],[4,5]);
 	this.states[4].quickAddGoto([0,8],[1,2],[2,3]);
 	
 	this.states[5].quickAddReduce([0,6],[1,6],[3,6],[5,6]);
@@ -126,6 +142,8 @@ LR_TABLE=new Abe.Table.LR_Table();
  * @parma {anything} value 
  */
 Abe.Table.Token=function(symbolIndex,value){
+	if(typeof symbolIndex !=='number')
+		throw 'bad index';
 	this.symbolIndex=symbolIndex;
 	this.value=value;
 }

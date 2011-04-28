@@ -5,13 +5,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<script type="text/javascript" src="js/jquery-1.5.1.js"></script>
 		<script type="text/javascript" src="js/js-oo.js"></script>
-		<script type="text/javascript" src="js/core.js"></script>
-		<script type="text/javascript" src="js/global.js"></script>
-		<script type="text/javascript" src="js/lexer.js"></script>
-		<script type="text/javascript" src="js/table.js"></script>
-		<script type="text/javascript" src="js/token.js"></script>
+		<script type="text/javascript" src="js/lr-table.js"></script>
+		<script type="text/javascript" src="js/lr-parser.js"></script>
 		<script type="text/javascript" src="js/grammar.js"></script>
-		<script type="text/javascript" src="js/sd-engine.js"></script>
+		
+		<script type="text/javascript" src="js/lexer.js"></script>
+		
 		<script type="text/javascript" src="js/index.js"></script>
 		<title>JSCompiler</title>
 		<style type="text/css">
@@ -27,22 +26,20 @@
 				display:inline-block;
 			}
 			.main {
-			}
+			}
 		</style>
 	</head>
 	<body>
 		<h1>JSCompiler</h1>
 		<div class="main">
 			<div class="left">
-				<textarea id='input' cols='30'  rows='10'>
-				</textarea>
+				<textarea id='input' cols='30'  rows='10'></textarea>
 			</div>
 			<div class="middle">
 				<input type="button" value="CHECK" onclick="check();" />
 			</div>
 			<div class="right">
-				<textarea id='output' cols='30'  rows='10'>
-				</textarea>
+				<textarea id='output' cols='30'  rows='10'></textarea>
 			</div>
 		</div>
 	</body>
