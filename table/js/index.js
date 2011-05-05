@@ -7,31 +7,29 @@
 
 window.onload=function(){
 
-	var E=new Nonterminal("E");
+	var D=new Nonterminal("D");
 	var T=new Nonterminal("T");
-	var F=new Nonterminal("F");
-	var t_plus=new Terminator("+");
-	var t_mul=new Terminator("*");
-	var t_qk=new Terminator("(");
-	var t_hk=new Terminator(")");
-	var t_i=new Terminator("i");
+	var L=new Nonterminal("L");
+	var t_i=new Terminator("int");
+	var t_f=new Terminator("float");
+	var t_d=new Terminator(",");
+	var t_id=new Terminator("id");
 	
-	var g1=new Item(E);
-	g1.Right.Symbols=[E,t_plus,T];
-	var g2=new Item(E);
-	g2.Right.Symbols=[T];
+	
+	var g1=new Item(D);
+	g1.Right.Symbols=[T,L];
+	var g2=new Item(T);
+	g2.Right.Symbols=[t_i];
 	var g3=new Item(T);
-	g3.Right.Symbols=[T,t_mul,F];
-	var g4=new Item(T);
-	g4.Right.Symbols=[F];
-	var g5=new Item(F);
-	g5.Right.Symbols=[t_qk,E,t_hk];
-	var g6=new Item(F);
-	g6.Right.Symbols=[t_i];
+	g3.Right.Symbols=[t_f];
+	var g4=new Item(L);
+	g4.Right.Symbols=[L,t_d,t_id];
+	var g5=new Item(L);
+	g5.Right.Symbols=[t_id];
 	
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
-	g_root.Right.Symbols=[E,Symbol.ENDSYMBOL];
+	g_root.Right.Symbols=[D,Symbol.ENDSYMBOL];
 	
 	
 //	var S=new Nonterminal("S");
@@ -56,7 +54,7 @@ window.onload=function(){
 //	var g_root=new Item(Z);
 //	g_root.Right.Symbols=[S,Symbol.ENDSYMBOL];
 	
-	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5,g6],g_root);	
+	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);	
 	//AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);	
 	var result=AnalysisTableCreator.Create();
 	$.dprint(result);
