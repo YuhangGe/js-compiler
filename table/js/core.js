@@ -13,10 +13,13 @@ var FOLLOWSHIP = {
 /****************************
  * 表示符号的类，包括终结符和非终结符
  ****************************/
-function Symbol(name, type){
+function Symbol(name, type ){
     this._id = Symbol._auto_increment_id++;
     this.Name = name;
     this.Type = type;
+    this.First = new Array();
+    this.Follow = new Array();
+    this.Nullable = false;
 }
 
 Symbol._auto_increment_id = 0;//为每个Symbol赋以一个自动增加的id，用于快速比较两个Sybmol是否相等
@@ -25,13 +28,6 @@ Symbol.prototype.Equals = function(symbol){
     return this._id === symbol._id;// this.Name==symbol.Name && this.Type===symbol.Type;
 }
 
-//Symbol的三种类型的枚举
-Symbol.TERMINATOR = 0;
-Symbol.NONTERMINAL = 1;
-Symbol.END = 2;
-
-
-Symbol.ENDSYMBOL = new Symbol('#', Symbol.END);
 /**
  * 终结符
  * @param {String} value
@@ -52,6 +48,14 @@ function Nonterminal(name){
 
 $.inherit(Nonterminal, Symbol);
 
+//Symbol的两种类型的枚举
+Symbol.TERMINATOR = 0;
+Symbol.NONTERMINAL = 1;
+
+
+Symbol.END = new Terminator('#');
+Symbol.NULL = new Terminator('e');
+Symbol.NULL.Nullable=true;
 
 /**********************************
  * 表示构造LR(0)项集规范族的表的类

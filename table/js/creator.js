@@ -71,11 +71,13 @@ _ATCreator.prototype.Create = function(){
     //第一步，生成后继关系项集表
     this._create_follow_table();
     
+    //第二步，计算symbol的first和follow
+    this._get_first_follow();
     
-    //第二步，使用后继关系项集表生成LR(1)分析表，即生成table.js文件
+    //第三步，使用后继关系项集表生成LR(1)分析表，即生成table.js文件
     var table = this._create_table();
     
-    //第三步，生成grammar.js文件
+    //第四步，生成grammar.js文件
     var grammar = this._create_grammar();
     
     return {
@@ -287,7 +289,7 @@ _ATCreator.prototype._get_closure = function(item, exists_items){
     
     if (f == null) 
         return rtn;
-    if (f.Type === Symbol.TERMINATOR || f.Type === Symbol.END) 
+    if (f.Type === Symbol.TERMINATOR) 
         return rtn;
     
     var tmp_items = new Array();
@@ -309,7 +311,7 @@ _ATCreator.prototype._get_closure_loop = function(item, exists_items, rtn_items)
     var f = item.GetDotSymbol();
     if (f == null) 
         return;
-    if (f.Type === Symbol.TERMINATOR || f.Type === Symbol.END) 
+    if (f.Type === Symbol.TERMINATOR) 
         return;
     for (var i = 0; i < this._init_set.length; i++) {
         if (this._init_set[i].Left.Equals(f)) {
@@ -335,11 +337,191 @@ _ATCreator.prototype._is_in_closure = function(closure, item){
 }
 
 /**
- * 得到一个符号（终结符或非终结符）的follow
- * @param {Symbol} symbol
+ * 得到符号的first和follow，结果会在每个symbol中添加属性first和follow
+ * 算法如下
+ * (1)
+ * for each symbol X   
+ *		FIRST[X] := { }, FOLLOW[X] := { }, nullable[X] := false
+ * 
+ * (2)
+ * for each terminal symbol t
+ *		FIRST[t] := {t}
+ *
+ * (3)
+ *  repeat
+ * 		for each production X → Y1 Y2 … Yk,
+ *			(3.1)
+ * 			if all Yi are nullable then
+ *				nullable[X] := true
+ *			(3.2)
+ * 			if Y1..Yi-1 are nullable then
+ *				FIRST[X] := FIRST[X] U FIRST[Yi]
+ *			(3.3)
+ * 			if Yi+1..Yk are all nullable then
+ *				FOLLOW[Yi] := FOLLOW[Yi] U FOLLOW[X]
+ *			
+ * 			(3.4)
+ * 			if Yi+1..Yj-1 are all nullable then
+ *				FOLLOW[Yi] := FOLLOW[Yi] U FIRST[Yj]
+ * until FIRST, FOLLOW, nullable do not change
+ * 
+ * 
  */
-_ATCreator.prototype._get_follows = function(symbol){
+_ATCreator.prototype._get_first_follow = function(){
+	
+	//首先将语法规则拷贝到一个数组中，方便循环
+	var ff_sets=new Array(this._root_item);
+	for(var i=0;i<this._init_set.length;i++)
+		ff_sets.push(this._init_set[i]);
 
+	//然后将语法中的符号提取出来放在数组中
+	var ff_symbols=new Array();
+	for(var i=0;i<ff_sets.length;i++){
+		this._add_symbols(ff_symbols,ff_sets[i]);
+	}
+	
+	//开始算法
+	//步骤(1)初始化在Symbol的构造函数中实现
+	
+	//步骤(2)
+	for(var i=0;i<ff_symbols.length;i++){
+		var t=ff_symbols[i];
+		if(t.Type===Symbol.TERMINATOR)
+			t.First.push(t);
+		//$.dprint(ff_symbols[i]);
+	}
+	
+	//步骤(3)
+	var changed=true;
+	while(changed){
+		var in_change=false;
+		for(var i=0;i<ff_sets.length;i++){
+			var p=ff_sets[i];
+			var r=p.Right.Symbols;
+			var j;
+			//找到左边连续的nullable符号
+			var left_i=-1;
+			for(j=0;j<r.length;j++){
+				if(r[j].Nullable===false){
+					left_i=j-1;
+					break;
+				}
+			}
+			//步骤(3.1)
+			if(left_i===r.length-1){
+				p.Left.Nullable=true;
+				in_change=true;
+				break;
+			}
+			//步骤(3.2)
+			if(this._union_symbols(p.Left.First,r[left_i+1].First)===true)
+				in_change=true;
+			//找到右边起连续的nullable符号
+			var right_i=r.length;
+			for(j=r.length-1;j>=0;j--){
+				if(r[j].Nullable===false){
+					right_i=j+1;
+					break;
+				}
+			}
+			//步骤(3.3)
+			if(r[right_i-1].Type===Symbol.NONTERMINAL){
+				if(this._union_symbols(r[right_i-1].Follow,p.Left.Follow)===true)
+					in_change=true;
+				//$.dprint(r[right_i-1]);
+			}
+				
+			//步骤(3.4)---真TM的麻烦啊有木有！！！！
+			left_i++;//left_i指向第一个非nullable的符号
+			while(true){
+				
+				//保证left_i指向非nullable的非终结符号
+				for(j=left_i;j<r.length;j++){
+					if(r[j].Type===Symbol.NONTERMINAL && r[j].Nullable===false){
+						left_i=j;
+						break;
+					}
+					else
+						left_i++;
+				}
+				right_i=left_i+1;
+				while(right_i<r.length){
+					if(r[right_i].Nullable===false ){
+						$.dprint(r[left_i]);
+						if(this._union_symbols(r[left_i].Follow,r[right_i].First)===true)
+							in_change=true;
+						left_i=right_i;
+						break;
+					}
+					right_i++;
+				}
+				if(right_i>=r.length)
+					break;
+			}
+			
+		}
+		if(in_change===false)
+			changed=false;
+		else
+			changed=true;
+	}
+	
+	$.dprint('-----------------');
+	for(var i=0;i<ff_symbols.length;i++){
+		$.dprint(ff_symbols[i]);
+	}
 }
-
+/**
+ * 辅助函数，在_get_first_follow中，将set2并入(union)到set1中
+ * @return {boolean} 如果set1元素发生改变，返回ture，否则false
+ */
+_ATCreator.prototype._union_symbols=function(set1,set2){
+	var tmp=new Array();
+	for(var i=0;i<set2.length;i++){
+		var e=set2[i];
+		var _in=false;
+		for(var j=0;j<set1.length;j++){
+			if(set1[j].Equals(e)){
+				_in=true;
+				break;
+			}
+		}
+		if(_in===false)
+			tmp.push(e);
+	}
+	if(tmp.length>0){
+		//$.dprint(tmp);
+		for(var i=0;i<tmp.length;i++)
+			set1.push(tmp[i]);
+		return true;
+	}else
+		return false;
+	
+		
+}
+/**
+ * 辅助函数，在_get_first_follow中，从语法项item中提取symbol放入arr数组中
+ */
+_ATCreator.prototype._add_symbols=function(arr,item){
+	//将item中的symbols取出临时放入tmp
+	var tmp=new Array(item.Left);
+	for(var i=0;i<item.Right.Symbols.length;i++)
+		tmp.push(item.Right.Symbols[i]);
+	
+	//检验tmp中每一项是否已经在arr 中，如果没有，加入arr
+	for(var i=0;i<tmp.length;i++){
+		var _in=false;
+		for(var j=0;j<arr.length;j++){
+			if(arr[j].Equals(tmp[i])){
+				_in=true;
+				break;
+			}
+		}
+		if(_in===false)
+			arr.push(tmp[i]);
+				
+	}
+	//$.dprint(arr);
+	
+}
 AnalysisTableCreator = new _ATCreator();

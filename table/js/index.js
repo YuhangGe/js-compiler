@@ -29,7 +29,7 @@ window.onload=function(){
 	
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
-	g_root.Right.Symbols=[D,Symbol.ENDSYMBOL];
+	g_root.Right.Symbols=[D,Symbol.END];
 	
 	
 //	var S=new Nonterminal("S");
@@ -57,7 +57,7 @@ window.onload=function(){
 	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);	
 	//AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);	
 	var result=AnalysisTableCreator.Create();
-	$.dprint(result);
+	//$.dprint(result);
 	document.body.innerHTML=AnalysisTableCreator._output_table();
 	
 }
