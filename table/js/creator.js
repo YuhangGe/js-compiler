@@ -391,16 +391,18 @@ _ATCreator.prototype._get_first_follow = function(){
 		//$.dprint(ff_symbols[i]);
 	}
 	
+	var debug_n=0;
 	//步骤(3)
 	var changed=true;
 	while(changed){
+		debug_n++;
 		var in_change=false;
 		for(var i=0;i<ff_sets.length;i++){
 			var p=ff_sets[i];
 			var r=p.Right.Symbols;
 			var j;
 			//找到左边连续的nullable符号
-			var left_i=-1;
+			var left_i=r.length-1;
 			for(j=0;j<r.length;j++){
 				if(r[j].Nullable===false){
 					left_i=j-1;
@@ -411,13 +413,13 @@ _ATCreator.prototype._get_first_follow = function(){
 			if(left_i===r.length-1){
 				p.Left.Nullable=true;
 				in_change=true;
-				break;
+				continue;
 			}
 			//步骤(3.2)
 			if(this._union_symbols(p.Left.First,r[left_i+1].First)===true)
 				in_change=true;
 			//找到右边起连续的nullable符号
-			var right_i=r.length;
+			var right_i=0;
 			for(j=r.length-1;j>=0;j--){
 				if(r[j].Nullable===false){
 					right_i=j+1;
@@ -447,7 +449,7 @@ _ATCreator.prototype._get_first_follow = function(){
 				right_i=left_i+1;
 				while(right_i<r.length){
 					if(r[right_i].Nullable===false ){
-						$.dprint(r[left_i]);
+						//$.dprint(r[left_i]);
 						if(this._union_symbols(r[left_i].Follow,r[right_i].First)===true)
 							in_change=true;
 						left_i=right_i;
@@ -460,16 +462,24 @@ _ATCreator.prototype._get_first_follow = function(){
 			}
 			
 		}
+		// $.dprint(ff_symbols[1]);
+		// $.dprint(ff_symbols[4]);
+		// $.dprint(ff_symbols[5]);
+		// $.dprint('-----------------');
 		if(in_change===false)
 			changed=false;
 		else
 			changed=true;
+			
+		if(debug_n>20)
+			break;
 	}
 	
-	$.dprint('-----------------');
-	for(var i=0;i<ff_symbols.length;i++){
+	$.dprint(debug_n);
+	$.dprint('+++++++++++++');
+	for(var i=0;i<ff_symbols.length;i++)
 		$.dprint(ff_symbols[i]);
-	}
+ 
 }
 /**
  * 辅助函数，在_get_first_follow中，将set2并入(union)到set1中

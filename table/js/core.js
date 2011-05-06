@@ -54,7 +54,7 @@ Symbol.NONTERMINAL = 1;
 
 
 Symbol.END = new Terminator('#');
-Symbol.NULL = new Terminator('e');
+Symbol.NULL = new Terminator('null');
 Symbol.NULL.Nullable=true;
 
 /**********************************
