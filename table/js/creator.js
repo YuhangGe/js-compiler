@@ -401,21 +401,29 @@ _ATCreator.prototype._get_first_follow = function(){
 			var p=ff_sets[i];
 			var r=p.Right.Symbols;
 			var j;
-			//找到左边连续的nullable符号
-			var left_i=r.length-1;
+			
+			//步骤(3.1)
+			var n=0;
 			for(j=0;j<r.length;j++){
+				if(r[j].Nullable===true)
+					n++;
+			}
+			if(n===r.length){
+				p.Left.Nullable=true;
+				in_change=true;
+			}
+			
+						
+			//步骤(3.2)
+			//找到左边连续的nullable符号
+			var left_i=r.length-2;
+			for(j=0;j<r.length-1;j++){
 				if(r[j].Nullable===false){
-					left_i=j-1;
+					left_i=j;
 					break;
 				}
 			}
-			//步骤(3.1)
-			if(left_i===r.length-1){
-				p.Left.Nullable=true;
-				in_change=true;
-				continue;
-			}
-			//步骤(3.2)
+
 			if(this._union_symbols(p.Left.First,r[left_i+1].First)===true)
 				in_change=true;
 			//找到右边起连续的nullable符号
@@ -462,10 +470,10 @@ _ATCreator.prototype._get_first_follow = function(){
 			}
 			
 		}
-		// $.dprint(ff_symbols[1]);
-		// $.dprint(ff_symbols[4]);
-		// $.dprint(ff_symbols[5]);
-		// $.dprint('-----------------');
+		$.dprint(ff_symbols[1]);
+		$.dprint(ff_symbols[4]);
+		$.dprint(ff_symbols[5]);
+		$.dprint('-----------------');
 		if(in_change===false)
 			changed=false;
 		else
