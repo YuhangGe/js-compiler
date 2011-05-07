@@ -337,7 +337,7 @@ _ATCreator.prototype._is_in_closure = function(closure, item){
 }
 
 /**
- * 得到符号的first和follow，结果会在每个symbol中添加属性first和follow
+ * 得到符号的first和follow
  * 算法如下
  * (1)
  * for each symbol X   
@@ -364,7 +364,7 @@ _ATCreator.prototype._is_in_closure = function(closure, item){
  * 			if Yi+1..Yj-1 are all nullable then
  *				FOLLOW[Yi] := FOLLOW[Yi] U FIRST[Yj]
  * until FIRST, FOLLOW, nullable do not change
- * 
+ * 关于算法的解释，参看龙书《编译原理》第二版140页
  * 
  */
 _ATCreator.prototype._get_first_follow = function(){
@@ -391,96 +391,76 @@ _ATCreator.prototype._get_first_follow = function(){
 		//$.dprint(ff_symbols[i]);
 	}
 	
-	var debug_n=0;
-	//步骤(3)
+	//var debug_n=0;//在调试时使用，防止算法没写对陷入死循环。。。
+	
+	//步骤(3)---这个操蛋的算法哥看了半天，然后又写了半天代码，然后发现居然还是理解错了，然后又用了半天才有了现在这代码啊！！！！
 	var changed=true;
 	while(changed){
-		debug_n++;
+		//debug_n++;
 		var in_change=false;
 		for(var i=0;i<ff_sets.length;i++){
 			var p=ff_sets[i];
 			var r=p.Right.Symbols;
-			var j;
 			
-			//步骤(3.1)
-			var n=0;
-			for(j=0;j<r.length;j++){
-				if(r[j].Nullable===true)
-					n++;
-			}
-			if(n===r.length){
+			var j,k;//用来进行循环的变量
+			
+			/**步骤(3.1)---真TM的麻烦啊有木有！！！！**/
+			//首先如果nullable是true就不需要检验了，因为算法中不会出现true改为false的情况
+			if(p.Left.Nullable===false){
+				//此处使用的思想是首先假设Y1...Yk全为nullable,将X的nullable设为true
 				p.Left.Nullable=true;
 				in_change=true;
+				//然后检验
+				for(j=0;j<r.length;j++){
+					//如果出现某个Yi不为nullable，取消假设
+					if(r[j].Nullable===false){
+						p.Left.Nullable=false;
+						in_change=false;
+						break;
+					}
+				}
 			}
 			
-						
-			//步骤(3.2)
-			//找到左边连续的nullable符号
-			var left_i=r.length-2;
-			for(j=0;j<r.length-1;j++){
-				if(r[j].Nullable===false){
-					left_i=j;
+			/**
+			 * 耗了十多个小时才写来的这么几行代码，已经木有能力用注释解释了
+			 * 参考龙书《编译原理》第二版140页理解吧~~~
+			 **/
+			//步骤(3.2)---真TM的麻烦啊有木有！！！！
+			for(j=0;j<r.length;j++){
+				if(this._union_symbols(p.Left.First,r[j].First)===true)
+					in_change=true;
+				if(r[j].Nullable===false)
 					break;
-				}
 			}
 
-			if(this._union_symbols(p.Left.First,r[left_i+1].First)===true)
-				in_change=true;
-			//找到右边起连续的nullable符号
-			var right_i=0;
+			//步骤(3.3)---真TM的麻烦啊有木有！！！！
 			for(j=r.length-1;j>=0;j--){
-				if(r[j].Nullable===false){
-					right_i=j+1;
+				if(r[j].Type===Symbol.NONTERMINAL &&
+					this._union_symbols(r[j].Follow,p.Left.Follow)===true)
+						in_change=true;
+		
+				if(r[j].Nullable===false)
 					break;
-				}
 			}
-			//步骤(3.3)
-			if(r[right_i-1].Type===Symbol.NONTERMINAL){
-				if(this._union_symbols(r[right_i-1].Follow,p.Left.Follow)===true)
-					in_change=true;
-				//$.dprint(r[right_i-1]);
-			}
-				
+					
 			//步骤(3.4)---真TM的麻烦啊有木有！！！！
-			left_i++;//left_i指向第一个非nullable的符号
-			while(true){
-				
-				//保证left_i指向非nullable的非终结符号
-				for(j=left_i;j<r.length;j++){
-					if(r[j].Type===Symbol.NONTERMINAL && r[j].Nullable===false){
-						left_i=j;
+			for(j=0;j<r.length-1;j++){
+				if(r[j].Type===Symbol.TERMINATOR)
+					continue;
+				for(k=j+1;k<r.length;k++){
+					if(this._union_symbols(r[j].Follow,r[k].First)===true)
+						in_change=true;
+					if(r[k].Nullable===false)
 						break;
-					}
-					else
-						left_i++;
 				}
-				right_i=left_i+1;
-				while(right_i<r.length){
-					if(r[right_i].Nullable===false ){
-						//$.dprint(r[left_i]);
-						if(this._union_symbols(r[left_i].Follow,r[right_i].First)===true)
-							in_change=true;
-						left_i=right_i;
-						break;
-					}
-					right_i++;
-				}
-				if(right_i>=r.length)
-					break;
 			}
+			
 			
 		}
-		$.dprint(ff_symbols[1]);
-		$.dprint(ff_symbols[4]);
-		$.dprint(ff_symbols[5]);
-		$.dprint('-----------------');
-		if(in_change===false)
-			changed=false;
-		else
-			changed=true;
-			
-		if(debug_n>20)
-			break;
+		changed=(in_change===false?false:true);
+		
+		//if(debug_n>20)//在调试时使用，防止算法没写对陷入死循环。。。
+			//break;
 	}
 	
 	$.dprint(debug_n);
@@ -490,13 +470,15 @@ _ATCreator.prototype._get_first_follow = function(){
  
 }
 /**
- * 辅助函数，在_get_first_follow中，将set2并入(union)到set1中
+ * 辅助函数，在_get_first_follow中，将set2中所有非空并入(union)到set1中
  * @return {boolean} 如果set1元素发生改变，返回ture，否则false
  */
 _ATCreator.prototype._union_symbols=function(set1,set2){
 	var tmp=new Array();
 	for(var i=0;i<set2.length;i++){
 		var e=set2[i];
+		if(e.Equals(Symbol.NULL))
+			continue;
 		var _in=false;
 		for(var j=0;j<set1.length;j++){
 			if(set1[j].Equals(e)){
