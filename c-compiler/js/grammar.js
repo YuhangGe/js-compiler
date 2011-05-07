@@ -1,87 +1,76 @@
-/**
- * @author Abraham
- */
 LR_GRAMMARS=new Array();
 LR_GRAMMARS[0]= {
+	//D->L T
 	reduce: function() {
-		var p0=Abe.LR_Stack.pop();//T
-		var p1=Abe.LR_Stack.pop();//+
-		var p2=Abe.LR_Stack.pop();//E
-		var value=calc_plus_minus(p0.value,p1.value,p2.value);
+		var p0=Abe.LR_Stack.pop();//L
+		var p1=Abe.LR_Stack.pop();//T
 		return {
-			symbolIndex:LR_TABLE.SYMBOLS.E,
-			value:value
+			symbolIndex:LR_TABLE.SYMBOLS.D,
+			valeu:p0.value
 		}
 	}
 }
-
-function calc_plus_minus(n1,op,n2) {
-	if(op==='+')
-		return n2+n1;
-	else
-		return n2-n1;
-}
-
 LR_GRAMMARS[1]= {
-	//E:=T
+	//T->int
 	reduce: function() {
-		//$.dprint("E:=T");
-		var p0=Abe.LR_Stack.pop();//T
+		var p0=Abe.LR_Stack.pop();//int
 		return {
-			symbolIndex:LR_TABLE.SYMBOLS.E,
-			value:p0.value
+			symbolIndex:LR_TABLE.SYMBOLS.T,
+			valeu:p0.value
 		}
 	}
 }
 LR_GRAMMARS[2]= {
-	//T:=T*F | T:=T/F
+	//T->float
 	reduce: function() {
-		var p0=Abe.LR_Stack.pop();//F
-		var p1=Abe.LR_Stack.pop();//*
-		var p2=Abe.LR_Stack.pop();//T
-		var v=calc_mul_div(p0.value,p1.value,p2.value);
+		var p0=Abe.LR_Stack.pop();//float
 		return {
 			symbolIndex:LR_TABLE.SYMBOLS.T,
-			value:v
-		};
+			valeu:p0.value
+		}
 	}
 }
-
-function calc_mul_div(n1,op,n2){
-	if(op==='*')
-		return n2*n1;
-	else
-		return n2/n1;
-}
 LR_GRAMMARS[3]= {
-	//T:=F
+	//L->id , L
 	reduce: function() {
-		var p0=Abe.LR_Stack.pop();//F
+		var p0=Abe.LR_Stack.pop();//id
+		var p1=Abe.LR_Stack.pop();//,
+		var p2=Abe.LR_Stack.pop();//L
 		return {
-			symbolIndex: LR_TABLE.SYMBOLS.T,
-			value: p0.value
-		};
+			symbolIndex:LR_TABLE.SYMBOLS.L,
+			valeu:p0.value
+		}
 	}
 }
 LR_GRAMMARS[4]= {
-	//F:=(E)
+	//L->id
 	reduce: function() {
-		var p0=Abe.LR_Stack.pop();//)
-		var p1=Abe.LR_Stack.pop();//E
-		var p2=Abe.LR_Stack.pop();//(
+		var p0=Abe.LR_Stack.pop();//id
 		return {
-			symbolIndex: LR_TABLE.SYMBOLS.F,
-			value: p1.value
-		};
+			symbolIndex:LR_TABLE.SYMBOLS.L,
+			valeu:p0.value
+		}
 	}
 }
 LR_GRAMMARS[5]= {
-	//F:=num
+	//S->D
 	reduce: function() {
-		var p0=Abe.LR_Stack.pop();//num
+		var p0=Abe.LR_Stack.pop();//D
 		return {
-			symbolIndex: LR_TABLE.SYMBOLS.F,
-			value: p0.value
-		};
+			symbolIndex:LR_TABLE.SYMBOLS.S,
+			valeu:p0.value
+		}
+	}
+}
+LR_GRAMMARS[6]= {
+	//S->S new_line D
+	reduce: function() {
+		var p0=Abe.LR_Stack.pop();//S
+		var p1=Abe.LR_Stack.pop();//new_line
+		var p2=Abe.LR_Stack.pop();//D
+		return {
+			symbolIndex:LR_TABLE.SYMBOLS.S,
+			valeu:p0.value
+		}
 	}
 }

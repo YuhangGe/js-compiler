@@ -40,25 +40,21 @@ Abe.Lexer.prototype={
 			
 		var word=this._cur_ch;
 		var rtn=null;
-		if(this.is_digit(word)===true){
-			while(this.get_next_ch()!==null && this.is_digit(this._cur_ch)===true ){
+		if(this.is_letter(word)===true){
+			while(this.get_next_ch()!==null && this.is_letter(this._cur_ch)===true ){
 				word+=this._cur_ch;
 			}
-			rtn= new Abe.Table.Token(LR_TABLE.SYMBOLS.num,Number(word));
+			var type=LR_TABLE.SYMBOLS.ID;
+			if(word==='int')
+				type=LR_TABLE.SYMBOLS.INT;
+			else if(word==='float')
+			    type=LR_TABLE.SYMBOLS.FLOAT;
+			rtn= new Abe.Table.Token(type,word);
 		}else{
+			//$.dprint(word);
 			rtn= new Abe.Table.Token(LR_TABLE.SYMBOLS.UNDEF,this._cur_ch);	
 			this.get_next_ch();
 		}
-		// if(this.is_letter(word)===true){
-			// while(this.get_next_ch()!==null && this.is_letter(this._cur_ch)===true ){
-				// word+=this._cur_ch;
-			// }
-			// if(Abe.Token.KEYWORDS[word]!=null)
-				// return Abe.Token.KEYWORDS[word];
-			// else
-				// return new Abe.Table.Token(LR_TABLE.word,Abe.Global.ID);
-		// }
-	
 		return rtn;
 	}
 }

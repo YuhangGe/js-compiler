@@ -7,6 +7,7 @@
 
 window.onload= function() {
 
+	var S=new Nonterminal("S");
 	var D=new Nonterminal("D");
 	var T=new Nonterminal("T");
 	var L=new Nonterminal("L");
@@ -14,6 +15,7 @@ window.onload= function() {
 	var t_f=new Terminator("float");
 	var t_d=new Terminator(",");
 	var t_id=new Terminator("id");
+	var t_nl=new Terminator("new_line");
 	
 	
 	var g1=new Item(D);
@@ -26,10 +28,14 @@ window.onload= function() {
 	g4.Right.Symbols=[L,t_d,t_id];
 	var g5=new Item(L);
 	g5.Right.Symbols=[t_id];
+	var g6=new Item(S);
+	g6.Right.Symbols=[D];
+	var g7=new Item(S);
+	g7.Right.Symbols=[D,t_nl,S];
 	
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
-	g_root.Right.Symbols=[D,Symbol.END];
+	g_root.Right.Symbols=[S,Symbol.END];
 
 	// var Z=new Nonterminal("Z");
 	// var X=new Nonterminal("X");
@@ -56,7 +62,7 @@ window.onload= function() {
 	// g_root.Right.Symbols=[Z,Symbol.END];
 
 	//AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);
-	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);
+	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5,g6,g7],g_root);
 	var result=AnalysisTableCreator.Create();
 	//$.dprint(result);
 	document.body.innerHTML=AnalysisTableCreator._output_table();

@@ -273,6 +273,13 @@ _ATCreator.prototype._create_follow_table = function(){
 
 
 _ATCreator.prototype._output_table = function(){
+	var s_table="";
+	var s_grammar="LR_GRAMMARS=new Array();<br/>";
+	
+	for(var i=0;i<this._init_set.length;i++){
+		s_grammar+=this._generate_grammar(i,this._init_set[i]);
+	}
+	
     var rtn = "<style>.t{display:table-cell;margin-left:20px;border-right:1px solid blue;width:50%;}</style><ul style='list-style:none;width:100%;'>";
     for (var i = 0; i < this._item_sets.length; i++) {
         var item_set = this._item_sets[i];
@@ -290,6 +297,9 @@ _ATCreator.prototype._output_table = function(){
     }
     rtn += "</ul></br></br><table  border='1' cellspacing='50%' cellpadding='3'><tr>";
     rtn += "<th>state</th>";
+    
+    
+    
     for(var i=0;i<this._t_symbols.length;i++){
     	rtn+="<th>"+this._t_symbols[i].Name+"</th>";
     }
@@ -297,38 +307,107 @@ _ATCreator.prototype._output_table = function(){
     	rtn+="<th>"+this._n_symbols[i].Name+"</th>";
     }
     rtn+="</tr>";
+    
+    s_table+="Abe.Table.LR_Table.prototype.initTable=function(){<br/>"	
+	+"   for(var i=0;i<"+this._table.length+";i++)<br/>"
+	+"	    this.states[i]=new Abe.Table.State(i);<br/>";
+	s_table+="<br/>";
+	
     for(var i=0;i<this._table.length;i++){
     	var row=this._table[i];
     	if(!row)
     		continue;
     	rtn+="<tr><td>"+i+"</td>";
+    	
+    	var s_arg="",r_arg="";
     	for(var j=0;j<row[0].length;j++){
     		rtn+="<td>";
     		var a=row[0][j];
     		if(a){
-    			$.dprint(a);
-    			if(a.Type===Action.ACCEPT)
+    			if(a.Type===Action.ACCEPT){
+    				s_table+="this.states["+i+"].addAction("+j+",Abe.Table.Action.ACC);";
     				rtn+="acc";
-    			else if(a.Type===Action.SHIFT)
+    			}
+    			
+    			else if(a.Type===Action.SHIFT){
+    				if(s_arg!=="")
+    					s_arg+=",";
+    				s_arg+="["+j+","+a.Value+"]";
     				rtn+="S"+a.Value;
-    			else
+    			}
+    			else {
+    				if(r_arg!=="")
+    					r_arg+=",";
+    				r_arg+="["+j+","+a.Value+"]";
     				rtn+="r"+a.Value;
+    			}
+    				
     		}
     	    rtn+="</td>";
     	}
+    	
+    	if(s_arg!=="")
+    		s_table+="this.states["+i+"].quickAddShift("+s_arg+");<br/>";
+    	if(r_arg!=="")
+    		s_table+="this.states["+i+"].quickAddReduce("+r_arg+");<br/>";
+  		
+  		var g_arg="";
     	for(var j=0;j<row[1].length;j++){
     		rtn+="<td>";
     		var g=row[1][j];
     		if(g){
+    			if(g_arg!=="")
+    				g_arg+=",";
+    			g_arg+="["+j+","+g+"]";
     			rtn+=g;
     		}
     		rtn+="</td>";
     	}
+    	if(g_arg!=="")
+    		s_table+="this.states["+i+"].quickAddGoto("+g_arg+");<br/>";
+    	
+    	s_table+="<br/>";
+    	
     	rtn+="</tr>";
     }
-    return rtn;
+    s_table+="}";
+    
+    return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p>";
 }
-
+_ATCreator.prototype._generate_grammar=function(index,grammar,func){
+	var rtn="LR_GRAMMARS["+index+"]= {<br/>";
+	var t1="//"+grammar.Left.Name+"->";
+	var t2="";
+	var idx=0;
+	var s=grammar.Right.Symbols;	
+	for(var i=s.length-1;i>=0;i--){
+		t1+=s[i].Name+' ';
+		t2+="var p"+idx+"=Abe.LR_Stack.pop();//"+s[i].Name+"<br/>";
+		idx++;
+	}
+	
+	rtn+=t1+"<br/>reduce: function() {<br/>"+t2;
+	if(func){
+		var arg="";
+		for(var i=idx-1;i>=0;i--)
+			{
+				if(arg!=="")
+				arg+=",";
+			arg+="p"+i+".value";}
+		rtn+="var value="+func+"("+arg+");<br/>";
+	}
+		rtn+="return {<br/>"
+		rtn+="	symbolIndex:LR_TABLE.SYMBOLS."+grammar.Left.Name+",<br/>";
+		if(func)	
+		rtn+="value:value<br/>";
+		else
+		rtn+="valeu:p0.value<br/>";
+		rtn+="}<br/>";	
+	rtn+="}<br/>";
+	rtn+="}<br/>";
+	
+	return rtn;
+}
 /**
  * 递归生成表
  */

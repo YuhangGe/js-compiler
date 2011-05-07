@@ -92,6 +92,7 @@ Abe.LR_Parser.prototype= {
 		switch (act.type) {
 			case Abe.Table.Action.ACCEPT:
 				document.getElementById("output").value="Success!\n"+this._stack.pop().value;
+				$.dprint("Accept");
 				return false;
 				break;
 			case Abe.Table.Action.SHIFT:
@@ -101,7 +102,7 @@ Abe.LR_Parser.prototype= {
 				break;
 			case Abe.Table.Action.REDUCE:
 				var U = this._grammar[act.value-1].reduce();
-			//	$.dprint(U.value);
+				//$.dprint(U.value);
 				var go_state = this._stack[this._stack.length - 1].state.getGoto(U.symbolIndex);
 				this._stack.push(new Abe.StackElement(this._table.states[go_state], U.symbolIndex,U.value));
 				return true;
