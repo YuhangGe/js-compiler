@@ -58,6 +58,7 @@ _ATCreator = function(){
 _ATCreator.prototype.InitGrammer = function(set, root){
     this._init_set = set;
     this._root_item = root;
+    this._root_symbol=root.Left;
     this._set_index = 0;//项集编号索引
 }
 
@@ -82,7 +83,7 @@ _ATCreator.prototype.Create = function(){
     var grammar = this._create_grammar();
     
     return {
-        "Table": table,
+        "Table": this._table,
         "Grammar": grammar
     };
     //return this._output_table();
@@ -115,48 +116,57 @@ _ATCreator.prototype._get_grammar_index=function(item){
  * 使用后继关系项集表生成LR(1)分析表
  */
 _ATCreator.prototype._create_table = function(){
-   	var t_symbols=new Array();
-	var n_symbols=new Array();
+   	this._t_symbols=new Array();
+	this._n_symbols=new Array();
 	for(var i=0;i<this._symbols.length;i++){
 		var s=this._symbols[i];
 		if(s.Type===Symbol.TERMINATOR)
-			t_symbols.push(s)
-		else
-			n_symbols.push(s);
+			this._t_symbols.push(s)
+		else if(s.Equals(this._root_symbol)===false)
+			this._n_symbols.push(s);
 	}
-	this._table={};
+	this._table=[];
 	/**
 	 * 填写SLR(1)分析表，参见《编译原理——编译程序构造与实践教程》（张幸儿、戴新宇 编著，人民邮电出版社）
 	 * 第一版第114页
 	 */
 	for(var i=0;i<this._item_sets.length;i++){
+		if(this._item_sets[i].Type===ItemSet.END){
+			continue;//如果是END符的项集，忽略
+		}
 		var items=this._item_sets[i].Items;
 		
 		var actions=[];
 		var gotos=[];
+		actions.length=this._t_symbols.length;
+		gotos.length=this._n_symbols.length;
 		for(var j=0;j<items.length;j++){
 			var item=items[j];
+			
 			if (item.Follow.Type === FOLLOWSHIP.SHIFT) {
 				var follow=item.Follow;
 				//对于初始项Z'->Z#的Z_后续的#_后续，置ACTION[k][#]=acc，这里，k是Z'->Z#的项集序号
 				if(follow.Value.Equals(Symbol.END)){
-					actions[this._get_symbol_index(t_symbols,follow.Value)]=new Action('#',Action.ACCEPT);
+					actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action('#',Action.ACCEPT);
 				}
 				//对于X_后继，x∈Vn，置GOTO[i][X]=j，这里j是该X_后继的项集序号
 				else if(follow.Value.Type==Symbol.NONTERMINAL){
-					gotos[this._get_symbol_index(n_symbols,follow.Value)]=follow.Result.Id;
+					gotos[this._get_symbol_index(this._n_symbols,follow.Value)]=follow.Result.Id;
 				}
 				//对于X_后继，x∈Vt，置ACTION[i][X]=Sj，这里j是该X_后继的项集序号
 				else if(follow.Value.Type===Symbol.TERMINATOR){
-					actions[this._get_symbol_index(t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
+					actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
 				}
 			}
 			//3.对于#U:=u后继，置ACTION[i][a]=rj，这里j是规则U:=u的序号，而a∈U的follow集合，对于follow集合，参见编译原理教材
 			else {
+				
+			
 				var fset=item.Left.Follow;
-				var j=this._get_grammar_index(item)+1;//加1是因为还有个init(0)状态
-				for(var i=0;i<fset.length;i++){
-			  		actions[this._get_symbol_index(t_symbols,fset[i])]=new Action(j,Action.REDUCE);
+				var rj=this._get_grammar_index(item)+1;//加1是因为还有个init(0)状态
+					//$.dprint(rj);
+				for(var k=0;k<fset.length;k++){
+			  		actions[this._get_symbol_index(this._t_symbols,fset[k])]=new Action(rj,Action.REDUCE);
 				}
 			}
 		}
@@ -170,7 +180,7 @@ _ATCreator.prototype._create_table = function(){
  */
 _ATCreator.prototype._create_follow_table = function(){
     //初始项集
-    var init_set = this._create_item_set(this._set_index++, this._root_item, "Init");
+    var init_set = this._create_item_set(this._set_index++, this._root_item, "Init" ,ItemSet.INIT);
     this._item_sets.push(init_set);
     
     var _set_queue = new Array();
@@ -210,7 +220,10 @@ _ATCreator.prototype._create_follow_table = function(){
                 var follow_item = item.GetFollowItem();
                 //如果还没有为后继的符号创建项集，则创建新的项集
                 if (f_p_h === null) {
-                    var new_item_set = this._create_item_set(this._set_index++, follow_item, dot_symbol.Name);
+                	var type=ItemSet.SYMBOL;
+                	if(dot_symbol.Equals(Symbol.END))
+                		type=ItemSet.END;
+                    var new_item_set = this._create_item_set(this._set_index++, follow_item, dot_symbol.Name,type);
                     var f_p_h = new _Follow_Previous_Helper(new_item_set);
                     symbol_follow_helper.AddItemSet(dot_symbol, f_p_h);
                     tmp_follow_preious_array.push(f_p_h);//临时保存，最后检测
@@ -275,7 +288,44 @@ _ATCreator.prototype._output_table = function(){
         }
         rtn += "</div></li>";
     }
-    rtn += "</ul>";
+    rtn += "</ul></br></br><table  border='1' cellspacing='50%' cellpadding='3'><tr>";
+    rtn += "<th>state</th>";
+    for(var i=0;i<this._t_symbols.length;i++){
+    	rtn+="<th>"+this._t_symbols[i].Name+"</th>";
+    }
+    for(var i=0;i<this._n_symbols.length;i++){
+    	rtn+="<th>"+this._n_symbols[i].Name+"</th>";
+    }
+    rtn+="</tr>";
+    for(var i=0;i<this._table.length;i++){
+    	var row=this._table[i];
+    	if(!row)
+    		continue;
+    	rtn+="<tr><td>"+i+"</td>";
+    	for(var j=0;j<row[0].length;j++){
+    		rtn+="<td>";
+    		var a=row[0][j];
+    		if(a){
+    			$.dprint(a);
+    			if(a.Type===Action.ACCEPT)
+    				rtn+="acc";
+    			else if(a.Type===Action.SHIFT)
+    				rtn+="S"+a.Value;
+    			else
+    				rtn+="r"+a.Value;
+    		}
+    	    rtn+="</td>";
+    	}
+    	for(var j=0;j<row[1].length;j++){
+    		rtn+="<td>";
+    		var g=row[1][j];
+    		if(g){
+    			rtn+=g;
+    		}
+    		rtn+="</td>";
+    	}
+    	rtn+="</tr>";
+    }
     return rtn;
 }
 
@@ -310,9 +360,10 @@ _ATCreator.prototype._append_item_set = function(item_set, base_item){
  * @param {Integer} id
  * @param {ItemSet} base_item
  */
-_ATCreator.prototype._create_item_set = function(id, base_item, name){
+_ATCreator.prototype._create_item_set = function(id, base_item, name ,type){
     var rtn = new ItemSet(id);
     rtn.Name = name;
+    rtn.Type = type;
     rtn.AddItem(base_item);
     rtn.AddItem(this._get_closure(base_item));
     return rtn;

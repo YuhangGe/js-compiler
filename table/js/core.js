@@ -75,8 +75,11 @@ function ItemSet(id){
     this.Id = id; //项集编号
     this.Items = new Array(); //项的集合
     this.Name=null;
+    this.Type=-1;
 }
-
+ItemSet.INIT=0;
+ItemSet.END=1;
+ItemSet.SYMBOL=2;
 /**
  * 判断两个项集是否相同
  * @param {ItemSet} itemset

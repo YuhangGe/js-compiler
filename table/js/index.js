@@ -55,10 +55,11 @@ window.onload= function() {
 	// var g_root=new Item(S);
 	// g_root.Right.Symbols=[Z,Symbol.END];
 
-	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);
 	//AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);
+	AnalysisTableCreator.InitGrammer([g1,g2,g3,g4,g5],g_root);
 	var result=AnalysisTableCreator.Create();
 	//$.dprint(result);
 	document.body.innerHTML=AnalysisTableCreator._output_table();
-
+	
+	
 }
