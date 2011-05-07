@@ -47,6 +47,7 @@ _Follow_Previous_Helper = function(itemset){
 _ATCreator = function(){
     this._init_set = null;//初始项集
     this._item_sets = new Array();//所有的项集
+    this._symbols= new Array();
     this._root_item = null;
 }
 /**
@@ -75,7 +76,7 @@ _ATCreator.prototype.Create = function(){
     this._get_first_follow();
     
     //第三步，使用后继关系项集表生成LR(1)分析表，即生成table.js文件
-    var table = this._create_table();
+    this._create_table();
     
     //第四步，生成grammar.js文件
     var grammar = this._create_grammar();
@@ -92,35 +93,74 @@ _ATCreator.prototype._create_grammar = function(){
 }
 
 /**
+ * 辅助函数，用在_create_table中，返回符号在表中的索引
+ */
+_ATCreator.prototype._get_symbol_index=function(arr,symbol){
+	for(var i=0;i<arr.length;i++)
+		if(arr[i].Equals(symbol))
+			return i;
+	return -1;
+}
+/**
+ * 辅助函数，用在_create_table中，返回规则的序号
+ */
+_ATCreator.prototype._get_grammar_index=function(item){
+	for(var i=0;i<this._init_set.length;i++){
+		if(this._init_set[i].GrammarEquals(item)===true)
+			return i;
+	}
+	return -1;
+}
+/**
  * 使用后继关系项集表生成LR(1)分析表
  */
 _ATCreator.prototype._create_table = function(){
-   	var term_symbols=new Array();
-	var nont_symbols=new Array();
-	
+   	var t_symbols=new Array();
+	var n_symbols=new Array();
+	for(var i=0;i<this._symbols.length;i++){
+		var s=this._symbols[i];
+		if(s.Type===Symbol.TERMINATOR)
+			t_symbols.push(s)
+		else
+			n_symbols.push(s);
+	}
+	this._table={};
 	/**
 	 * 填写SLR(1)分析表，参见《编译原理——编译程序构造与实践教程》（张幸儿、戴新宇 编著，人民邮电出版社）
 	 * 第一版第114页
 	 */
 	for(var i=0;i<this._item_sets.length;i++){
 		var items=this._item_sets[i].Items;
+		
+		var actions=[];
+		var gotos=[];
 		for(var j=0;j<items.length;j++){
 			var item=items[j];
 			if (item.Follow.Type === FOLLOWSHIP.SHIFT) {
-				var follow=item.Follow.Value;
-				//1.对于X_后继，x∈Vn，置GOTO[i][X]=j，这里j是该X_后继的项集序号
-				if(follow.Type==Symbol.NONTERMINAL){
-					
+				var follow=item.Follow;
+				//对于初始项Z'->Z#的Z_后续的#_后续，置ACTION[k][#]=acc，这里，k是Z'->Z#的项集序号
+				if(follow.Value.Equals(Symbol.END)){
+					actions[this._get_symbol_index(t_symbols,follow.Value)]=new Action('#',Action.ACCEPT);
 				}
-				//2.对于X_后继，x∈Vt，置ACTION[i][X]=Sj，这里j是该X_后继的项集序号
-				else if(follow.Type===Symbol.TERMINATOR){
-					
+				//对于X_后继，x∈Vn，置GOTO[i][X]=j，这里j是该X_后继的项集序号
+				else if(follow.Value.Type==Symbol.NONTERMINAL){
+					gotos[this._get_symbol_index(n_symbols,follow.Value)]=follow.Result.Id;
+				}
+				//对于X_后继，x∈Vt，置ACTION[i][X]=Sj，这里j是该X_后继的项集序号
+				else if(follow.Value.Type===Symbol.TERMINATOR){
+					actions[this._get_symbol_index(t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
 				}
 			}
 			//3.对于#U:=u后继，置ACTION[i][a]=rj，这里j是规则U:=u的序号，而a∈U的follow集合，对于follow集合，参见编译原理教材
 			else {
+				var fset=item.Left.Follow;
+				var j=this._get_grammar_index(item)+1;//加1是因为还有个init(0)状态
+				for(var i=0;i<fset.length;i++){
+			  		actions[this._get_symbol_index(t_symbols,fset[i])]=new Action(j,Action.REDUCE);
+				}
 			}
 		}
+		this._table[this._item_sets[i].Id]=[actions,gotos];
 	}
 	
 }
@@ -375,17 +415,17 @@ _ATCreator.prototype._get_first_follow = function(){
 		ff_sets.push(this._init_set[i]);
 
 	//然后将语法中的符号提取出来放在数组中
-	var ff_symbols=new Array();
+	this._symbols=new Array();
 	for(var i=0;i<ff_sets.length;i++){
-		this._add_symbols(ff_symbols,ff_sets[i]);
+		this._add_symbols(this._symbols,ff_sets[i]);
 	}
 	
 	//开始算法
 	//步骤(1)初始化在Symbol的构造函数中实现
 	
 	//步骤(2)
-	for(var i=0;i<ff_symbols.length;i++){
-		var t=ff_symbols[i];
+	for(var i=0;i<this._symbols.length;i++){
+		var t=this._symbols[i];
 		if(t.Type===Symbol.TERMINATOR)
 			t.First.push(t);
 		//$.dprint(ff_symbols[i]);
@@ -457,16 +497,16 @@ _ATCreator.prototype._get_first_follow = function(){
 			
 			
 		}
-		changed=(in_change===false?false:true);
+		changed=in_change;
 		
 		//if(debug_n>20)//在调试时使用，防止算法没写对陷入死循环。。。
 			//break;
 	}
 	
-	$.dprint(debug_n);
-	$.dprint('+++++++++++++');
-	for(var i=0;i<ff_symbols.length;i++)
-		$.dprint(ff_symbols[i]);
+	//$.dprint(debug_n);
+	//$.dprint('+++++++++++++');
+	for(var i=0;i<this._symbols.length;i++)
+		$.dprint(this._symbols[i]);
  
 }
 /**
@@ -490,7 +530,6 @@ _ATCreator.prototype._union_symbols=function(set1,set2){
 			tmp.push(e);
 	}
 	if(tmp.length>0){
-		//$.dprint(tmp);
 		for(var i=0;i<tmp.length;i++)
 			set1.push(tmp[i]);
 		return true;

@@ -9,6 +9,13 @@ var FOLLOWSHIP = {
     REDUCE: 1,
 }
 
+function Action(value,type){
+	this.Type=type;
+	this.Value=value;
+}
+Action.REDUCE=0;
+Action.SHIFT=1;
+Action.ACCEPT=2;
 
 /****************************
  * 表示符号的类，包括终结符和非终结符
@@ -135,13 +142,23 @@ Item.prototype.Clone=function(){
 	rtn.Right=this.Right;
 	return rtn;
 }
-
+/**
+ * 严格等，要求项的符号和句点位置一样
+ */
 Item.prototype.Equals = function(item){
     if (!this.Left.Equals(item.Left)) 
         return false;
-    if (this.Right.Dot !== item.Right.Dot || this.Right.Symbols.length !== item.Right.Symbols.length) 
-        return false;
-    for (var i = 0; i < this.Right.Symbols.length; i++) {
+    if (this.Right.Dot !== item.Right.Dot )
+		return false;
+	return this.GrammarEquals(item);
+}
+/**
+ * 方法相等，只要求项的符号相等。
+ */
+Item.prototype.GrammarEquals=function(item){
+	if(this.Right.Symbols.length !== item.Right.Symbols.length)
+		return false;
+	for (var i = 0; i < this.Right.Symbols.length; i++) {
         if (!this.Right.Symbols[i].Equals(item.Right.Symbols[i])) 
             return false;
     }
