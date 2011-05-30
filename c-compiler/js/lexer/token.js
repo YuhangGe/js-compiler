@@ -1,28 +1,25 @@
-if(!Abe)
+if(typeof Abe ==='undefined')
 	Abe={};
+
 
 /**
  * 
  * @param {anything} value
  * @param {Abe.Tag} tag
  */
-Abe.Token=function(tag,value){
+Abe.Token=function(value,tag){
 	this.tag=tag;
 	this.value=value;
-	this.objectId=Abe.Token.autoIncId++;
 }
-Abe.Token.autoIncId=0;
+
 Abe.Token.prototype.toString=function(){
 	return this.value;
 }
-Abe.Token.prototype.equals=function(token){
-	return this.objectId===token.objectId;
-}
-Abe.Token.END=new Abe.Token(Abe.Tag.END,'#');
+
+Abe.Token.END=new Abe.Token('#',Abe.Tag.END);
 
 Abe.Num=function(value){
-	this.base(Abe.Tag.NUM);
-	this.value=value;
+	this.base(value,Abe.Tag.NUM);
 }
 Abe.Num.prototype.toString=function(){
 	return ""+this.value;
@@ -30,13 +27,14 @@ Abe.Num.prototype.toString=function(){
 $.inherit(Abe.Num,Abe.Token);
 
 Abe.Word=function(str,tag){
-	this.base(tag);
-	this.lexeme=str;
+	this.base(str,tag);
+	this.lexeme=this.value;
 }
-Abe.prototype.toString=function(){
+Abe.Word.prototype.toString=function(){
 	return this.lexeme;
 }
 $.inherit(Abe.Word,Abe.Token);
+
 Abe.Word.and=new Abe.Word("&&",Abe.Tag.AND);
 Abe.Word.or=new Abe.Word("||",Abe.Tag.OR);
 Abe.Word.eq=new Abe.Word("==",Abe.Tag.EQ);

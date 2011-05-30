@@ -7,9 +7,9 @@ Abe.Action= function(value,type) {
 	this.type=type;
 }
 Abe.Action.prototype.toString= function() {
-	if(this.type===Abe.Table.Action.SHIFT)
+	if(this.type===Abe.Action.SHIFT)
 		return 'S'+this.value;
-	else if(this.type===Abe.Table.Action.REDUCE)
+	else if(this.type===Abe.Action.REDUCE)
 		return 'r'+this.value;
 	else
 		return "Accept"

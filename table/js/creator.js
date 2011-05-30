@@ -274,7 +274,9 @@ _ATCreator.prototype._create_follow_table = function(){
 
 _ATCreator.prototype._output_table = function(){
 	var s_table="";
-	var s_grammar="LR_GRAMMARS=new Array();<br/>";
+	var s_grammar="ABE_LR_GRAMMARS=new Array();<br/>";
+	var s_tag="";
+	var l=/^[a-zA-Z_]+$/;
 	
 	for(var i=0;i<this._init_set.length;i++){
 		s_grammar+=this._generate_grammar(i,this._init_set[i]);
@@ -302,15 +304,23 @@ _ATCreator.prototype._output_table = function(){
     
     for(var i=0;i<this._t_symbols.length;i++){
     	rtn+="<th>"+this._t_symbols[i].Name+"</th>";
+    	if(this._t_symbols[i].Equals(Symbol.END))
+    		s_tag+="END:"+i+"</br>";
+    	else if(l.test(this._t_symbols[i].Name))
+    		s_tag+=this._t_symbols[i].Name.toUpperCase()+":"+i+",</br>";
+    	else
+    		s_tag+="'"+this._t_symbols[i].Name+"':"+i+",</br>";
     }
+    s_tag+="</br>/********************/</br>"
     for(var i=0;i<this._n_symbols.length;i++){
     	rtn+="<th>"+this._n_symbols[i].Name+"</th>";
+    	s_tag+=this._n_symbols[i].Name.toUpperCase()+":"+i+",</br>";
     }
     rtn+="</tr>";
     
-    s_table+="Abe.Table.LR_Table.prototype.initTable=function(){<br/>"	
+    s_table+="Abe.Table.prototype.initTable=function(){<br/>"	
 	+"   for(var i=0;i<"+this._table.length+";i++)<br/>"
-	+"	    this.states[i]=new Abe.Table.State(i);<br/>";
+	+"	    this.states[i]=new Abe.State(i);<br/>";
 	s_table+="<br/>";
 	
     for(var i=0;i<this._table.length;i++){
@@ -372,17 +382,17 @@ _ATCreator.prototype._output_table = function(){
     }
     s_table+="}";
     
-    return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p>";
+    return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p><p>"+s_tag+"</p>";
 }
 _ATCreator.prototype._generate_grammar=function(index,grammar,func){
-	var rtn="LR_GRAMMARS["+index+"]= {<br/>";
+	var rtn="ABE_LR_GRAMMARS["+index+"]= {<br/>";
 	var t1="//"+grammar.Left.Name+"->";
 	var t2="";
 	var idx=0;
 	var s=grammar.Right.Symbols;	
 	for(var i=s.length-1;i>=0;i--){
 		t1+=s[i].Name+' ';
-		t2+="var p"+idx+"=Abe.LR_Stack.pop();//"+s[i].Name+"<br/>";
+		t2+="var p"+idx+"=Abe.Stack.pop();//"+s[i].Name+"<br/>";
 		idx++;
 	}
 	
@@ -397,11 +407,11 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 		rtn+="var value="+func+"("+arg+");<br/>";
 	}
 		rtn+="return {<br/>"
-		rtn+="	symbolIndex:LR_TABLE.SYMBOLS."+grammar.Left.Name+",<br/>";
+		rtn+="	symbolTag:Abe.Tag."+grammar.Left.Name+",<br/>";
 		if(func)	
 		rtn+="value:value<br/>";
 		else
-		rtn+="valeu:p0.value<br/>";
+		rtn+="value:p0.value<br/>";
 		rtn+="}<br/>";	
 	rtn+="}<br/>";
 	rtn+="}<br/>";
@@ -572,22 +582,24 @@ _ATCreator.prototype._get_first_follow = function(){
 			var p=ff_sets[i];
 			var r=p.Right.Symbols;
 			
-			var j,k;//用来进行循环的变量
+			var j=0,k=0;//用来进行循环的变量
 			
 			/**步骤(3.1)---真TM的麻烦啊有木有！！！！**/
 			//首先如果nullable是true就不需要检验了，因为算法中不会出现true改为false的情况
 			if(p.Left.Nullable===false){
 				//此处使用的思想是首先假设Y1...Yk全为nullable,将X的nullable设为true
-				p.Left.Nullable=true;
-				in_change=true;
+				var tmp=true;
 				//然后检验
 				for(j=0;j<r.length;j++){
 					//如果出现某个Yi不为nullable，取消假设
 					if(r[j].Nullable===false){
-						p.Left.Nullable=false;
-						in_change=false;
+						tmp=false;
 						break;
 					}
+				}
+				if(tmp===true){
+					p.Left.Nullable=true;
+					in_change=true;
 				}
 			}
 			
@@ -602,7 +614,7 @@ _ATCreator.prototype._get_first_follow = function(){
 				if(r[j].Nullable===false)
 					break;
 			}
-
+			//$.dprint(in_change);
 			//步骤(3.3)---真TM的麻烦啊有木有！！！！
 			for(j=r.length-1;j>=0;j--){
 				if(r[j].Type===Symbol.NONTERMINAL &&
@@ -612,23 +624,27 @@ _ATCreator.prototype._get_first_follow = function(){
 				if(r[j].Nullable===false)
 					break;
 			}
-					
+			//$.dprint(in_change);		
 			//步骤(3.4)---真TM的麻烦啊有木有！！！！
 			for(j=0;j<r.length-1;j++){
 				if(r[j].Type===Symbol.TERMINATOR)
 					continue;
 				for(k=j+1;k<r.length;k++){
-					if(this._union_symbols(r[j].Follow,r[k].First)===true)
+					if(this._union_symbols(r[j].Follow,r[k].First)===true){
 						in_change=true;
+					}
+						
 					if(r[k].Nullable===false)
 						break;
 				}
 			}
-			
+			//$.dprint(in_change);
 			
 		}
 		changed=in_change;
-		
+		// for(var i=0;i<this._symbols.length;i++)
+			// $.dprint(this._symbols[i]);
+		// $.dprint("--------------------");
 		//if(debug_n>20)//在调试时使用，防止算法没写对陷入死循环。。。
 			//break;
 	}

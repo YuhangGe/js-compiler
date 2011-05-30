@@ -15,14 +15,14 @@ window.onload= function() {
 	var t_f=new Terminator("float");
 	var t_d=new Terminator(",");
 	var t_id=new Terminator("id");
-	var t_nl=new Terminator("new_line");
+	var t_nl=new Terminator(";");
 	
 	
 	var g1=new Item(D);
-	g1.Right.Symbols=[T,L];
+	g1.Right.Symbols=[T,L,t_nl];//[T,L];
 	var g2=new Item(T);
 	g2.Right.Symbols=[t_i];
-	var g3=new Item(T);
+ 	var g3=new Item(T);
 	g3.Right.Symbols=[t_f];
 	var g4=new Item(L);
 	g4.Right.Symbols=[L,t_d,t_id];
@@ -31,7 +31,8 @@ window.onload= function() {
 	var g6=new Item(S);
 	g6.Right.Symbols=[D];
 	var g7=new Item(S);
-	g7.Right.Symbols=[D,t_nl,S];
+	g7.Right.Symbols=[S,D];
+	
 	
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
