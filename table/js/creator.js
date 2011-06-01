@@ -155,7 +155,8 @@ _ATCreator.prototype._create_table = function(){
 				}
 				//对于X_后继，x∈Vt，置ACTION[i][X]=Sj，这里j是该X_后继的项集序号
 				else if(follow.Value.Type===Symbol.TERMINATOR){
-					actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
+					//if(follow.Value!==Symbol.NULL)
+						actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
 				}
 			}
 			//3.对于#U:=u后继，置ACTION[i][a]=rj，这里j是规则U:=u的序号，而a∈U的follow集合，对于follow集合，参见编译原理教材
@@ -274,7 +275,7 @@ _ATCreator.prototype._create_follow_table = function(){
 
 _ATCreator.prototype._output_table = function(){
 	var s_table="";
-	var s_grammar="ABE_LR_GRAMMARS=new Array();<br/>";
+	var s_grammar="ABE_LR_GRAMMARS=new Array();\n";
 	var s_tag="";
 	var l=/^[a-zA-Z_]+$/;
 	
@@ -301,65 +302,86 @@ _ATCreator.prototype._output_table = function(){
     rtn += "<th>state</th>";
     
     
-    
+    var eIndex=-1;
     for(var i=0;i<this._t_symbols.length;i++){
-    	rtn+="<th>"+this._t_symbols[i].Name+"</th>";
-    	if(this._t_symbols[i].Equals(Symbol.END))
-    		s_tag+="END:"+i+"</br>";
-    	else if(l.test(this._t_symbols[i].Name))
-    		s_tag+=this._t_symbols[i].Name.toUpperCase()+":"+i+",</br>";
-    	else
-    		s_tag+="'"+this._t_symbols[i].Name+"':"+i+",</br>";
+    	if(this._t_symbols[i]===Symbol.NULL){
+    		eIndex=i;
+    		//to do
+    	}
+    		rtn+="<th>"+this._t_symbols[i].Name+"</th>";
+	    	if(this._t_symbols[i].Equals(Symbol.END))
+	    		s_tag+="END:"+i+",\n";
+	    	else if(l.test(this._t_symbols[i].Name))
+	    		s_tag+=this._t_symbols[i].Name.toUpperCase()+":"+i+",\n";
+	    	else
+	    		s_tag+="'"+this._t_symbols[i].Name+"':"+i+",\n";
+    	
+    
     }
-    s_tag+="</br>/********************/</br>"
+    
+    $.dprint("ε:"+eIndex);
+    
+    s_tag+="\n/********************/\n"
     for(var i=0;i<this._n_symbols.length;i++){
     	rtn+="<th>"+this._n_symbols[i].Name+"</th>";
-    	s_tag+=this._n_symbols[i].Name.toUpperCase()+":"+i+",</br>";
+    	s_tag+=this._n_symbols[i].Name.toUpperCase()+":"+i+",\n";
     }
     rtn+="</tr>";
     
-    s_table+="Abe.Table.prototype.initTable=function(){<br/>"	
-	+"   for(var i=0;i<"+this._table.length+";i++)<br/>"
-	+"	    this.states[i]=new Abe.State(i);<br/>";
-	s_table+="<br/>";
+    s_table+="Abe.Table.prototype.initTable=function(){\n"	
+
+	s_table+="\n";
 	
     for(var i=0;i<this._table.length;i++){
     	var row=this._table[i];
     	if(!row)
     		continue;
+    	else
+    		s_table+="this.states["+i+"]=new Abe.State("+i+");\n";
     	rtn+="<tr><td>"+i+"</td>";
     	
     	var s_arg="",r_arg="";
     	for(var j=0;j<row[0].length;j++){
     		rtn+="<td>";
-    		var a=row[0][j];
-    		if(a){
-    			if(a.Type===Action.ACCEPT){
-    				s_table+="this.states["+i+"].addAction("+j+",Abe.Table.Action.ACC);";
-    				rtn+="acc";
-    			}
-    			
-    			else if(a.Type===Action.SHIFT){
-    				if(s_arg!=="")
-    					s_arg+=",";
-    				s_arg+="["+j+","+a.Value+"]";
-    				rtn+="S"+a.Value;
-    			}
-    			else {
-    				if(r_arg!=="")
-    					r_arg+=",";
-    				r_arg+="["+j+","+a.Value+"]";
-    				rtn+="r"+a.Value;
-    			}
-    				
-    		}
-    	    rtn+="</td>";
+			var a=row[0][j];
+			if(a) {
+				
+				if(j===eIndex) {
+
+					s_table+="this.states["+i+"].setEmptyAction("+a.Value+");\n";
+				}
+
+				if(a.Type===Action.ACCEPT) {
+					s_table+="this.states["+i+"].addAction("+j+",Abe.Action.ACC);\n";
+					rtn+="acc";
+				} else if(a.Type===Action.SHIFT) {
+					if(j!==eIndex) {
+						if(s_arg!=="")
+							s_arg+=",";
+						s_arg+="["+j+","+a.Value+"]";
+					}
+
+					rtn+="S"+a.Value;
+
+				} else {
+					if(j!==eIndex) {
+						if(r_arg!=="")
+							r_arg+=",";
+						r_arg+="["+j+","+a.Value+"]";
+					}
+
+					rtn+="r"+a.Value;
+				}
+
+			}
+			rtn+="</td>";
+
     	}
     	
     	if(s_arg!=="")
-    		s_table+="this.states["+i+"].quickAddShift("+s_arg+");<br/>";
+    		s_table+="this.states["+i+"].quickAddShift("+s_arg+");\n";
     	if(r_arg!=="")
-    		s_table+="this.states["+i+"].quickAddReduce("+r_arg+");<br/>";
+    		s_table+="this.states["+i+"].quickAddReduce("+r_arg+");\n";
   		
   		var g_arg="";
     	for(var j=0;j<row[1].length;j++){
@@ -374,29 +396,35 @@ _ATCreator.prototype._output_table = function(){
     		rtn+="</td>";
     	}
     	if(g_arg!=="")
-    		s_table+="this.states["+i+"].quickAddGoto("+g_arg+");<br/>";
+    		s_table+="this.states["+i+"].quickAddGoto("+g_arg+");\n";
     	
-    	s_table+="<br/>";
+    	s_table+="\n";
     	
     	rtn+="</tr>";
     }
     s_table+="}";
     
-    return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p><p>"+s_tag+"</p>";
+    return {
+    	'info':rtn,
+    	'tag':s_tag,
+    	'table':s_table,
+    	'grammar':s_grammar
+    }
+   // return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p><p>"+s_tag+"</p>";
 }
 _ATCreator.prototype._generate_grammar=function(index,grammar,func){
-	var rtn="ABE_LR_GRAMMARS["+index+"]= {<br/>";
+	var rtn="ABE_LR_GRAMMARS["+index+"]= {\n";
 	var t1="//"+grammar.Left.Name+"->";
 	var t2="";
 	var idx=0;
 	var s=grammar.Right.Symbols;	
 	for(var i=s.length-1;i>=0;i--){
 		t1+=s[i].Name+' ';
-		t2+="var p"+idx+"=Abe.Stack.pop();//"+s[i].Name+"<br/>";
+		t2+="var p"+idx+"=Abe.Stack.pop();//"+s[i].Name+"\n";
 		idx++;
 	}
 	
-	rtn+=t1+"<br/>reduce: function() {<br/>"+t2;
+	rtn+=t1+"\nreduce: function() {\n"+t2;
 	if(func){
 		var arg="";
 		for(var i=idx-1;i>=0;i--)
@@ -404,17 +432,17 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 				if(arg!=="")
 				arg+=",";
 			arg+="p"+i+".value";}
-		rtn+="var value="+func+"("+arg+");<br/>";
+		rtn+="var value="+func+"("+arg+");\n";
 	}
-		rtn+="return {<br/>"
-		rtn+="	symbolTag:Abe.Tag."+grammar.Left.Name+",<br/>";
+		rtn+="return {\n"
+		rtn+="	symbolTag:Abe.Tag."+grammar.Left.Name.toUpperCase()+",\n";
 		if(func)	
-		rtn+="value:value<br/>";
+		rtn+="value:value\n";
 		else
-		rtn+="value:p0.value<br/>";
-		rtn+="}<br/>";	
-	rtn+="}<br/>";
-	rtn+="}<br/>";
+		rtn+="value:p0.value\n";
+		rtn+="}\n";	
+	rtn+="}\n";
+	rtn+="}\n";
 	
 	return rtn;
 }

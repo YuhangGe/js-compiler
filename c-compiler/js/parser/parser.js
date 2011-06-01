@@ -41,7 +41,7 @@ Abe.Parser.prototype= {
 
 		while (tagS === true && this._error === false) {
 			var look=this.lexer.scan();
-			//$.dprint(look);
+			//$.dprint(look!==null?look.value:'#');
 			if (look===null) {
 				while (tagS)
 					tagS = this.analyze(Abe.Token.END);
@@ -60,20 +60,28 @@ Abe.Parser.prototype= {
 	dispose: function() {
 		this.stack.length=0;
 		this._error = false;
+		this.lexer.reset();
 	},
 	err : function(msg) {
-		alert(msg);
+		document.getElementById("output").value="Error!\n"+this.stack.pop().value;
+		$.dprint("Error");
 		this._error = true;
 	},
 	analyze : function(look) {
-		//Debug.print(symbol);
-		if (look == null) {
+		
+		if (look === null) {
 			this.err("不能识别的符号'" + this.lexer.peek+"'");
 			return false;
 		}
 		
-		var act = this.stack[this.stack.length - 1].state.getAction(look.tag);
+		var state=this.stack[this.stack.length-1].state;
 		
+		var act = state.getAction(look.tag);
+		
+		//如果action是null，检查是否可能存在ε推导
+		if(act==null && (act=state.getEmptyAction())!==null)
+			this.lexer.back(look);//回退一个token
+			
 		if (act == null) {
 			$.dprint(look);
 		
@@ -81,7 +89,7 @@ Abe.Parser.prototype= {
 			return false;
 		}
 		//$.dprint(act);
-		
+	
 		switch (act.type) {
 			case Abe.Action.ACCEPT:
 				document.getElementById("output").value="Success!\n"+this.stack.pop().value;
@@ -94,8 +102,9 @@ Abe.Parser.prototype= {
 				return false;
 				break;
 			case Abe.Action.REDUCE:
+				
 				var U = this.grammar[act.value-1].reduce();
-				//$.dprint(U.value);
+				//$.dprint(U);
 				var go_state = this.stack[this.stack.length - 1].state.getGoto(U.symbolTag);
 				this.stack.push(new Abe.StackElement(this.table.states[go_state], U.symbolTag,U.value));
 				return true;

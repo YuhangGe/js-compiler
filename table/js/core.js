@@ -61,7 +61,7 @@ Symbol.NONTERMINAL = 1;
 
 
 Symbol.END = new Terminator('#');
-Symbol.NULL = new Terminator('null');
+Symbol.NULL = new Terminator('ε');
 Symbol.NULL.Nullable=true;
 
 /**********************************
@@ -116,11 +116,14 @@ ItemSet.prototype.Display = function(){
  * 表示一个项集中的项，诸如 E->T.+F，其中Left表示推导符->的左部E，Right属性表示右部 T.+F
  * @param {Object} left
  */
-function Item(left){
+function Item(left,right_symbols){
     //this._id = Item._auto_increment_id++;//给每一个Item分配一个唯一的id,用于判断是否相同
     this.Left = left; //推导符->的左部，是一个非终结符
     this.Right = new _Right(); //推导符->的右部，是一个Right的类
     this.Follow = new _Follow();
+    if(right_symbols instanceof Array){
+    	this.Right.Symbols=right_symbols;
+    }
 }
 
 //Item._auto_increment_id = 0;

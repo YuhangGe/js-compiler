@@ -6,16 +6,25 @@ if(typeof Abe ==='undefined')
 	Abe={};
 
 Abe.Lexer=function(src){
-	this.line=1;
+	this.line=0;
 	this.peek=' ';
 	this.words={};
-	this.cur_idx=0;
+	this.cur_idx=-1;
 	this.source=src;
 	this.end_idx=this.source.length-1;
-	
+	this.bufToken=null;
 	this.init();
+	
+	//this.read_ch();
+	
 }
 Abe.Lexer.prototype={
+	reset:function(){
+		this.line=0;
+		this.peek=' ';
+		this.cur_idx=-1;
+		this.bufToken=null;
+	},
 	init:function(){
 		this.reserve(new Abe.Word("if",Abe.Tag.IF));
 		this.reserve(new Abe.Word("else",Abe.Tag.ELSE));
@@ -38,11 +47,11 @@ Abe.Lexer.prototype={
 			|| (ch>='A' && ch<='Z'))
 	},
 	read_ch:function(){
-		if(this.cur_idx<=this.end_idx){
-			this.peek=this.source[this.cur_idx];
-			if(this.cur_idx==='\n')
-				this.line++;
+		if(this.cur_idx<this.end_idx){
 			this.cur_idx++;
+			this.peek=this.source[this.cur_idx];
+			if(this.peek ==='\n')
+				this.line++;
 		}else{
 			this.peek=null;
 		}
@@ -51,8 +60,33 @@ Abe.Lexer.prototype={
 	read_the_ch:function(ch){
 		return this.read_ch()===ch;
 	},
+	unread_ch:function(){
+		if(this.peek===null)
+			return;
+		this.cur_idx--;
+		if(this.peek==='\n')
+			this.line--;
+		this.peek=this.source[this.cur_idx];
+	},
 	scan:function(){
-		for(;;this.read_ch()){
+		if(this.bufToken!==null){
+			var rtn=this.bufToken;
+			this.bufToken=null;
+			return rtn;
+		}else{
+			return this.get_token();
+		}
+
+	},
+	/**
+	 * 回退一个token，当遇到 empty符号时，需要
+	 */
+	back:function(token){
+		this.bufToken=token;
+		$.dprint("lexer back:"+token);
+	},
+	get_token:function(){
+		while(this.read_ch()!==null){
 			if(this.peek===' ' || this.peek==='\t')
 				continue;
 			else if(this.peek==='\n')
@@ -108,6 +142,7 @@ Abe.Lexer.prototype={
 			while(this.is_digit(this.read_ch())===true ){
 				word+=this.peek;
 			}
+			this.unread_ch();
 			return new Abe.Num(Number(word));
 		}
 		
@@ -116,6 +151,7 @@ Abe.Lexer.prototype={
 			while(this.is_letter(this.read_ch())===true ){
 				word+=this.peek;
 			}
+			this.unread_ch();
 			var w=this.words[word];
 			if(w)
 				return w;
@@ -125,8 +161,7 @@ Abe.Lexer.prototype={
 				return w;
 			}
 		}
-		var t=new Abe.Token(this.peek,Abe.Tag[this.peek]);
-		this.peek=' ';
-		return t;
+
+		return new Abe.Token(this.peek,Abe.Tag[this.peek]);
 	}
 }

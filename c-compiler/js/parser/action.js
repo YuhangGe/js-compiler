@@ -23,8 +23,17 @@ Abe.State= function(value) {
 	this.vlaue=value;
 	this.action=new Array();
 	this.go_to=new Array();
+	this.emptyAction=null;
 }
 Abe.State.prototype= {
+	setEmptyAction:function(value){
+		if(this.emptyAction!==null)
+			throw "already have set empty action";
+		this.emptyAction=new Abe.Action(value,Abe.Action.SHIFT);
+	},
+	getEmptyAction:function(){
+		return this.emptyAction;
+	},
 	toString: function() {
 		return 'state'+this.value;
 	},
