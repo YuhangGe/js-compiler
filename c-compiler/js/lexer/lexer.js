@@ -6,7 +6,6 @@ if(typeof Abe ==='undefined')
 	Abe={};
 
 Abe.Lexer=function(src){
-	this.line=0;
 	this.peek=' ';
 	this.words={};
 	this.cur_idx=-1;
@@ -18,6 +17,8 @@ Abe.Lexer=function(src){
 	//this.read_ch();
 	
 }
+Abe.Lexer.line=0;
+
 Abe.Lexer.prototype={
 	reset:function(){
 		this.line=0;
@@ -51,7 +52,7 @@ Abe.Lexer.prototype={
 			this.cur_idx++;
 			this.peek=this.source[this.cur_idx];
 			if(this.peek ==='\n')
-				this.line++;
+				Abe.Lexer.line++;
 		}else{
 			this.peek=null;
 		}

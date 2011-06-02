@@ -3,14 +3,14 @@ Abe.Type=function(str,tag,width){
 	this.base(str,tag);
 	this.width=width;
 }
-Abe.Type.prototype.numeric=function(type){
+Abe.Type.numeric=function(type){
 	 if(type===Abe.Type.Char||type===Abe.Type.Int||type===Abe.Type.Byte)
 	 	return true;
 	 else
 	 	return false;
 }
-Abe.Type.prototype.max=function(t1,t2){
-	if(!this.numeric(t1)||!this.numeric(t2))
+Abe.Type.max=function(t1,t2){
+	if(!Abe.Type.numeric(t1)||!Abe.Type.numeric(t2))
 		return null;
 	else if(t1===Abe.Type.Int||t2===Abe.Type.Int)
 		return Abe.Type.Int;
