@@ -152,8 +152,6 @@ Item.prototype.Clone=function(){
  * 严格等，要求项的符号和句点位置一样
  */
 Item.prototype.Equals = function(item){
-    if (!this.Left.Equals(item.Left)) 
-        return false;
     if (this.Right.Dot !== item.Right.Dot )
 		return false;
 	return this.GrammarEquals(item);
@@ -162,6 +160,8 @@ Item.prototype.Equals = function(item){
  * 方法相等，只要求项的符号相等。
  */
 Item.prototype.GrammarEquals=function(item){
+	if (!this.Left.Equals(item.Left)) 
+        return false;
 	if(this.Right.Symbols.length !== item.Right.Symbols.length)
 		return false;
 	for (var i = 0; i < this.Right.Symbols.length; i++) {

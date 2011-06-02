@@ -108,32 +108,43 @@ Abe.Lexer.prototype={
 		case '|':
 			if(this.read_the_ch('|')===true)
 				return Abe.Word.or;
-			else
+			else{
+				this.unread_ch();
 				return new Abe.Token('|',Abe.Tag['|']);
+			}
 			break;
 		case '=':
 			if(this.read_the_ch('=')===true)
 				return Abe.Word.eq;
-			else
+			else{
+				this.unread_ch();
 				return new Abe.Token('=',Abe.Tag['=']);
+			}
+				
 			break;
 		case '!':
 			if(this.read_the_ch('=')===true)
 				return Abe.Word.ne;
-			else
+			else{
+				this.unread_ch();
 				return new Abe.Token('!',Abe.Tag['!']);
+			}
 			break;
 		case '<':
 			if(this.read_the_ch('=')===true)
 				return Abe.Word.le;
-			else
+			else{
+				this.unread_ch();
 				return new Abe.Token('<',Abe.Tag['<']);
+			}
 			break;
 		case '>':
 			if(this.read_the_ch('=')===true)
 				return Abe.Word.ge;
-			else
+			else{
+				this.unread_ch();
 				return new Abe.Token('>',Abe.Tag['>']);
+			}
 			break;
 		}
 		

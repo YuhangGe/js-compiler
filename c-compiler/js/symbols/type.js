@@ -21,10 +21,10 @@ Abe.Type.prototype.max=function(t1,t2){
 }
 $.inherit(Abe.Type,Abe.Word);
 
-Abe.Type.Int=new Abe.Type("int", Abe.Tag.INT,4);
-Abe.Type.Char=new Abe.Type("char" ,Abe.Tag.CHAR,1);
-Abe.Type.Byte=new Abe.Type("byte",Abe.Tag.BYTE,1);
-Abe.Type.Float=new Abe.Type("float",Abe.Tag.FLOAT,4);
+Abe.Type.Int=new Abe.Type("int", Abe.Tag.BASIC,4);
+Abe.Type.Char=new Abe.Type("char" ,Abe.Tag.BASIC,1);
+Abe.Type.Byte=new Abe.Type("byte",Abe.Tag.BASIC,1);
+Abe.Type.Float=new Abe.Type("float",Abe.Tag.BASIC,4);
 Abe.TArray=function(type,size){
 	this.base("[]",Abe.Tag.INDEX,sz*type.widtd);
 	this.of=type;

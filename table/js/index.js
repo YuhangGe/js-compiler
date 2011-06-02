@@ -12,6 +12,12 @@ window.onload= function() {
 	
 	var NUM=new _t('num');
 	var ID= new _t('id');
+	var BASIC=new _t('basic');
+	var IF=new _t('if');
+	var ELSE=new _t('else');
+	var WHILE=new _t('while');
+	var DO=new _t('do');
+	var BREAK=new _t('break');
 	var CON_OR=new _t('OR');
 	var CON_AND=new _t('AND');
 	var CON_EQ=new _t('EQ');
@@ -32,8 +38,16 @@ window.onload= function() {
 	var B_RIGHT=new _t(')');
 	var F_LEFT=new _t('[');
 	var F_RIGHT=new _t(']');
+	var H_LEFT=new _t('{');
+	var H_RIGHT=new _t('}');
 	var ST_END=new _t(';');
 	
+
+	var BLOCK=new _n('block');
+	var DECLS=new _n('decls');
+	var DECL=new _n('decl');
+	var TYPE=new _n('type');
+	var STMTS=new _n('stmts');
 	var STMT=new _n('stmt');
 	var LOC=new _n('loc');
 	var BOOL=new _n("bool");
@@ -46,8 +60,28 @@ window.onload= function() {
 	var FACTOR=new _n('factor');
 	
 	var g=new Array();
+	//g.push(new Item(PROGRAM,[BLOCK]));
+	g.push(new Item(BLOCK,[H_LEFT,DECLS,STMTS,H_RIGHT]));
+	g.push(new Item(DECLS,[DECLS,DECL]));
+	g.push(new Item(DECLS,[Symbol.NULL]));
+	g.push(new Item(DECL,[TYPE,ID,ST_END]));
+	g.push(new Item(TYPE,[TYPE,F_LEFT,NUM,F_RIGHT]));
+	g.push(new Item(TYPE,[BASIC]));
+	g.push(new Item(STMTS,[STMTS,STMT]));
+	g.push(new Item(STMTS,[Symbol.NULL]));
+	
+	//g.push(new Item(STMT,[ID,ST_END]));
+	//g.push(new Item(STMT,[Symbol.NULL]));
+	
 	g.push(new Item(STMT,[LOC,OP_EQ,BOOL,ST_END]));
-	g.push(new Item(STMT,[BOOL,ST_END]));
+	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT]));
+	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,ELSE,STMT]));
+	g.push(new Item(STMT,[WHILE,B_LEFT,BOOL,B_RIGHT,STMT]));
+	g.push(new Item(STMT,[DO,STMT,WHILE,B_LEFT,BOOL,B_RIGHT,ST_END]));
+	g.push(new Item(STMT,[BREAK,ST_END]));
+	g.push(new Item(STMT,[BLOCK]));
+	//g.push(new Item(STMT,[BOOL,ST_END]));
+	
 	g.push(new Item(LOC,[LOC,F_LEFT,BOOL,F_RIGHT]));
 	g.push(new Item(LOC,[ID]));
 	g.push(new Item(BOOL,[BOOL,CON_OR,JOIN]));
@@ -74,43 +108,30 @@ window.onload= function() {
 	g.push(new Item(FACTOR,[NUM]));
 	g.push(new Item(FACTOR,[LOC]));
 	
-	// var S=new Nonterminal("S");
-	// var D=new Nonterminal("D");
-	// var T=new Nonterminal("T");
+	/*
+	 var E=new Nonterminal("E");
+	 var T=new _n("T");
+	 var F=new _n("F");
+	 //var D=new Nonterminal("D");
+	 //var T=new Nonterminal("T");
 	// var L=new Nonterminal("L");
-	// var t_i=new Terminator("int");
-	// var t_f=new Terminator("float");
-	// var t_d=new Terminator(",");
-	// var t_id=new Terminator("id");
-	// var t_end=new Terminator(";");
+	 var t_i=new Terminator("i");
+	 var t_l=new Terminator("(");
+	 var t_r=new Terminator(")");
+	 var t_p=new Terminator("+");
+	 var t_m=new Terminator("*");
 // 	
 // 	
-	// var g=new Array();
-	// g.push(new Item())
+	g.push(new Item(E,[T,F]));
+	g.push(new Item(T,[t_p]));
+	g.push(new Item(T,[Symbol.NULL]));
+	g.push(new Item(F,[t_m]));
+	g.push(new Item(F,[Symbol.NULL]));
 // 	
-	// var g1=new Item(D);
-	// g1.Right.Symbols=[T,L];
-	// var g2=new Item(T);
-	// g2.Right.Symbols=[t_i];
- 	// var g3=new Item(T);
-	// g3.Right.Symbols=[t_f];
-	// var g4=new Item(L);
-	// g4.Right.Symbols=[L,t_d,t_id];
-	// var g5=new Item(L);
-	// g5.Right.Symbols=[t_id];
-	// var g6=new Item(D);
-	// g6.Right.Symbols=[Symbol.NULL];
-	// var g7=new Item(S);
-	// g7.Right.Symbols=[D,t_end];
-	// var g8=new Item(B);
-	// g8.Right.Symbols=[S];
-	// var g9=new Item(B);
-	// g9.Right.Symbols=[B,S]
-// 	
-// 	
+*/
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
-	g_root.Right.Symbols=[STMT,Symbol.END];
+	g_root.Right.Symbols=[BLOCK,Symbol.END];
 
 	
 	AnalysisTableCreator.InitGrammer(g,g_root);

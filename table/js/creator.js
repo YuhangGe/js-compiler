@@ -140,6 +140,8 @@ _ATCreator.prototype._create_table = function(){
 		var gotos=[];
 		actions.length=this._t_symbols.length;
 		gotos.length=this._n_symbols.length;
+		var idx=-1;
+		
 		for(var j=0;j<items.length;j++){
 			var item=items[j];
 			
@@ -147,16 +149,25 @@ _ATCreator.prototype._create_table = function(){
 				var follow=item.Follow;
 				//对于初始项Z'->Z#的Z_后续的#_后续，置ACTION[k][#]=acc，这里，k是Z'->Z#的项集序号
 				if(follow.Value.Equals(Symbol.END)){
-					actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action('#',Action.ACCEPT);
+					idx=this._get_symbol_index(this._t_symbols,follow.Value);
+					if(actions[idx]!=null)
+						$.dprint('action aready exist at '+i+','+idx+" : #");
+					actions[idx]=new Action('#',Action.ACCEPT);
 				}
 				//对于X_后继，x∈Vn，置GOTO[i][X]=j，这里j是该X_后继的项集序号
 				else if(follow.Value.Type==Symbol.NONTERMINAL){
-					gotos[this._get_symbol_index(this._n_symbols,follow.Value)]=follow.Result.Id;
+					idx=this._get_symbol_index(this._n_symbols,follow.Value);
+					if(gotos[idx]!=null && gotos[idx]!==follow.Result.Id)
+						$.dprint('goto aready exist at '+this._item_sets[i].Id+','+follow.Value.Name+" : "+gotos[idx]+" to "+follow.Result.Id);
+					gotos[idx]=follow.Result.Id;
 				}
 				//对于X_后继，x∈Vt，置ACTION[i][X]=Sj，这里j是该X_后继的项集序号
 				else if(follow.Value.Type===Symbol.TERMINATOR){
-					//if(follow.Value!==Symbol.NULL)
-						actions[this._get_symbol_index(this._t_symbols,follow.Value)]=new Action(follow.Result.Id,Action.SHIFT);
+					idx=this._get_symbol_index(this._t_symbols,follow.Value);
+					if(actions[idx]!=null && actions[idx].Value!==follow.Result.Id)
+						//$.dprint(items);
+						$.dprint('action aready exist_1 at '+this._item_sets[i].Id+','+follow.Value.Name+" : "+(actions[idx].Type===Action.SHIFT?'S':'r')+actions[idx].Value+" to S"+follow.Result.Id);
+					actions[idx]=new Action(follow.Result.Id,Action.SHIFT);
 				}
 			}
 			//3.对于#U:=u后继，置ACTION[i][a]=rj，这里j是规则U:=u的序号，而a∈U的follow集合，对于follow集合，参见编译原理教材
@@ -165,9 +176,12 @@ _ATCreator.prototype._create_table = function(){
 			
 				var fset=item.Left.Follow;
 				var rj=this._get_grammar_index(item)+1;//加1是因为还有个init(0)状态
-					//$.dprint(rj);
+				//$.dprint(item.toString()+" : "+rj);
 				for(var k=0;k<fset.length;k++){
-			  		actions[this._get_symbol_index(this._t_symbols,fset[k])]=new Action(rj,Action.REDUCE);
+			  		idx=this._get_symbol_index(this._t_symbols,fset[k]);
+					if(actions[idx]!=null && actions[idx].Value!==rj)
+						$.dprint('action aready exist_2 at '+this._item_sets[i].Id+','+fset[k].Name+" : "+(actions[idx].Type===Action.SHIFT?'S':'r')+actions[idx].Value+" to r"+rj);
+			  		actions[idx]=new Action(rj,Action.REDUCE);
 				}
 			}
 		}
@@ -274,7 +288,8 @@ _ATCreator.prototype._create_follow_table = function(){
 
 
 _ATCreator.prototype._output_table = function(){
-	var s_table="";
+	var s_table="if(!Abe)\n	Abe= {};\nAbe.Table= function() {\n"
+		+"this.states=new Array();\n this.initTable();\n }\n";
 	var s_grammar="ABE_LR_GRAMMARS=new Array();\n";
 	var s_tag="";
 	var l=/^[a-zA-Z_]+$/;
@@ -402,7 +417,7 @@ _ATCreator.prototype._output_table = function(){
     	
     	rtn+="</tr>";
     }
-    s_table+="}";
+    s_table+="}\n ABE_LR_TABLE=new Abe.Table();";
     
     return {
     	'info':rtn,
@@ -679,8 +694,8 @@ _ATCreator.prototype._get_first_follow = function(){
 	
 	//$.dprint(debug_n);
 	//$.dprint('+++++++++++++');
-	for(var i=0;i<this._symbols.length;i++)
-		$.dprint(this._symbols[i]);
+	//for(var i=0;i<this._symbols.length;i++)
+		//$.dprint(this._symbols[i]);
  
 }
 /**

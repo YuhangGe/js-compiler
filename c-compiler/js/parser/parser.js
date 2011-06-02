@@ -106,6 +106,7 @@ Abe.Parser.prototype= {
 				var U = this.grammar[act.value-1].reduce();
 				//$.dprint(U);
 				var go_state = this.stack[this.stack.length - 1].state.getGoto(U.symbolTag);
+				//$.dprint("GOTO:"+go_state);
 				this.stack.push(new Abe.StackElement(this.table.states[go_state], U.symbolTag,U.value));
 				return true;
 				break;
