@@ -61,6 +61,7 @@ Abe.Parser.prototype= {
 		this.stack.length=0;
 		this._error = false;
 		this.lexer.reset();
+		Abe.Out.reset();
 	},
 	err : function(msg) {
 		document.getElementById("output").value="Error!\n"+this.stack.pop().value;
@@ -92,7 +93,7 @@ Abe.Parser.prototype= {
 	
 		switch (act.type) {
 			case Abe.Action.ACCEPT:
-				document.getElementById("output").value="Success!\n"+this.stack.pop().value;
+				document.getElementById("output").value="Success!\n"+Abe.Out.toString();//+this.stack.pop().value;
 				$.dprint("Accept");
 				return false;
 				break;
