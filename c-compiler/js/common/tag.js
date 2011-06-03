@@ -3,13 +3,12 @@
  */
 if(typeof Abe ==='undefined')
 	Abe= {};
-	
-Abe.Reset=function(){
+
+Abe.Reset= function() {
 	Abe.Node.labels=0;
 	Abe.Temp.count=0;
 	Abe.Out.reset();
 }
-
 Abe.Tag= {
 	UNDEF:-1,
 
@@ -61,12 +60,13 @@ Abe.Tag= {
 	STMT:5,
 	LOC:6,
 	BOOL:7,
-	JOIN:8,
-	EQUALITY:9,
-	REL:10,
-	EXPR:11,
-	TERN:12,
-	UNARY:13,
-	FACTOR:14,
+	IF_STMT:8,
+	JOIN:9,
+	EQUALITY:10,
+	REL:11,
+	EXPR:12,
+	TERN:13,
+	UNARY:14,
+	FACTOR:15,
 
 }

@@ -77,19 +77,19 @@ Abe.Table.prototype.initTable= function() {
 
 	this.states[23]=new Abe.State(23);
 	this.states[23].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[23].quickAddGoto([6,51],[7,39],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[23].quickAddGoto([6,51],[7,39],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[24]=new Abe.State(24);
 	this.states[24].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[24].quickAddGoto([6,51],[7,53],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[24].quickAddGoto([6,51],[7,53],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[25]=new Abe.State(25);
 	this.states[25].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[25].quickAddGoto([6,51],[7,67],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[25].quickAddGoto([6,51],[7,67],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[26]=new Abe.State(26);
 	this.states[26].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[26].quickAddGoto([6,51],[7,81],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[26].quickAddGoto([6,51],[7,81],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[27]=new Abe.State(27);
 	this.states[27].quickAddShift([15,95]);
@@ -130,18 +130,18 @@ Abe.Table.prototype.initTable= function() {
 
 	this.states[46]=new Abe.State(46);
 	this.states[46].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[46].quickAddGoto([6,51],[13,109],[14,48]);
+	this.states[46].quickAddGoto([6,51],[14,109],[15,48]);
 
 	this.states[47]=new Abe.State(47);
 	this.states[47].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[47].quickAddGoto([6,51],[13,117],[14,48]);
+	this.states[47].quickAddGoto([6,51],[14,117],[15,48]);
 
 	this.states[48]=new Abe.State(48);
 	this.states[48].quickAddReduce([5,37],[8,37],[13,37],[18,37],[19,37],[20,37],[21,37],[22,37],[23,37],[24,37],[25,37],[26,37],[27,37],[28,37]);
 
 	this.states[49]=new Abe.State(49);
 	this.states[49].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[49].quickAddGoto([6,51],[7,125],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[49].quickAddGoto([6,51],[7,125],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[50]=new Abe.State(50);
 	this.states[50].quickAddReduce([5,39],[8,39],[13,39],[18,39],[19,39],[20,39],[21,39],[22,39],[23,39],[24,39],[25,39],[26,39],[27,39],[28,39]);
@@ -170,47 +170,47 @@ Abe.Table.prototype.initTable= function() {
 
 	this.states[98]=new Abe.State(98);
 	this.states[98].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[98].quickAddGoto([6,51],[8,147],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[98].quickAddGoto([6,51],[9,147],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[99]=new Abe.State(99);
 	this.states[99].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[99].quickAddGoto([6,51],[9,160],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[99].quickAddGoto([6,51],[10,160],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[100]=new Abe.State(100);
 	this.states[100].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[100].quickAddGoto([6,51],[10,172],[11,43],[12,44],[13,45],[14,48]);
+	this.states[100].quickAddGoto([6,51],[11,172],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[101]=new Abe.State(101);
 	this.states[101].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[101].quickAddGoto([6,51],[11,183],[12,44],[13,45],[14,48]);
+	this.states[101].quickAddGoto([6,51],[12,183],[13,44],[14,45],[15,48]);
 
 	this.states[102]=new Abe.State(102);
 	this.states[102].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[102].quickAddGoto([6,51],[12,193],[13,45],[14,48]);
+	this.states[102].quickAddGoto([6,51],[13,193],[14,45],[15,48]);
 
 	this.states[103]=new Abe.State(103);
 	this.states[103].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[103].quickAddGoto([6,51],[12,202],[13,45],[14,48]);
+	this.states[103].quickAddGoto([6,51],[13,202],[14,45],[15,48]);
 
 	this.states[104]=new Abe.State(104);
 	this.states[104].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[104].quickAddGoto([6,51],[11,211],[12,44],[13,45],[14,48]);
+	this.states[104].quickAddGoto([6,51],[12,211],[13,44],[14,45],[15,48]);
 
 	this.states[105]=new Abe.State(105);
 	this.states[105].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[105].quickAddGoto([6,51],[11,221],[12,44],[13,45],[14,48]);
+	this.states[105].quickAddGoto([6,51],[12,221],[13,44],[14,45],[15,48]);
 
 	this.states[106]=new Abe.State(106);
 	this.states[106].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[106].quickAddGoto([6,51],[11,231],[12,44],[13,45],[14,48]);
+	this.states[106].quickAddGoto([6,51],[12,231],[13,44],[14,45],[15,48]);
 
 	this.states[107]=new Abe.State(107);
 	this.states[107].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[107].quickAddGoto([6,51],[13,241],[14,48]);
+	this.states[107].quickAddGoto([6,51],[14,241],[15,48]);
 
 	this.states[108]=new Abe.State(108);
 	this.states[108].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[108].quickAddGoto([6,51],[13,249],[14,48]);
+	this.states[108].quickAddGoto([6,51],[14,249],[15,48]);
 
 	this.states[109]=new Abe.State(109);
 	this.states[109].quickAddReduce([5,35],[8,35],[13,35],[18,35],[19,35],[20,35],[21,35],[22,35],[23,35],[24,35],[25,35],[26,35],[27,35],[28,35]);
@@ -234,7 +234,7 @@ Abe.Table.prototype.initTable= function() {
 
 	this.states[146]=new Abe.State(146);
 	this.states[146].quickAddShift([4,14],[7,50],[12,49],[26,47],[29,46]);
-	this.states[146].quickAddGoto([6,51],[7,277],[8,40],[9,41],[10,42],[11,43],[12,44],[13,45],[14,48]);
+	this.states[146].quickAddGoto([6,51],[7,277],[9,40],[10,41],[11,42],[12,43],[13,44],[14,45],[15,48]);
 
 	this.states[147]=new Abe.State(147);
 	this.states[147].quickAddShift([19,99]);
@@ -281,27 +281,34 @@ Abe.Table.prototype.initTable= function() {
 	this.states[257].quickAddReduce([5,38],[8,38],[13,38],[18,38],[19,38],[20,38],[21,38],[22,38],[23,38],[24,38],[25,38],[26,38],[27,38],[28,38]);
 
 	this.states[259]=new Abe.State(259);
-	//this.states[259].quickAddShift([14,305]);
-	this.states[259].quickAddReduce([14,10],[1,10],[2,10],[4,10],[11,10],[15,10],[16,10],[17,10]);
+	this.states[259].setEmptyAction(307);
+	this.states[259].quickAddShift([14,306]);
+	this.states[259].quickAddGoto([8,305]);
 
 	this.states[268]=new Abe.State(268);
 	this.states[268].quickAddReduce([1,12],[2,12],[4,12],[11,12],[14,12],[15,12],[16,12],[17,12]);
 
 	this.states[277]=new Abe.State(277);
-	this.states[277].quickAddShift([13,306],[18,98]);
+	this.states[277].quickAddShift([13,308],[18,98]);
 
 	this.states[305]=new Abe.State(305);
-	this.states[305].quickAddShift([1,2],[4,14],[11,15],[15,16],[16,17],[17,18]);
-	this.states[305].quickAddGoto([0,19],[5,308],[6,13]);
+	this.states[305].quickAddReduce([1,10],[2,10],[4,10],[11,10],[14,10],[15,10],[16,10],[17,10]);
 
 	this.states[306]=new Abe.State(306);
-	this.states[306].quickAddShift([5,317]);
+	this.states[306].quickAddShift([1,2],[4,14],[11,15],[15,16],[16,17],[17,18]);
+	this.states[306].quickAddGoto([0,19],[5,310],[6,13]);
+
+	this.states[307]=new Abe.State(307);
+	this.states[307].quickAddReduce([1,41],[2,41],[4,41],[11,41],[14,41],[15,41],[16,41],[17,41]);
 
 	this.states[308]=new Abe.State(308);
-	this.states[308].quickAddReduce([1,11],[2,11],[4,11],[11,11],[14,11],[15,11],[16,11],[17,11]);
+	this.states[308].quickAddShift([5,319]);
 
-	this.states[317]=new Abe.State(317);
-	this.states[317].quickAddReduce([1,13],[2,13],[4,13],[11,13],[14,13],[15,13],[16,13],[17,13]);
+	this.states[310]=new Abe.State(310);
+	this.states[310].quickAddReduce([1,11],[2,11],[4,11],[11,11],[14,11],[15,11],[16,11],[17,11]);
+
+	this.states[319]=new Abe.State(319);
+	this.states[319].quickAddReduce([1,13],[2,13],[4,13],[11,13],[14,13],[15,13],[16,13],[17,13]);
 
 }
 ABE_LR_TABLE=new Abe.Table();

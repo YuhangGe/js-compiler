@@ -14,6 +14,7 @@ window.onload= function() {
 	var ID= new _t('id');
 	var BASIC=new _t('basic');
 	var IF=new _t('if');
+	
 	var ELSE=new _t('else');
 	var WHILE=new _t('while');
 	var DO=new _t('do');
@@ -42,6 +43,7 @@ window.onload= function() {
 	var H_RIGHT=new _t('}');
 	var ST_END=new _t(';');
 	
+	var IF_STMT=new _n("if_stmt");
 
 	var BLOCK=new _n('block');
 	var DECLS=new _n('decls');
@@ -60,7 +62,7 @@ window.onload= function() {
 	var FACTOR=new _n('factor');
 	
 	var g=new Array();
-	//g.push(new Item(PROGRAM,[BLOCK]));
+
 	g.push(new Item(BLOCK,[H_LEFT,DECLS,STMTS,H_RIGHT]));
 	g.push(new Item(DECLS,[DECLS,DECL]));
 	g.push(new Item(DECLS,[Symbol.NULL]));
@@ -70,17 +72,17 @@ window.onload= function() {
 	g.push(new Item(STMTS,[STMTS,STMT]));
 	g.push(new Item(STMTS,[Symbol.NULL]));
 	
-	//g.push(new Item(STMT,[ID,ST_END]));
-	//g.push(new Item(STMT,[Symbol.NULL]));
-	
+
 	g.push(new Item(STMT,[LOC,OP_EQ,BOOL,ST_END]));
-	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT]));
-	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,ELSE,STMT]));
+	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,IF_STMT]));
+	g.push(new Item(IF_STMT,[ELSE,STMT]));
+	
+	//g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,ELSE,STMT]));
 	g.push(new Item(STMT,[WHILE,B_LEFT,BOOL,B_RIGHT,STMT]));
 	g.push(new Item(STMT,[DO,STMT,WHILE,B_LEFT,BOOL,B_RIGHT,ST_END]));
 	g.push(new Item(STMT,[BREAK,ST_END]));
 	g.push(new Item(STMT,[BLOCK]));
-	//g.push(new Item(STMT,[BOOL,ST_END]));
+
 	
 	g.push(new Item(LOC,[LOC,F_LEFT,BOOL,F_RIGHT]));
 	g.push(new Item(LOC,[ID]));
@@ -107,7 +109,13 @@ window.onload= function() {
 	g.push(new Item(FACTOR,[B_LEFT,BOOL,B_RIGHT]));
 	g.push(new Item(FACTOR,[NUM]));
 	g.push(new Item(FACTOR,[LOC]));
-	
+	g.push(new Item(IF_STMT,[Symbol.NULL]));
+	//g.push(new Item(BLOCK,[BLOCK,STMT]));
+	//g.push(new Item(BLOCK,[Symbol.NULL]));
+	// g.push(new Item(STMT,[IF,ID,STMT,BLOCK]));
+	// g.push(new Item(BLOCK,[ELSE,STMT]));
+	// g.push(new Item(BLOCK,[Symbol.NULL]));
+	// g.push(new Item(STMT,[BASIC]));
 	/*
 	 var E=new Nonterminal("E");
 	 var T=new _n("T");

@@ -109,6 +109,7 @@ Abe.Access= function(id,expr,type) {
 	this.index=expr;
 }
 Abe.Access.prototype.gen= function() {
+	$.dprint('access gen');
 	return new Abe.Access(this.array,this.index.reduce(),this.type)	;
 }
 Abe.Access.prototype.jumping= function(t,f) {

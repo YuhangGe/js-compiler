@@ -119,7 +119,7 @@ Abe.SetElem= function(access,expr) {
 Abe.SetElem.prototype= {
 	gen: function(b,a) {
 		var s1=this.index.reduce().toString();
-		var s2=this.index.reduce().toString();
+		var s2=this.expr.reduce().toString();
 		this.emit(this.array.toString()+" [ "+s1+" ] = "+s2);
 	},
 	toString:undefined

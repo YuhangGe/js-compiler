@@ -93,9 +93,10 @@ Abe.Parser.prototype= {
 	
 		switch (act.type) {
 			case Abe.Action.ACCEPT:
+				$.dprint("Accept");
 				last_reduce();
 				document.getElementById("output").value="Success!\n"+Abe.Out.toString();//+this.stack.pop().value;
-				$.dprint("Accept");
+			
 				return false;
 				break;
 			case Abe.Action.SHIFT:

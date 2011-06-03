@@ -69,15 +69,31 @@ function func_8_stmt(loc,p1,bool,p3) {
 	
 }
 
-function func_9_stmt(_if,p1,bool,p3,stmt) {
-	//stmt->if ( bool ) stmt
-	return new Abe.If(bool,stmt);
+function func_9_stmt(_if,p1,bool,p3,stmt,_if_stmt){
+//stmt->if ( bool ) stmt if_stmt 
+	$.dprint('stmt->if ( bool ) stmt if_stmt ');
+	if(_if_stmt===null){
+		return new Abe.If(bool,stmt);
+	}else{
+		return new Abe.Else(bool,stmt,_if_stmt);
+	}
+	
+}
+function func_10_if_stmt(_else,stmt){
+//if_stmt->else stmt 
+	$.dprint('if_stmt->else stmt');
+	return stmt;
 }
 
-function func_10_stmt(_if,p1,bool,p3,stmt1,_else,stmt2) {
-	//stmt->if ( bool ) stmt else stmt
-	return new Abe.Else(bool,stmt1,stmt2);
-}
+// function func_9_stmt(_if,p1,bool,p3,stmt) {
+	// //stmt->if ( bool ) stmt
+	// return new Abe.If(bool,stmt);
+// }
+// 
+// function func_10_stmt(_if,p1,bool,p3,stmt1,_else,stmt2) {
+	// //stmt->if ( bool ) stmt else stmt
+	// return new Abe.Else(bool,stmt1,stmt2);
+// }
 
 function func_11_stmt(_while,p1,bool,p3,stmt) {
 	//stmt->while ( bool ) stmt
@@ -108,6 +124,7 @@ function func_14_stmt(block) {
 
 function func_15_loc(loc,p1,bool,p3) {
 	//loc->loc [ bool ]
+	$.dprint("loc->loc[bool]");
 	//return new Abe.Id(loc,Abe.Type.Int,bool);
 	return new Abe.Access(loc,bool,Abe.Type.Int);
 }
@@ -233,4 +250,9 @@ function func_38_factor(num) {
 function func_39_factor(loc) {
 	//factor->loc
 	return loc;
+}
+function func_40_if_stmt(p0){
+	//if_stmt->ε 
+	$.dprint('if_stmt->ε');
+	return null;
 }

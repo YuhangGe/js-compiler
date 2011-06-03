@@ -112,14 +112,15 @@ ABE_LR_GRAMMARS[8]= {
 	}
 }
 ABE_LR_GRAMMARS[9]= {
-	//stmt->if ( bool ) stmt
+	//stmt->if ( bool ) stmt if_stmt
 	reduce: function() {
-		var p0=Abe.Stack.pop().value;//stmt
-		var p1=Abe.Stack.pop().value;//)
-		var p2=Abe.Stack.pop().value;//bool
-		var p3=Abe.Stack.pop().value;//(
-		var p4=Abe.Stack.pop().value;//if
-		var value=func_9_stmt(p4,p3,p2,p1,p0);
+		var p0=Abe.Stack.pop().value;//if_stmt
+		var p1=Abe.Stack.pop().value;//stmt
+		var p2=Abe.Stack.pop().value;//)
+		var p3=Abe.Stack.pop().value;//bool
+		var p4=Abe.Stack.pop().value;//(
+		var p5=Abe.Stack.pop().value;//if
+		var value=func_9_stmt(p5,p4,p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
 			value:value
@@ -127,18 +128,13 @@ ABE_LR_GRAMMARS[9]= {
 	}
 }
 ABE_LR_GRAMMARS[10]= {
-	//stmt->if ( bool ) stmt else stmt
+	//if_stmt->else stmt
 	reduce: function() {
 		var p0=Abe.Stack.pop().value;//stmt
 		var p1=Abe.Stack.pop().value;//else
-		var p2=Abe.Stack.pop().value;//stmt
-		var p3=Abe.Stack.pop().value;//)
-		var p4=Abe.Stack.pop().value;//bool
-		var p5=Abe.Stack.pop().value;//(
-		var p6=Abe.Stack.pop().value;//if
-		var value=func_10_stmt(p6,p5,p4,p3,p2,p1,p0);
+		var value=func_10_if_stmt(p1,p0);
 		return {
-			symbolTag:Abe.Tag.STMT,
+			symbolTag:Abe.Tag.IF_STMT,
 			value:value
 		}
 	}
@@ -498,6 +494,17 @@ ABE_LR_GRAMMARS[39]= {
 		var value=func_39_factor(p0);
 		return {
 			symbolTag:Abe.Tag.FACTOR,
+			value:value
+		}
+	}
+}
+ABE_LR_GRAMMARS[40]= {
+	//if_stmt->ε
+	reduce: function() {
+		var p0=Abe.Stack.pop().value;//ε
+		var value=func_40_if_stmt(p0);
+		return {
+			symbolTag:Abe.Tag.IF_STMT,
 			value:value
 		}
 	}
