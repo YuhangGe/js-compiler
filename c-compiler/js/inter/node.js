@@ -3,13 +3,14 @@ if(!Abe)
 
 Abe.Node= function() {
 	this.lexline=Abe.Lexer.line;
-	this.labels=0;
+
 }
+Abe.Node.labels=0;
 Abe.Node.prototype.error= function(s) {
 	throw "error: "+s;
 }
 Abe.Node.prototype.newlabel= function() {
-	return ++this.labels;
+	return ++Abe.Node.labels;
 }
 Abe.Node.prototype.emitlabel= function(i) {
 	Abe.Out.print("L"+i+":");
@@ -18,6 +19,7 @@ Abe.Node.prototype.emit= function(s) {
 	Abe.Out.print("\t"+s+"\n");
 }
 Abe.Expr= function(token,type) {
+	this.base();
 	this.op=token;
 	this.type=type;
 }
@@ -43,7 +45,7 @@ Abe.Expr.prototype.emitjumps= function(str,t,f) {
 	}
 }
 Abe.Expr.prototype.toString= function() {
-	return op.toString();
+	return this.op.toString();
 }
 $.inherit(Abe.Expr,Abe.Node);
 
@@ -51,17 +53,24 @@ Abe.Id= function(id,type,offset) {
 	this.base(id,type);
 	this.offset=offset;
 }
-$.inherit(Abe.Ip,Abe.Expr);
+Abe.Id.prototype= {
+	toString:undefined
+};
+$.inherit(Abe.Id,Abe.Expr);
 
 Abe.Op= function(token,type) {
 	this.base(token,type);
 }
-Abe.Op.prototype.reduce= function() {
-	var x=this.gen();
-	var t=new Abe.Temp(this.type);
-	this.emit(t.toString()+" = "+x.toString());
-	return t;
+Abe.Op.prototype= {
+	reduce: function() {
+		var x=this.gen();
+		var t=new Abe.Temp(this.type);
+		this.emit(t.toString()+" = "+x.toString());
+		return t;
+	},
+	toString:undefined
 }
+
 $.inherit(Abe.Op,Abe.Expr);
 
 Abe.Arith= function(token,expr1,expr2) {
@@ -72,37 +81,35 @@ Abe.Arith= function(token,expr1,expr2) {
 	if(this.type===null)
 		this.error("type error!");
 }
-Abe.Arith.prototype.gen=function(){
+Abe.Arith.prototype.gen= function() {
 	return new Abe.Arith(this.op,this.expr1.reduce(),this.expr2.reduce());
 }
-Abe.Arith.prototype.toString=function(){
+Abe.Arith.prototype.toString= function() {
 	return this.expr1.toString()+" "+this.op.toString()+" "+this.expr2.toString();
 }
 $.inherit(Abe.Arith,Abe.Op);
 
-Abe.Temp=function(type){
+Abe.Temp= function(type) {
 	this.base(Abe.Word.temp,type);
 	this.number=++Abe.Temp.count;
-	
+
 }
 Abe.Temp.count=0;
-Abe.Temp.prototype.toString=function(){
+Abe.Temp.prototype.toString= function() {
 	return "t"+this.number;
 }
 $.inherit(Abe.Temp,Abe.Expr);
 
-Abe.Unary=function(token,expr){
+Abe.Unary= function(token,expr) {
 	this.base(token,null);
 	this.expr=expr;
 	this.type=Abe.Type.max(Abe.Type.Int,expr.type);
 	if(this.type===null)
 		this.error("type error!");
 }
-Abe.Unary.prototype.gen=function(){
+Abe.Unary.prototype.gen= function() {
 	return new Abe.Unary(this.op,this.expr.reduce());
 }
-Abe.Unary.prototype.toString=function(){
+Abe.Unary.prototype.toString= function() {
 	return this.op.toString()+" "+this.expr.toString();
 }
-
-

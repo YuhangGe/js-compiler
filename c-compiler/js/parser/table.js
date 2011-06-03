@@ -281,8 +281,8 @@ Abe.Table.prototype.initTable= function() {
 	this.states[257].quickAddReduce([5,38],[8,38],[13,38],[18,38],[19,38],[20,38],[21,38],[22,38],[23,38],[24,38],[25,38],[26,38],[27,38],[28,38]);
 
 	this.states[259]=new Abe.State(259);
-	this.states[259].quickAddShift([14,305]);
-	this.states[259].quickAddReduce([1,10],[2,10],[4,10],[11,10],[15,10],[16,10],[17,10]);
+	//this.states[259].quickAddShift([14,305]);
+	this.states[259].quickAddReduce([14,10],[1,10],[2,10],[4,10],[11,10],[15,10],[16,10],[17,10]);
 
 	this.states[268]=new Abe.State(268);
 	this.states[268].quickAddReduce([1,12],[2,12],[4,12],[11,12],[14,12],[15,12],[16,12],[17,12]);

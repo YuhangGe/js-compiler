@@ -84,7 +84,7 @@ Abe.Lexer.prototype={
 	 */
 	back:function(token){
 		this.bufToken=token;
-		$.dprint("lexer back:"+token);
+		//$.dprint("lexer back:"+token);
 	},
 	get_token:function(){
 		while(this.read_ch()!==null){

@@ -19,18 +19,23 @@ Abe.Type.max=function(t1,t2){
 	else
 		return Abe.Type.Char;
 }
+Abe.Type.prototype={
+	toString:undefined
+};
 $.inherit(Abe.Type,Abe.Word);
 
 Abe.Type.Int=new Abe.Type("int", Abe.Tag.BASIC,4);
 Abe.Type.Char=new Abe.Type("char" ,Abe.Tag.BASIC,1);
 Abe.Type.Byte=new Abe.Type("byte",Abe.Tag.BASIC,1);
 Abe.Type.Float=new Abe.Type("float",Abe.Tag.BASIC,4);
+
+
 Abe.TArray=function(type,size){
-	this.base("[]",Abe.Tag.INDEX,sz*type.widtd);
+	this.base("[]",Abe.Tag.INDEX,size*type.width);
 	this.of=type;
 	this.size=size;
 }
 Abe.TArray.prototype.toString=function(){
-	return "["+size+"] "+of.toString();
+	return "["+this.size+"] "+this.of.toString();
 }
-$.inherit(Abe.Type,Abe.TArray);
+$.inherit(Abe.TArray,Abe.Type);

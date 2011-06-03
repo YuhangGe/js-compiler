@@ -290,12 +290,15 @@ _ATCreator.prototype._create_follow_table = function(){
 _ATCreator.prototype._output_table = function(){
 	var s_table="if(!Abe)\n	Abe= {};\nAbe.Table= function() {\n"
 		+"this.states=new Array();\n this.initTable();\n }\n";
-	var s_grammar="ABE_LR_GRAMMARS=new Array();\n";
+	var s_reduce="ABE_LR_GRAMMARS=new Array();\n";
+	var s_grammar="";
 	var s_tag="";
 	var l=/^[a-zA-Z_]+$/;
 	
 	for(var i=0;i<this._init_set.length;i++){
-		s_grammar+=this._generate_grammar(i,this._init_set[i]);
+		var tmp_g=this._generate_grammar(i,this._init_set[i]);
+		s_reduce+=tmp_g[0];
+		s_grammar+=tmp_g[1];
 	}
 	
     var rtn = "<style>.t{display:table-cell;margin-left:20px;border-right:1px solid blue;width:50%;}</style><ul style='list-style:none;width:100%;'>";
@@ -423,30 +426,49 @@ _ATCreator.prototype._output_table = function(){
     	'info':rtn,
     	'tag':s_tag,
     	'table':s_table,
+    	'reduce':s_reduce,
     	'grammar':s_grammar
     }
    // return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p><p>"+s_tag+"</p>";
 }
 _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 	var rtn="ABE_LR_GRAMMARS["+index+"]= {\n";
+	var rtn_func=null;
 	var t1="//"+grammar.Left.Name+"->";
 	var t2="";
 	var idx=0;
 	var s=grammar.Right.Symbols;	
 	for(var i=s.length-1;i>=0;i--){
-		t1+=s[i].Name+' ';
-		t2+="var p"+idx+"=Abe.Stack.pop();//"+s[i].Name+"\n";
+		t1+=s[s.length-1-i].Name+' ';
+		t2+="var p"+idx+"=Abe.Stack.pop().value;//"+s[i].Name+"\n";
 		idx++;
 	}
-	
+	func="func_"+index+"_"+grammar.Left.Name;
+
 	rtn+=t1+"\nreduce: function() {\n"+t2;
 	if(func){
 		var arg="";
+		var arg_2="";
+		var r_t=/[^a-zA-Z0-9_]+/
+		var r_key=/(if)|(while)|(do)|(else)|(break)|(function)|(var)|(for)/i
 		for(var i=idx-1;i>=0;i--)
 			{
-				if(arg!=="")
-				arg+=",";
-			arg+="p"+i+".value";}
+				if(arg!==""){
+					arg+=",";
+					arg_2+=",";
+				}
+			//if(s[idx-1-i].Type===Symbol.NONTERMINAL)
+			var n=s[idx-1-i].Name;
+			if(r_t.test(n)===true)
+				arg_2+="p"+(idx-1-i);
+			else if(r_key.test(n)===false)
+				arg_2+=n;
+			else{
+				arg_2+='_'+n;
+			}
+			///	
+			arg+="p"+i;
+		}
 		rtn+="var value="+func+"("+arg+");\n";
 	}
 		rtn+="return {\n"
@@ -454,12 +476,13 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 		if(func)	
 		rtn+="value:value\n";
 		else
-		rtn+="value:p0.value\n";
+		rtn+="value:p0\n";
 		rtn+="}\n";	
 	rtn+="}\n";
 	rtn+="}\n";
 	
-	return rtn;
+	rtn_func="function "+func+"("+arg_2+"){\n"+t1+"\n}\n";
+	return [rtn,rtn_func];
 }
 /**
  * 递归生成表

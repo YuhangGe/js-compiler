@@ -142,5 +142,6 @@ window.onload= function() {
 	$('#info').html(r.info);
 	$('#tag').attr('value',r.tag);
 	$('#table').attr('value',r.table);
+	$('#reduce').attr('value',r.reduce);
 	$('#grammar').attr('value',r.grammar);
 }

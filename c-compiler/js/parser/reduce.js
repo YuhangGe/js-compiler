@@ -1,464 +1,504 @@
 ABE_LR_GRAMMARS=new Array();
 ABE_LR_GRAMMARS[0]= {
-	//block->} stmts decls {
+	//block->{ decls stmts }
 	reduce: function() {
-		var p0=Abe.Stack.pop();//}
-		var p1=Abe.Stack.pop();//stmts
-		var p2=Abe.Stack.pop();//decls
-		var p3=Abe.Stack.pop();//{
+		var p0=Abe.Stack.pop().value;//}
+		var p1=Abe.Stack.pop().value;//stmts
+		var p2=Abe.Stack.pop().value;//decls
+		var p3=Abe.Stack.pop().value;//{
+		var value=func_0_block(p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.BLOCK,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[1]= {
-	//decls->decl decls
+	//decls->decls decl
 	reduce: function() {
-		var p0=Abe.Stack.pop();//decl
-		var p1=Abe.Stack.pop();//decls
+		var p0=Abe.Stack.pop().value;//decl
+		var p1=Abe.Stack.pop().value;//decls
+		var value=func_1_decls(p1,p0);
 		return {
 			symbolTag:Abe.Tag.DECLS,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[2]= {
 	//decls->ε
 	reduce: function() {
-		var p0=Abe.Stack.pop();//ε
+		var p0=Abe.Stack.pop().value;//ε
+		var value=func_2_decls(p0);
 		return {
 			symbolTag:Abe.Tag.DECLS,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[3]= {
-	//decl->; id type
+	//decl->type id ;
 	reduce: function() {
-		var p0=Abe.Stack.pop();//;
-		var p1=Abe.Stack.pop();//id
-		var p2=Abe.Stack.pop();//type
+		var p0=Abe.Stack.pop().value;//;
+		var p1=Abe.Stack.pop().value;//id
+		var p2=Abe.Stack.pop().value;//type
+		var value=func_3_decl(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.DECL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[4]= {
-	//type->] num [ type
+	//type->type [ num ]
 	reduce: function() {
-		var p0=Abe.Stack.pop();//]
-		var p1=Abe.Stack.pop();//num
-		var p2=Abe.Stack.pop();//[
-		var p3=Abe.Stack.pop();//type
+		var p0=Abe.Stack.pop().value;//]
+		var p1=Abe.Stack.pop().value;//num
+		var p2=Abe.Stack.pop().value;//[
+		var p3=Abe.Stack.pop().value;//type
+		var value=func_4_type(p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.TYPE,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[5]= {
 	//type->basic
 	reduce: function() {
-		var p0=Abe.Stack.pop();//basic
+		var p0=Abe.Stack.pop().value;//basic
+		var value=func_5_type(p0);
 		return {
 			symbolTag:Abe.Tag.TYPE,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[6]= {
-	//stmts->stmt stmts
+	//stmts->stmts stmt
 	reduce: function() {
-		var p0=Abe.Stack.pop();//stmt
-		var p1=Abe.Stack.pop();//stmts
+		var p0=Abe.Stack.pop().value;//stmt
+		var p1=Abe.Stack.pop().value;//stmts
+		var value=func_6_stmts(p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMTS,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[7]= {
 	//stmts->ε
 	reduce: function() {
-		var p0=Abe.Stack.pop();//ε
+		var p0=Abe.Stack.pop().value;//ε
+		var value=func_7_stmts(p0);
 		return {
 			symbolTag:Abe.Tag.STMTS,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[8]= {
-	//stmt->; bool = loc
+	//stmt->loc = bool ;
 	reduce: function() {
-		var p0=Abe.Stack.pop();//;
-		var p1=Abe.Stack.pop();//bool
-		var p2=Abe.Stack.pop();//=
-		var p3=Abe.Stack.pop();//loc
+		var p0=Abe.Stack.pop().value;//;
+		var p1=Abe.Stack.pop().value;//bool
+		var p2=Abe.Stack.pop().value;//=
+		var p3=Abe.Stack.pop().value;//loc
+		var value=func_8_stmt(p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[9]= {
-	//stmt->stmt ) bool ( if
+	//stmt->if ( bool ) stmt
 	reduce: function() {
-		var p0=Abe.Stack.pop();//stmt
-		var p1=Abe.Stack.pop();//)
-		var p2=Abe.Stack.pop();//bool
-		var p3=Abe.Stack.pop();//(
-		var p4=Abe.Stack.pop();//if
+		var p0=Abe.Stack.pop().value;//stmt
+		var p1=Abe.Stack.pop().value;//)
+		var p2=Abe.Stack.pop().value;//bool
+		var p3=Abe.Stack.pop().value;//(
+		var p4=Abe.Stack.pop().value;//if
+		var value=func_9_stmt(p4,p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[10]= {
-	//stmt->stmt else stmt ) bool ( if
+	//stmt->if ( bool ) stmt else stmt
 	reduce: function() {
-		var p0=Abe.Stack.pop();//stmt
-		var p1=Abe.Stack.pop();//else
-		var p2=Abe.Stack.pop();//stmt
-		var p3=Abe.Stack.pop();//)
-		var p4=Abe.Stack.pop();//bool
-		var p5=Abe.Stack.pop();//(
-		var p6=Abe.Stack.pop();//if
+		var p0=Abe.Stack.pop().value;//stmt
+		var p1=Abe.Stack.pop().value;//else
+		var p2=Abe.Stack.pop().value;//stmt
+		var p3=Abe.Stack.pop().value;//)
+		var p4=Abe.Stack.pop().value;//bool
+		var p5=Abe.Stack.pop().value;//(
+		var p6=Abe.Stack.pop().value;//if
+		var value=func_10_stmt(p6,p5,p4,p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[11]= {
-	//stmt->stmt ) bool ( while
+	//stmt->while ( bool ) stmt
 	reduce: function() {
-		var p0=Abe.Stack.pop();//stmt
-		var p1=Abe.Stack.pop();//)
-		var p2=Abe.Stack.pop();//bool
-		var p3=Abe.Stack.pop();//(
-		var p4=Abe.Stack.pop();//while
+		var p0=Abe.Stack.pop().value;//stmt
+		var p1=Abe.Stack.pop().value;//)
+		var p2=Abe.Stack.pop().value;//bool
+		var p3=Abe.Stack.pop().value;//(
+		var p4=Abe.Stack.pop().value;//while
+		var value=func_11_stmt(p4,p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[12]= {
-	//stmt->; ) bool ( while stmt do
+	//stmt->do stmt while ( bool ) ;
 	reduce: function() {
-		var p0=Abe.Stack.pop();//;
-		var p1=Abe.Stack.pop();//)
-		var p2=Abe.Stack.pop();//bool
-		var p3=Abe.Stack.pop();//(
-		var p4=Abe.Stack.pop();//while
-		var p5=Abe.Stack.pop();//stmt
-		var p6=Abe.Stack.pop();//do
+		var p0=Abe.Stack.pop().value;//;
+		var p1=Abe.Stack.pop().value;//)
+		var p2=Abe.Stack.pop().value;//bool
+		var p3=Abe.Stack.pop().value;//(
+		var p4=Abe.Stack.pop().value;//while
+		var p5=Abe.Stack.pop().value;//stmt
+		var p6=Abe.Stack.pop().value;//do
+		var value=func_12_stmt(p6,p5,p4,p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[13]= {
-	//stmt->; break
+	//stmt->break ;
 	reduce: function() {
-		var p0=Abe.Stack.pop();//;
-		var p1=Abe.Stack.pop();//break
+		var p0=Abe.Stack.pop().value;//;
+		var p1=Abe.Stack.pop().value;//break
+		var value=func_13_stmt(p1,p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[14]= {
 	//stmt->block
 	reduce: function() {
-		var p0=Abe.Stack.pop();//block
+		var p0=Abe.Stack.pop().value;//block
+		var value=func_14_stmt(p0);
 		return {
 			symbolTag:Abe.Tag.STMT,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[15]= {
-	//loc->] bool [ loc
+	//loc->loc [ bool ]
 	reduce: function() {
-		var p0=Abe.Stack.pop();//]
-		var p1=Abe.Stack.pop();//bool
-		var p2=Abe.Stack.pop();//[
-		var p3=Abe.Stack.pop();//loc
+		var p0=Abe.Stack.pop().value;//]
+		var p1=Abe.Stack.pop().value;//bool
+		var p2=Abe.Stack.pop().value;//[
+		var p3=Abe.Stack.pop().value;//loc
+		var value=func_15_loc(p3,p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.LOC,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[16]= {
 	//loc->id
 	reduce: function() {
-		var p0=Abe.Stack.pop();//id
+		var p0=Abe.Stack.pop().value;//id
+		var value=func_16_loc(p0);
 		return {
 			symbolTag:Abe.Tag.LOC,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[17]= {
-	//bool->join OR bool
+	//bool->bool OR join
 	reduce: function() {
-		var p0=Abe.Stack.pop();//join
-		var p1=Abe.Stack.pop();//OR
-		var p2=Abe.Stack.pop();//bool
+		var p0=Abe.Stack.pop().value;//join
+		var p1=Abe.Stack.pop().value;//OR
+		var p2=Abe.Stack.pop().value;//bool
+		var value=func_17_bool(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.BOOL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[18]= {
 	//bool->join
 	reduce: function() {
-		var p0=Abe.Stack.pop();//join
+		var p0=Abe.Stack.pop().value;//join
+		var value=func_18_bool(p0);
 		return {
 			symbolTag:Abe.Tag.BOOL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[19]= {
-	//join->equality AND join
+	//join->join AND equality
 	reduce: function() {
-		var p0=Abe.Stack.pop();//equality
-		var p1=Abe.Stack.pop();//AND
-		var p2=Abe.Stack.pop();//join
+		var p0=Abe.Stack.pop().value;//equality
+		var p1=Abe.Stack.pop().value;//AND
+		var p2=Abe.Stack.pop().value;//join
+		var value=func_19_join(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.JOIN,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[20]= {
 	//join->equality
 	reduce: function() {
-		var p0=Abe.Stack.pop();//equality
+		var p0=Abe.Stack.pop().value;//equality
+		var value=func_20_join(p0);
 		return {
 			symbolTag:Abe.Tag.JOIN,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[21]= {
-	//equality->rel EQ equality
+	//equality->equality EQ rel
 	reduce: function() {
-		var p0=Abe.Stack.pop();//rel
-		var p1=Abe.Stack.pop();//EQ
-		var p2=Abe.Stack.pop();//equality
+		var p0=Abe.Stack.pop().value;//rel
+		var p1=Abe.Stack.pop().value;//EQ
+		var p2=Abe.Stack.pop().value;//equality
+		var value=func_21_equality(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.EQUALITY,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[22]= {
 	//equality->rel
 	reduce: function() {
-		var p0=Abe.Stack.pop();//rel
+		var p0=Abe.Stack.pop().value;//rel
+		var value=func_22_equality(p0);
 		return {
 			symbolTag:Abe.Tag.EQUALITY,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[23]= {
 	//rel->expr < expr
 	reduce: function() {
-		var p0=Abe.Stack.pop();//expr
-		var p1=Abe.Stack.pop();//<
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//expr
+		var p1=Abe.Stack.pop().value;//<
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_23_rel(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.REL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[24]= {
 	//rel->expr LE expr
 	reduce: function() {
-		var p0=Abe.Stack.pop();//expr
-		var p1=Abe.Stack.pop();//LE
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//expr
+		var p1=Abe.Stack.pop().value;//LE
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_24_rel(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.REL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[25]= {
 	//rel->expr > expr
 	reduce: function() {
-		var p0=Abe.Stack.pop();//expr
-		var p1=Abe.Stack.pop();//>
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//expr
+		var p1=Abe.Stack.pop().value;//>
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_25_rel(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.REL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[26]= {
 	//rel->expr GE expr
 	reduce: function() {
-		var p0=Abe.Stack.pop();//expr
-		var p1=Abe.Stack.pop();//GE
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//expr
+		var p1=Abe.Stack.pop().value;//GE
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_26_rel(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.REL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[27]= {
 	//rel->expr
 	reduce: function() {
-		var p0=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//expr
+		var value=func_27_rel(p0);
 		return {
 			symbolTag:Abe.Tag.REL,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[28]= {
-	//expr->tern + expr
+	//expr->expr + tern
 	reduce: function() {
-		var p0=Abe.Stack.pop();//tern
-		var p1=Abe.Stack.pop();//+
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//tern
+		var p1=Abe.Stack.pop().value;//+
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_28_expr(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.EXPR,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[29]= {
-	//expr->tern - expr
+	//expr->expr - tern
 	reduce: function() {
-		var p0=Abe.Stack.pop();//tern
-		var p1=Abe.Stack.pop();//-
-		var p2=Abe.Stack.pop();//expr
+		var p0=Abe.Stack.pop().value;//tern
+		var p1=Abe.Stack.pop().value;//-
+		var p2=Abe.Stack.pop().value;//expr
+		var value=func_29_expr(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.EXPR,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[30]= {
 	//expr->tern
 	reduce: function() {
-		var p0=Abe.Stack.pop();//tern
+		var p0=Abe.Stack.pop().value;//tern
+		var value=func_30_expr(p0);
 		return {
 			symbolTag:Abe.Tag.EXPR,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[31]= {
-	//tern->unary * tern
+	//tern->tern * unary
 	reduce: function() {
-		var p0=Abe.Stack.pop();//unary
-		var p1=Abe.Stack.pop();//*
-		var p2=Abe.Stack.pop();//tern
+		var p0=Abe.Stack.pop().value;//unary
+		var p1=Abe.Stack.pop().value;//*
+		var p2=Abe.Stack.pop().value;//tern
+		var value=func_31_tern(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.TERN,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[32]= {
-	//tern->unary / tern
+	//tern->tern / unary
 	reduce: function() {
-		var p0=Abe.Stack.pop();//unary
-		var p1=Abe.Stack.pop();///
-		var p2=Abe.Stack.pop();//tern
+		var p0=Abe.Stack.pop().value;//unary
+		var p1=Abe.Stack.pop().value;///
+		var p2=Abe.Stack.pop().value;//tern
+		var value=func_32_tern(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.TERN,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[33]= {
 	//tern->unary
 	reduce: function() {
-		var p0=Abe.Stack.pop();//unary
+		var p0=Abe.Stack.pop().value;//unary
+		var value=func_33_tern(p0);
 		return {
 			symbolTag:Abe.Tag.TERN,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[34]= {
-	//unary->unary !
+	//unary->! unary
 	reduce: function() {
-		var p0=Abe.Stack.pop();//unary
-		var p1=Abe.Stack.pop();//!
+		var p0=Abe.Stack.pop().value;//unary
+		var p1=Abe.Stack.pop().value;//!
+		var value=func_34_unary(p1,p0);
 		return {
 			symbolTag:Abe.Tag.UNARY,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[35]= {
-	//unary->unary -
+	//unary->- unary
 	reduce: function() {
-		var p0=Abe.Stack.pop();//unary
-		var p1=Abe.Stack.pop();//-
+		var p0=Abe.Stack.pop().value;//unary
+		var p1=Abe.Stack.pop().value;//-
+		var value=func_35_unary(p1,p0);
 		return {
 			symbolTag:Abe.Tag.UNARY,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[36]= {
 	//unary->factor
 	reduce: function() {
-		var p0=Abe.Stack.pop();//factor
+		var p0=Abe.Stack.pop().value;//factor
+		var value=func_36_unary(p0);
 		return {
 			symbolTag:Abe.Tag.UNARY,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[37]= {
-	//factor->) bool (
+	//factor->( bool )
 	reduce: function() {
-		var p0=Abe.Stack.pop();//)
-		var p1=Abe.Stack.pop();//bool
-		var p2=Abe.Stack.pop();//(
+		var p0=Abe.Stack.pop().value;//)
+		var p1=Abe.Stack.pop().value;//bool
+		var p2=Abe.Stack.pop().value;//(
+		var value=func_37_factor(p2,p1,p0);
 		return {
 			symbolTag:Abe.Tag.FACTOR,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[38]= {
 	//factor->num
 	reduce: function() {
-		var p0=Abe.Stack.pop();//num
+		var p0=Abe.Stack.pop().value;//num
+		var value=func_38_factor(p0);
 		return {
 			symbolTag:Abe.Tag.FACTOR,
-			value:p0.value
+			value:value
 		}
 	}
 }
 ABE_LR_GRAMMARS[39]= {
 	//factor->loc
 	reduce: function() {
-		var p0=Abe.Stack.pop();//loc
+		var p0=Abe.Stack.pop().value;//loc
+		var value=func_39_factor(p0);
 		return {
 			symbolTag:Abe.Tag.FACTOR,
-			value:p0.value
+			value:value
 		}
 	}
 }
