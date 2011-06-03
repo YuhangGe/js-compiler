@@ -27,18 +27,35 @@ function func_2_decls(p0) {
 
 function func_3_decl(type,id,p2) {
 	//decl->type id ;
+	//$.dprint(type);
 	$.dprint(type.toString()+ " "+id);
 	//to do
 }
 
 function func_4_type(type,p1,num,p3) {
 	//type->type [ num ]
+	
 	return new Abe.TArray(type,num);
+	
 }
 
 function func_5_type(basic) {
 	//type->basic
-	$.dprint(basic);
+	//$.dprint(basic);
+	switch(basic){
+		case 'int':
+			return Abe.Type.Int;
+			break;
+		case 'byte':
+			return Abe.Type.Byte;
+			break;
+		case 'char':
+		    return Abe.Type.Char;
+		    break;
+		case 'float':
+		    return Abe.Type.Float;
+		    break;
+	}
 	return new Abe.Type(basic,Abe.Tag.BASIC,1);
 }
 
@@ -126,12 +143,23 @@ function func_15_loc(loc,p1,bool,p3) {
 	//loc->loc [ bool ]
 	$.dprint("loc->loc[bool]");
 	//return new Abe.Id(loc,Abe.Type.Int,bool);
-	return new Abe.Access(loc,bool,Abe.Type.Int);
+	
+	if(loc instanceof Abe.Id){
+		var w=new Abe.Constant(loc.type.width);
+		var t1=new Abe.Arith(new Abe.Token('*',Abe.Tag['*']),bool,w);
+		return new Abe.Access(loc,t1,loc.type);
+	}else{
+		var w=new Abe.Constant(loc.type.width);
+		var t1=new Abe.Arith(new Abe.Token('*',Abe.Tag['*']),loc.index,w);
+		var t2=new Abe.Arith(new Abe.Token('+',Abe.Tag['+']),bool,t1);
+		return new Abe.Access(loc.array,t2,loc.type);
+	}
+	
 }
 
 function func_16_loc(id) {
 	//loc->id
-	return new Abe.Id(id,Abe.Type.Int,0);
+	return new Abe.Id(id,Abe.Type.Byte,0);
 }
 
 function func_17_bool(bool,OR,join) {
