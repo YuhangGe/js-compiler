@@ -48,7 +48,7 @@ function func_6_stmts(stmts,stmt) {
 	//$.dprint(stmts);
 	//$.dprint(stmt);
 	//$.dprint('----');
-	return new Abe.Seq(stmt,stmts);
+	return new Abe.Seq(stmts,stmt);
 }
 
 function func_7_stmts(p0) {
@@ -90,7 +90,7 @@ function func_11_stmt(_while,p1,bool,p3,stmt) {
 function func_12_stmt(_do,stmt,_while,p3,bool,p5,p6) {
 	//stmt->do stmt while ( bool ) ;
 	var _d=new Abe.Do();
-	_d.init(stmt,bool);
+	_d.init(bool,stmt);
 	return _d;
 }
 

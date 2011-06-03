@@ -61,7 +61,7 @@ Abe.Parser.prototype= {
 		this.stack.length=0;
 		this._error = false;
 		this.lexer.reset();
-		Abe.Out.reset();
+		Abe.Reset();
 	},
 	err : function(msg) {
 		document.getElementById("output").value="Error!\n"+this.stack.pop().value;

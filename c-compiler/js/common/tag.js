@@ -3,6 +3,12 @@
  */
 if(typeof Abe ==='undefined')
 	Abe= {};
+	
+Abe.Reset=function(){
+	Abe.Node.labels=0;
+	Abe.Temp.count=0;
+	Abe.Out.reset();
+}
 
 Abe.Tag= {
 	UNDEF:-1,

@@ -93,7 +93,7 @@ Abe.Rel= function(token,expr1,expr2) {
 }
 Abe.Rel.prototype= {
 	jumping: function(t,f) {
-		var a=this.expr2.reduce();
+		var a=this.expr1.reduce();
 		var b=this.expr2.reduce();
 		var str=a.toString()+" "+this.op.toString()+" "+b.toString();
 		this.emitjumps(str,t,f);
