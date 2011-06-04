@@ -20,7 +20,6 @@ Abe.If= function(expr,stmt) {
 	this.base();
 	this.expr=expr;
 	this.stmt=stmt;
-	$.dprint(stmt);
 }
 Abe.If.prototype= {
 	gen: function(b,a) {
@@ -44,52 +43,50 @@ Abe.Else.prototype= {
 		var l1=this.newlabel();
 		var l2=this.newlabel();
 		this.expr.jumping(0,l2);
+
 		this.emitlabel(l1);
 		this.stmt1.gen(l1,a);
 		this.emit("goto L"+a);
 		this.emitlabel(l2);
 		this.stmt2.gen(l2,a);
+	
 	},
 	toString:undefined
 }
 $.inherit(Abe.Else,Abe.Stmt);
 
-Abe.While= function() {
+Abe.While= function(expr,stmt) {
 	this.base();
-	this.stmt=null;
-	this.expr=null;
+	this.expr=expr;
+	this.stmt=stmt;
 }
 Abe.While.prototype= {
-	init: function(expr,stmt) {
-		this.expr=expr;
-		this.stmt=stmt;
-	},
 	gen: function(b,a) {
 		this.after=a;
 		this.expr.jumping(0,a);
+		breakStack.push(this);
 		var l=this.newlabel();
 		this.emitlabel(l);
 		this.stmt.gen(l,b);
+		breakStack.pop();
 		this.emit("goto L"+b);
 	},
 	toString:undefined
 }
 $.inherit(Abe.While,Abe.Stmt);
 
-Abe.Do= function() {
+Abe.Do= function(stmt,expr) {
 	this.base();
-	this.stmt=null;
-	this.expr=null;
+	this.expr=expr;
+	this.stmt=stmt;
 }
 Abe.Do.prototype= {
-	init: function(expr,stmt) {
-		this.expr=expr;
-		this.stmt=stmt;
-	},
 	gen: function(b,a) {
 		this.after=a;
 		var l=this.newlabel();
+		breakStack.push(this);
 		this.stmt.gen(b,l);
+		breakStack.pop();
 		this.emitlabel(l);
 		this.expr.jumping(b,0);
 	},
@@ -97,6 +94,10 @@ Abe.Do.prototype= {
 }
 $.inherit(Abe.Do,Abe.Stmt);
 
+Abe.For=function(init,cond,step,stmt){
+	this.base();
+	this.init
+}
 Abe.Set= function(id,expr) {
 	this.base();
 	this.id=id;
@@ -149,13 +150,12 @@ $.inherit(Abe.Seq,Abe.Stmt);
 
 Abe.Break= function() {
 	this.base();
-	if(Abe.Stmt.Enclosing===Abe.Stmt.Null) {
-		this.error("unenclosed break");
-	}
-	this.stmt=Abe.Stmt.Enclosing;
 }
 Abe.Break.prototype= {
 	gen: function(b,a) {
+		var stmt=breakStack[breakStack.length-1];
+		if(stmt===Abe.Stmt.Null)
+			this.error("unenclosed break");
 		this.emit("goto L"+stmt.after);
 	},
 	toString:undefined

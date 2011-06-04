@@ -103,23 +103,25 @@ Abe.Rel.prototype= {
 
 $.inherit(Abe.Rel,Abe.Logical);
 
-Abe.Access= function(id,expr,type) {
+Abe.Access= function(id,expr,type,dim) {
 	this.base(new Abe.Word("[]",Abe.Tag.INDEX),type);
-	if(id.deep===undefined)
-		this.deep=0;
+	if(dim===undefined)
+		this.dim=1;
 	else
-		this.deep=id.deep+1;
+		this.dim=dim;
 	this.array=id;
 	this.index=expr;
 }
 Abe.Access.prototype.gen= function() {
-	$.dprint('access gen');
+	
 	return new Abe.Access(this.array,this.index.reduce(),this.type)	;
 }
 Abe.Access.prototype.jumping= function(t,f) {
+	
 	this.emitjumps(this.reduce().toString(),t,f);
 }
 Abe.Access.prototype.toString= function() {
+	
 	return this.array.toString()+" [ "+this.index.toString()+" ]";
 }
 $.inherit(Abe.Access,Abe.Op);

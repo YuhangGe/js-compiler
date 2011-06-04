@@ -1,5 +1,6 @@
 var _stmts=null;
 var envStack=new Array();
+var breakStack=new Array(Abe.Stmt.Null);
 var topEnv=null;
 var used=0;
 function last_reduce() {
@@ -46,7 +47,11 @@ function func_decl(type,id,p2) {
 
 function func_type(type,p1,num,p3) {
 	//type->type [ num ]
-	return new Abe.TArray(type,num);
+	if(type instanceof Abe.Type)
+		return new Abe.TArray(type,num);
+	else
+		return new Abe.TArray(new Abe.TArray(type.of,num),type.size,type.dim+1);
+	
 }
 
 function func_type_0(basic) {
@@ -83,6 +88,11 @@ function func_stmt(loc,p1,bool,p3) {
 	if(loc instanceof Abe.Id) {
 		return new  Abe.Set(loc,bool);
 	} else {
+		//$.dprint(loc.dim);
+		//$.dprint(loc.array.type.dim);
+		if(loc.dim!==loc.array.type.dim){
+			$.dprint("error:数组维数错误，声明数组"+loc.array.type.dim+"，访问只有"+loc.dim);
+		}
 		return new  Abe.SetElem(loc,bool);
 	}
 }
@@ -111,16 +121,13 @@ function func_if_stmt_0(p0) {
 function func_stmt_1(_while,p1,bool,p3,stmt) {
 	//stmt->while ( bool ) stmt
 	$.dprint('stmt->while ( bool ) stmt');
-	var _w=new Abe.While();
-	_w.init(bool,stmt);
-	return _w;
+	return new Abe.While(bool,stmt);
+
 }
 
 function func_stmt_2(_do,stmt,_while,p3,bool,p5,p6) {
 	//stmt->do stmt while ( bool ) ;
-	var _d=new Abe.Do();
-	_d.init(bool,stmt);
-	return _d;
+	return new Abe.Do(stmt,bool);
 }
 
 function func_stmt_3(_break,p1) {
@@ -147,10 +154,15 @@ function func_loc(loc,p1,bool,p3) {
 		return new Abe.Access(loc,t1,t);
 	}else{
 		var t=loc.type.of;
+		if(t===undefined){
+			$.dprint("error: 数组维数错误，超出。");
+			return loc;
+		}
+		//$.dprint(loc.array.type.dim);
 		var w=new Abe.Constant(t.width);
 		var t1=new Abe.Arith(new Abe.Token('*',Abe.Tag['*']),bool,w);
 		var t2=new Abe.Arith(new Abe.Token('+',Abe.Tag['+']),loc.index,t1);
-		return new Abe.Access(loc.array,t2,t);
+		return new Abe.Access(loc.array,t2,t,loc.dim+1);
 	}
 	
 }
@@ -158,6 +170,7 @@ function func_loc(loc,p1,bool,p3) {
 function func_loc_0(id) {
 	//loc->id
 	var i=topEnv.get(id);
+	//$.dprint(i.type.toString());
 	if(i===null){
 		$.dprint(id+" undeclared!");
 	}else

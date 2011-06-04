@@ -30,10 +30,14 @@ Abe.Type.Byte=new Abe.Type("byte",Abe.Tag.BASIC,1);
 Abe.Type.Float=new Abe.Type("float",Abe.Tag.BASIC,4);
 
 
-Abe.TArray=function(type,size){
+Abe.TArray=function(type,size,dim){
 	this.base("[]",Abe.Tag.INDEX,size*type.width);
 	this.of=type;
 	this.size=size;
+	if(dim===undefined)
+		this.dim=1;
+	else
+		this.dim=dim;
 }
 Abe.TArray.prototype.toString=function(){
 	return "["+this.size+"] {"+this.of.toString()+"}("+this.width+")";
