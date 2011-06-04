@@ -43,14 +43,16 @@ window.onload= function() {
 	var H_RIGHT=new _t('}');
 	var ST_END=new _t(';');
 	
-	var IF_STMT=new _n("if_stmt");
+	
 
 	var BLOCK=new _n('block');
+	var BLOCK_BEGIN=new _n('block_begin');
 	var DECLS=new _n('decls');
 	var DECL=new _n('decl');
 	var TYPE=new _n('type');
 	var STMTS=new _n('stmts');
 	var STMT=new _n('stmt');
+	var IF_STMT=new _n("if_stmt");
 	var LOC=new _n('loc');
 	var BOOL=new _n("bool");
 	var JOIN=new _n('join');
@@ -63,7 +65,9 @@ window.onload= function() {
 	
 	var g=new Array();
 
-	g.push(new Item(BLOCK,[H_LEFT,DECLS,STMTS,H_RIGHT]));
+	g.push(new Item(BLOCK,[BLOCK_BEGIN,DECLS,STMTS,H_RIGHT]));
+	g.push(new Item(BLOCK_BEGIN,[H_LEFT]));
+	
 	g.push(new Item(DECLS,[DECLS,DECL]));
 	g.push(new Item(DECLS,[Symbol.NULL]));
 	g.push(new Item(DECL,[TYPE,ID,ST_END]));
@@ -76,7 +80,7 @@ window.onload= function() {
 	g.push(new Item(STMT,[LOC,OP_EQ,BOOL,ST_END]));
 	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,IF_STMT]));
 	g.push(new Item(IF_STMT,[ELSE,STMT]));
-	
+	g.push(new Item(IF_STMT,[Symbol.NULL]));
 	//g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,ELSE,STMT]));
 	g.push(new Item(STMT,[WHILE,B_LEFT,BOOL,B_RIGHT,STMT]));
 	g.push(new Item(STMT,[DO,STMT,WHILE,B_LEFT,BOOL,B_RIGHT,ST_END]));
@@ -109,7 +113,7 @@ window.onload= function() {
 	g.push(new Item(FACTOR,[B_LEFT,BOOL,B_RIGHT]));
 	g.push(new Item(FACTOR,[NUM]));
 	g.push(new Item(FACTOR,[LOC]));
-	g.push(new Item(IF_STMT,[Symbol.NULL]));
+	
 	//g.push(new Item(BLOCK,[BLOCK,STMT]));
 	//g.push(new Item(BLOCK,[Symbol.NULL]));
 	// g.push(new Item(STMT,[IF,ID,STMT,BLOCK]));

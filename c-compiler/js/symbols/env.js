@@ -10,6 +10,8 @@ Abe.Env.prototype.get=function(token){
 		var f=e.table[token];
 		if(f)
 			return f;
+		//else
+			//$.dprint('not found,go to top env');
 	}
 	return null;
 }

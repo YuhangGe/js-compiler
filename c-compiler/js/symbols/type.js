@@ -36,6 +36,6 @@ Abe.TArray=function(type,size){
 	this.size=size;
 }
 Abe.TArray.prototype.toString=function(){
-	return "["+this.size+"] "+this.of.toString();
+	return "["+this.size+"] {"+this.of.toString()+"}("+this.width+")";
 }
 $.inherit(Abe.TArray,Abe.Type);

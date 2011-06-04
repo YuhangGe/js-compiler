@@ -105,6 +105,10 @@ $.inherit(Abe.Rel,Abe.Logical);
 
 Abe.Access= function(id,expr,type) {
 	this.base(new Abe.Word("[]",Abe.Tag.INDEX),type);
+	if(id.deep===undefined)
+		this.deep=0;
+	else
+		this.deep=id.deep+1;
 	this.array=id;
 	this.index=expr;
 }

@@ -295,6 +295,7 @@ _ATCreator.prototype._output_table = function(){
 	var s_tag="";
 	var l=/^[a-zA-Z_]+$/;
 	
+	this._func_table={};
 	for(var i=0;i<this._init_set.length;i++){
 		var tmp_g=this._generate_grammar(i,this._init_set[i]);
 		s_reduce+=tmp_g[0];
@@ -422,6 +423,9 @@ _ATCreator.prototype._output_table = function(){
     }
     s_table+="}\n ABE_LR_TABLE=new Abe.Table();";
     
+    delete this._func_table;
+    this._func_table=undefined;
+    
     return {
     	'info':rtn,
     	'tag':s_tag,
@@ -437,50 +441,69 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 	var t1="//"+grammar.Left.Name+"->";
 	var t2="";
 	var idx=0;
-	var s=grammar.Right.Symbols;	
-	for(var i=s.length-1;i>=0;i--){
+	var s=grammar.Right.Symbols;
+	for(var i=s.length-1;i>=0;i--) {
 		t1+=s[s.length-1-i].Name+' ';
 		t2+="var p"+idx+"=Abe.Stack.pop().value;//"+s[i].Name+"\n";
 		idx++;
 	}
-	func="func_"+index+"_"+grammar.Left.Name;
+
+	var f_i=this._func_table[grammar.Left.Name];
+	if(f_i===undefined) {
+		func="func_"+grammar.Left.Name;
+		this._func_table[grammar.Left.Name]=0;
+	} else {
+		func="func_"+grammar.Left.Name+"_"+f_i;
+		this._func_table[grammar.Left.Name]++;
+	}
 
 	rtn+=t1+"\nreduce: function() {\n"+t2;
-	if(func){
+	if(func) {
 		var arg="";
 		var arg_2="";
 		var r_t=/[^a-zA-Z0-9_]+/
-		var r_key=/(if)|(while)|(do)|(else)|(break)|(function)|(var)|(for)/i
-		for(var i=idx-1;i>=0;i--)
-			{
-				if(arg!==""){
-					arg+=",";
-					arg_2+=",";
-				}
+		var r_key=/(^undefined$)|(^if$)|(^while$)|(^do$)|(^else$)|(^break$)|(^function$)|(^var$)|(^for$)|(^continue$)|(^true$)|(^false$)/i
+
+		var p_table= {};
+		for(var i=idx-1;i>=0;i--) {
+			if(arg!=="") {
+				arg+=",";
+				arg_2+=",";
+			}
 			//if(s[idx-1-i].Type===Symbol.NONTERMINAL)
 			var n=s[idx-1-i].Name;
 			if(r_t.test(n)===true)
 				arg_2+="p"+(idx-1-i);
-			else if(r_key.test(n)===false)
-				arg_2+=n;
-			else{
-				arg_2+='_'+n;
+			else {
+				if(r_key.test(n)===true) {
+					n='_'+n;
+				}
+				var p_i=p_table[n];
+				if(p_i===undefined) {
+					arg_2+=n;
+					p_table[n]=0;
+				} else {
+					arg_2+=n+p_i;
+					p_table[n]++;
+				}
 			}
-			///	
+			///
 			arg+="p"+i;
 		}
+		delete p_table;
+
 		rtn+="var value="+func+"("+arg+");\n";
 	}
-		rtn+="return {\n"
-		rtn+="	symbolTag:Abe.Tag."+grammar.Left.Name.toUpperCase()+",\n";
-		if(func)	
+	rtn+="return {\n"
+	rtn+="	symbolTag:Abe.Tag."+grammar.Left.Name.toUpperCase()+",\n";
+	if(func)
 		rtn+="value:value\n";
-		else
+	else
 		rtn+="value:p0\n";
-		rtn+="}\n";	
 	rtn+="}\n";
 	rtn+="}\n";
-	
+	rtn+="}\n";
+
 	rtn_func="function "+func+"("+arg_2+"){\n"+t1+"\n}\n";
 	return [rtn,rtn_func];
 }
