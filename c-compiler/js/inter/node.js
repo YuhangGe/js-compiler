@@ -64,6 +64,8 @@ Abe.Op= function(token,type) {
 Abe.Op.prototype= {
 	reduce: function() {
 		var x=this.gen();
+		if(x instanceof Abe.Constant)
+			return x;
 		var t=new Abe.Temp(this.type);
 		this.emit(t.toString()+" = "+x.toString());
 		return t;
@@ -82,6 +84,7 @@ Abe.Arith= function(token,expr1,expr2) {
 		this.error("type error!");
 }
 Abe.Arith.prototype.gen= function() {
+	
 	return new Abe.Arith(this.op,this.expr1.reduce(),this.expr2.reduce());
 }
 Abe.Arith.prototype.toString= function() {

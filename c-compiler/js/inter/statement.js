@@ -105,6 +105,7 @@ Abe.Set= function(id,expr) {
 }
 Abe.Set.prototype= {
 	gen: function(b,a) {
+		//$.dprint(this.expr instanceof Abe.Arith);
 		this.emit(this.id.toString()+" = "+this.expr.gen().toString());
 	},
 	toString:undefined
