@@ -87,7 +87,7 @@ window.onload= function() {
 	g.push(new Item(STMT,[BREAK,ST_END]));
 	g.push(new Item(STMT,[BLOCK]));
 
-	
+
 	g.push(new Item(LOC,[LOC,F_LEFT,BOOL,F_RIGHT]));
 	g.push(new Item(LOC,[ID]));
 	g.push(new Item(BOOL,[BOOL,CON_OR,JOIN]));
