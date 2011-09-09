@@ -28,9 +28,27 @@ Abe.Logical.prototype.gen= function() {
 	var temp=new Abe.Temp(this.type);
 	this.jumping(0,f);
 	this.emit(temp.toString()+ " = true");
-	this.emit("goto L"+a);
+	this.emitIR(
+		new Abe.IROp(Abe.IROp.SET,"="),
+		new Abe.IRArg(Abe.IRArg.CONST,1),
+		null,
+		new Abe.IRArg(Abe.IRArg.TEMP,tmp.number)
+	);
+	this.emit("j L"+a);
+	this.emitIR(
+		new Abe.IROp(Abe.IROp.JUMP,"j"),
+		null,
+		null,
+		new Abe.IRArg(Abe.IRArg.CONST,a)
+	);
 	this.emitlabel(f);
 	this.emit(temp.toString()+" = false");
+	this.emitIR(
+		new Abe.IROp(Abe.IROp.SET,"="),
+		new Abe.IRArg(Abe.IRArg.CONST,0),
+		null,
+		new Abe.IRArg(Abe.IRArg.TEMP,tmp.number)
+	);
 	this.emitlabel(a);
 	return temp;
 }
@@ -66,7 +84,7 @@ Abe.And.prototype= {
 		var label=(f!==0?f:this.newlabel());
 		this.expr1.jumping(0,label);
 		this.expr2.jumping(t,f);
-		if(t===0) {
+		if(f===0) {
 			this.emitlabel(label);
 		}
 
@@ -96,6 +114,12 @@ Abe.Rel.prototype= {
 		var a=this.expr1.reduce();
 		var b=this.expr2.reduce();
 		var str=a.toString()+" "+this.op.toString()+" "+b.toString();
+		this.emitIR(
+			new Abe.IROp(Abe.IROp.REL,this.op.toString()),
+			null,
+			null,
+			null
+		);
 		this.emitjumps(str,t,f);
 	},
 	toString:undefined

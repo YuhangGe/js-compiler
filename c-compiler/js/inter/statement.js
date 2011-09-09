@@ -46,7 +46,7 @@ Abe.Else.prototype= {
 
 		this.emitlabel(l1);
 		this.stmt1.gen(l1,a);
-		this.emit("goto L"+a);
+		this.emit("j L"+a);
 		this.emitlabel(l2);
 		this.stmt2.gen(l2,a);
 	
@@ -69,7 +69,7 @@ Abe.While.prototype= {
 		this.emitlabel(l);
 		this.stmt.gen(l,b);
 		breakStack.pop();
-		this.emit("goto L"+b);
+		this.emit("j L"+b);
 	},
 	toString:undefined
 }
@@ -157,7 +157,7 @@ Abe.Break.prototype= {
 		var stmt=breakStack[breakStack.length-1];
 		if(stmt===Abe.Stmt.Null)
 			this.error("unenclosed break");
-		this.emit("goto L"+stmt.after);
+		this.emit("j L"+stmt.after);
 	},
 	toString:undefined
 }

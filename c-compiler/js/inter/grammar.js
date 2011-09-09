@@ -179,7 +179,7 @@ function func_loc_0(id) {
 
 function func_bool(bool,OR,join) {
 	//bool->bool OR join
-	return new Abe.Rel(new Abe.Token('||',Abe.Tag.OR),bool,join);
+	return new Abe.Or(new Abe.Token('||',Abe.Tag.OR),bool,join);
 }
 
 function func_bool_0(join) {
@@ -189,7 +189,7 @@ function func_bool_0(join) {
 
 function func_join(join,AND,equality) {
 	//join->join AND equality
-	return new Abe.Rel(new Abe.Token('&&',Abe.Tag.AND),join,equality);
+	return new Abe.And(new Abe.Token('&&',Abe.Tag.AND),join,equality);
 }
 
 function func_join_0(equality) {

@@ -9,19 +9,73 @@ window.onload= function() {
 
 	var _n= Nonterminal;
 	var _t = Terminator;
+	
+	var _Identifier= new _t('Identifier');
+	var _Number=new _t('Number');
+	var _String=new _t('String');
+	var _RegularExpression=new _t('RegExp');
 
 	var _function=new _t('function');
-	var Identifier= new _t('Identifier');
+	var _instanceof=new _t('instanceof');
+	var _typeof=new _t('typeof');
+	var _void=new _t('void');
+	var _delete=new _t('delete');
+	var _new =new _t('new');
+	var _this=new _t('this');
+	var _null=new _t('null');
+	var _true=new _t('true');
+	var _false=new _t('false');
+	var _try=new _t('try');
+	var _catch=new _t('catch');
+	var _finally=new _t('finally');
+	var _throw=new _t('throw');
+	var _return = new _t('return');
+	var _continue=new _t('continue');
+	var _break=new _t('break');
+	var _with=new _t('with');
+	var _var=new _t('var');
+	var _if=new _t('if');
+	var _else=new _t('else');
+	var _while=new _t('while');
+	var _do=new _t('do');
+	var _switch=new _t('switch');
+	var _case=new _t('case');
+	var _default=new _t('default');
+	
 	var B_LEFT=new _t('(');
 	var B_RIGHT=new _t(')');
 	var F_LEFT=new _t('[');
 	var F_RIGHT=new _t(']');
 	var H_LEFT=new _t('{');
 	var H_RIGHT=new _t('}');
-	var COMMOM=new _t(',');
-	var FEN=new _t(';');
-	var MAO=new _t(':');
+	var T_COMMOM=new _t(',');
+	var T_FEN=new _t(';');
+	var T_DOT=new _t('.');
+	var T_MAO=new _t(':');
+	var T_WEN=new _t('?');
 	var T_E=new _t('=');
+	var T_EE=new _t('==');
+	var T_EEE=new _t('===');
+	var T_NE=new _t('!=');
+	var T_NEE=new _t('!==');
+
+	var T_L=new _t('<');
+	var T_G=new _t('>');
+	var T_LE=new _t('<=');
+	var T_GE=new _t('>=');
+	var T_LS=new _t('<<');
+	var T_RS=new _t('>>');
+	var T_RRS=new _t('>>>');
+	var T_JIA=new _t('+');
+	var T_JIAN=new _t('-');
+	var T_CHENG=new _t('*');
+	var T_CHU=new _t('/');
+	var T_BAIFEN=new _t('%');
+	var T_NOT=new _t('!');
+	var T_BO=new _t('~');
+	var T_PP=new _t('++');
+	var T_MM=new _t('--');
+	
 	var CHENG_D=new _t('*=');
 	var CHU_D=new _t('/=');
 	var BAIFEN_D=new _t('%=');
@@ -33,24 +87,13 @@ window.onload= function() {
 	var AND_D=new _t('&=');
 	var MAO_D=new _t('^=');
 	var HUO_D=new _t('|=');
-	var _try=new _t('try');
-	var _catch=new _t('catch');
-	var _finally=new _t('finally');
-	var _throw=new _t('throw');
-	var _return = new _t('return');
-	var _continue=new _t('continue');
-	var _break=new _t('break');
-	var _with=new _t('with');
-	var _var=new _t('var');
+	var L_AND=new _t('&&');
+	var L_OR=new _t('||');
+	var T_AND=new _t('&');
+	var T_OR=new _t('|');
+	var T_XOR=new _t('^');
+	
 
-	var _if=new _t('if');
-
-	var _else=new _t('else');
-	var _while=new _t('while');
-	var _do=new _t('do');
-	var _switch=new _t('switch');
-	var _case=new _t('case');
-	var _default=new _t('default');
 
 	var CON_OR=new _t('OR');
 	var CON_AND=new _t('AND');
@@ -79,7 +122,7 @@ window.onload= function() {
 	var NamedFunction=new _n('NamedFunction');
 	var AnonymousFunction =new _n('AnonymousFunction');
 	var FormalParametersAndBody=new _n("FormalParametersAndBody");
-	var Identifier =new _n('Identifier');
+
 	var FormalParameters=new _n("FormalParameters");
 	var FormalParametersPrefix=new _n('FormalParametersPrefix');
 	var FormalParameter=new _n('FormalParameter');
@@ -109,6 +152,26 @@ window.onload= function() {
 	var OptionalExpression=new _n('OptionalExpression');
 	var ParenthesizedExpression=new _n('ParenthesizedExpression');
 	var AssignmentExpression=new _n('AssignmentExpression');
+	var LeftSideExpression=new _n('LeftSideExpression');
+	var CompoundAssignment =new _n('CompoundAssignment');
+	var ConditionalExpression=new _n('ConditionalExpression');	
+	var LogicalAndExpression=new _n('LogicalAndExpression');
+	var LogicalOrExpression=new _n('LogicalOrExpression');
+	var BitwiseAndExpression=new _n('BitwiseAndExpression');
+	var BitwiseXorExpression=new _n('BitwiseXorExpression');
+	var BitwiseOrExpression=new _n('BitwiseOrExpression');
+	var EqualityExpression=new _n('EqualityExpression');
+	var RelationalExpression=new _n('RelationalExpression');
+	var RelationalExpression=new _n('RelationalExpression');
+	var ShiftExpression=new _n('ShiftExpression');
+	var AdditiveExpression=new _n('AdditiveExpression');
+	var MultiplicativeExpression=new _n('MultiplicativeExpression');
+	var UnaryExpression=new _n('UnaryExpression');
+	var PostfixExpression=new _n('PostfixExpression');
+	var FunctionExpression =new _n('FunctionExpression');
+	var ParenthesizedExpression =new _n('ParenthesizedExpression');
+	var SimpleExpression =new _n('SimpleExpression');
+	var PrimaryExpression=new _n('PrimaryExpression');
 	//
 	var Statement=new _n('Statement');
 	var EmptyStatement=new _n('EmptyStatement');
@@ -135,13 +198,48 @@ window.onload= function() {
 
 	var OptionalSemicolon =new _n('OptionalSemicolon');
 
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
 
+
+
+	var ArgumentList =new _n('ArgumentList');
+	var Arguments =new _n('Arguments');
+	var MemberOperator =new _n('MemberOperator');
+	var ShortNewSubexpression =new _n('ShortNewSubexpression');
+	var FullNewSubexpression =new _n('FullNewSubexpression');
+	var ShortNewExpression =new _n('ShortNewExpression');
+	var FullNewExpression =new _n('FullNewExpression');
+	var CallExpression=new _n('CallExpression');
+	var LeftSideExpression=new _n('LeftSideExpression');
+	var LiteralElement =new _n('LiteralElement');
+	var ElementList =new _n('ElementList');
+	var ArrayLiteral =new _n('ArrayLiteral');
+	var LiteralField=new _n('LiteralField');
+	var FieldList =new _n('FieldList');
+	var ObjectLiteral =new _n('ObjectLiteral');
+	
+
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
+	
+	var FACTOR=new _n('factor');
+	var FACTOR=new _n('factor');
 	var g=new Array();
 	//Programs
 	g.push(new Item(Program,[TopStatements]));
@@ -154,20 +252,20 @@ window.onload= function() {
 	//Function Definition
 	g.push(new Item(FunctionDefinition,[NamedFunction]));
 	g.push(new Item(AnonymousFunction,[_function, FormalParametersAndBody]));
-	g.push(new Item(NamedFunction,[_function, Identifier, FormalParametersAndBody]));
+	g.push(new Item(NamedFunction,[_function, _Identifier, FormalParametersAndBody]));
 	g.push(new Item(FormalParametersAndBody,[B_LEFT, FormalParameters,B_RIGHT,H_LEFT, TopStatements,H_RIGHT]));
 	g.push(new Item(FormalParameters,[Symbol.NULL]));
 	g.push(new Item(FormalParameters,[FormalParametersPrefix]));
 	g.push(new Item(FormalParametersPrefix,[FormalParameter]));
 	g.push(new Item(FormalParametersPrefix,[FormalParametersPrefix ,COMMOM, FormalParameter]));
-	g.push(new Item(FormalParameter,[Identifier]));
+	g.push(new Item(FormalParameter,[_Identifier]));
 	//Try Statement
 	g.push(new Item(TryStatement,[_try, Block, CatchClauses]));
 	g.push(new Item(TryStatement,[_try, Block, FinallyClause]));
 	g.push(new Item(TryStatement,[_try, Block, CatchClauses, FinallyClause]));
 	g.push(new Item(CatchClauses ,[CatchClause]));
 	g.push(new Item(CatchClauses,[ CatchClauses, CatchClause]));
-	g.push(new Item(CatchClause,[ _catch ,B_LEFT, Identifier ,B_RIGHT, Block]));
+	g.push(new Item(CatchClause,[ _catch ,B_LEFT, _Identifier ,B_RIGHT, Block]));
 	g.push(new Item(FinallyClause,[ _finally ,Block]));
 	//Throw Return With
 	g.push(new Item(ReturnStatement,[ _return ,OptionalExpression]));
@@ -177,9 +275,9 @@ window.onload= function() {
 	g.push(new Item(ContinueStatement,[_continue, OptionalLabel]));
 	g.push(new Item(BreakStatement,[ _break, OptionalLabel]));
 	g.push(new Item(OptionalLabel,[Symbol.NULL]));
-	g.push(new Item(OptionalLabel,[Identifier]));
+	g.push(new Item(OptionalLabel,[_Identifier]));
 	//For Statements
-	g.push(new Item(ForStatement ,[_for ,B_LEFT,ForInitializer ,FEN, OptionalExpression,FEN, OptionalExpression,B_RIGHT,Statement]));
+	g.push(new Item(ForStatement ,[_for ,B_LEFT,ForInitializer ,T_FEN, OptionalExpression,T_FEN, OptionalExpression,B_RIGHT,Statement]));
 	g.push(new Item(ForStatement ,[_for,B_LEFT, ForInBinding ,_in ,Expression,B_RIGHT, Statement]));
 	g.push(new Item(ForInitializer ,[Symbol.NULL]));
 	g.push(new Item(ForInitializer ,[Expression]));
@@ -198,8 +296,8 @@ window.onload= function() {
 	g.push(new Item(LastCaseGroup ,[CaseGuards, BlockStatements]));
 	g.push(new Item(CaseGuards ,[ CaseGuard]));
 	g.push(new Item(CaseGuards ,[ CaseGuards, CaseGuard]));
-	g.push(new Item(CaseGuard ,[_case, Expression,MAO]));
-	g.push(new Item(CaseGuard,[ _default,MAO]));
+	g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
+	g.push(new Item(CaseGuard,[ _default,T_MAO]));
 	g.push(new Item(SwitchStatement,[ _switch, ParenthesizedExpression ,H_LEFT,H_RIGHT]));
 	g.push(new Item(SwitchStatement,[ _switch ,ParenthesizedExpression ,H_LEFT,CaseGroups ,LastCaseGroup,H_RIGHT]));
 	g.push(new Item(CaseGroups ,[Symbol.NULL]));
@@ -208,13 +306,13 @@ window.onload= function() {
 	g.push(new Item(LastCaseGroup ,[CaseGuards, BlockStatements]));
 	g.push(new Item(CaseGuards ,[ CaseGuard]));
 	g.push(new Item(CaseGuards ,[ CaseGuards, CaseGuard]));
-	g.push(new Item(CaseGuard ,[_case, Expression,MAO]));
-	g.push(new Item(CaseGuard,[ _default,MAO]));
+	g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
+	g.push(new Item(CaseGuard,[ _default,T_MAO]));
 	//if
 	g.push(new Item(IfStatement,[ _if,ParenthesizedExpression ,Statement]));
 	g.push(new Item(IfStatement,[_if,ParenthesizedExpression ,Statement,_else,Statement]));
 	//labeled statements
-	g.push(new Item(LabeledStatement,[Identifier,MAO,Statement]));
+	g.push(new Item(LabeledStatement,[_Identifier,T_MAO,Statement]));
 	//block
 	g.push(new Item(Block ,[H_LEFT, BlockStatements ,H_RIGHT]));
 	g.push(new Item(BlockStatements,[Symbol.NULL]));
@@ -224,15 +322,15 @@ window.onload= function() {
 	//Variable Definition
 	g.push(new Item(VariableDefinition ,[_var, VariableDeclarationList]));
 	g.push(new Item(VariableDeclarationList,[VariableDeclaration]));
-	g.push(new Item( VariableDeclarationList,[VariableDeclarationList,COMMON, VariableDeclaration]));
-	g.push(new Item( VariableDeclaration,[Identifier,VariableInitializer]));
+	g.push(new Item( VariableDeclarationList,[VariableDeclarationList,T_COMMON, VariableDeclaration]));
+	g.push(new Item( VariableDeclaration,[_Identifier,VariableInitializer]));
 	g.push(new Item(VariableInitializer,[Symbol.NULL]));
 	g.push(new Item(VariableInitializer,[AssignmentExpression]));
 	//Expression
 	g.push(new Item(ExpressionStatement ,[Expression]));
-	g.push(new Item(EmptyStatement,[FEN]));
+	g.push(new Item(EmptyStatement,[T_FEN]));
 	g.push(new Item(Expression ,[AssignmentExpression]));
-	g.push(new Item(Expression ,[ Expression,COMMON, AssignmentExpression]));
+	g.push(new Item(Expression ,[ Expression,T_COMMON, AssignmentExpression]));
 	g.push(new Item(OptionalExpression ,[ Expression]));
 	g.push(new Item(OptionalExpression ,[ Symbol.NULL]));
 
@@ -269,78 +367,116 @@ window.onload= function() {
 	g.push(new Item(CompoundAssignment ,[AND_D]));// &=
 	g.push(new Item(CompoundAssignment ,[MAO_D]));// ^=
 	g.push(new Item(CompoundAssignment ,[HUO_D]));// |=
+	//Conditional Operator
+	g.push(new Item(ConditionalExpression,[  LogicalOrExpression]));
+	g.push(new Item(ConditionalExpression,[LogicalOrExpression,T_WEN, AssignmentExpression,T_MAO,AssignmentExpression]));
+	//Binary Logical Operator
+	g.push(new Item(LogicalAndExpression,[BitwiseOrExpression]));
+	g.push(new Item(LogicalAndExpression,[LogicalAndExpression ,L_AND,BitwiseOrExpression]));
+	g.push(new Item(LogicalOrExpression,[ LogicalAndExpression]));
+	g.push(new Item(LogicalOrExpression,[ LogicalOrExpression,L_OR,LogicalAndExpression]));
+	//Binary Bitwise Operator
+	g.push(new Item(BitwiseAndExpression,[EqualityExpression]));
+	g.push(new Item(BitwiseAndExpression,[BitwiseAndExpression,T_AND, EqualityExpression]));
+	g.push(new Item(BitwiseXorExpression,[ BitwiseAndExpression]));
+	g.push(new Item(BitwiseXorExpression,[ BitwiseXorExpression,T_XOR, BitwiseAndExpression]));
+	g.push(new Item(BitwiseOrExpression,[  BitwiseXorExpression]));
+	g.push(new Item(BitwiseOrExpression,[BitwiseOrExpression,T_OR, BitwiseXorExpression]));
+	//Equality Operator
+	g.push(new Item(EqualityExpression,[RelationalExpression]));
+	g.push(new Item(EqualityExpression,[ EqualityExpression,T_EE, RelationalExpression]));
+	g.push(new Item(EqualityExpression,[ EqualityExpression,T_NE, RelationalExpression]));
+	g.push(new Item(EqualityExpression,[ EqualityExpression,T_EEE, RelationalExpression]));
+	g.push(new Item(EqualityExpression,[EqualityExpression,T_NEE,RelationalExpression]));
+	//Relational Operator
+	g.push(new Item(RelationalExpression,[ShiftExpressio]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,T_L,ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,T_G,ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,T_LE, ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,T_GE,ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,_instanceof, ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,_in, ShiftExpression]));
+	//Bitwise Shift Operator
+	g.push(new Item(ShiftExpression,[AdditiveExpression]));
+	g.push(new Item(ShiftExpression,[ShiftExpression,T_LS,AdditiveExpression]));
+	g.push(new Item(ShiftExpression,[ShiftExpression,T_RS, AdditiveExpression]));
+	g.push(new Item(ShiftExpression,[ShiftExpression,T_RRS, AdditiveExpression]));
+	//Additive Operators
+	g.push(new Item(AdditiveExpression , [MultiplicativeExpression ]));
+	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIA, MultiplicativeExpression]));
+	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIAN, MultiplicativeExpression]));
+	//Multiplicative Operators
+	g.push(new Item(MultiplicativeExpression , [  UnaryExpression]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHENG, UnaryExpression ]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHU,UnaryExpression]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_BAIFEN,UnaryExpression ]));
+	//Unary Operators
+	g.push(new Item(UnaryExpression , [PostfixExpression ]));
+	g.push(new Item(UnaryExpression , [_delete,LeftSideExpression ]));
+	g.push(new Item(UnaryExpression , [_void,UnaryExpression ]));
+	g.push(new Item(UnaryExpression , [_typeof,UnaryExpression ]));
+	g.push(new Item(UnaryExpression , [T_PP,LeftSideExpression ]));
+	g.push(new Item(UnaryExpression , [T_MM ,LeftSideExpression]));
+	g.push(new Item(UnaryExpression , [T_JIA ,UnaryExpression]));
+	g.push(new Item(UnaryExpression , [T_JIAN ,UnaryExpression]));
+	g.push(new Item(UnaryExpression , [T_BO ,UnaryExpression]));
+	g.push(new Item(UnaryExpression , [T_NOT ,UnaryExpression]));
+	//Postfix Operators
+	g.push(new Item(PostfixExpression , [LeftSideExpression ]));
+	g.push(new Item(PostfixExpression , [LeftSideExpression,T_PP ]));
+	g.push(new Item(PostfixExpression, [LeftSideExpression,T_MM ]));
+	//Left-Side Expressions
+	g.push(new Item(LeftSideExpression , [CallExpression ]));
+	g.push(new Item(LeftSideExpression , [ShortNewExpression]));
+	g.push(new Item(CallExpression , [PrimaryExpression]));
+	g.push(new Item( CallExpression, [ FullNewExpression ]));
+	g.push(new Item(CallExpression , [CallExpression ,MemberOperator]));
+	g.push(new Item(CallExpression , [CallExpression,Arguments ]));
+	g.push(new Item(FullNewExpression  , [_new,FullNewSubexpression]));
+	g.push(new Item(ShortNewExpression  , [_new, ShortNewSubexpression]));
+	g.push(new Item(FullNewSubexpression  , [PrimaryExpression]));
+	g.push(new Item(FullNewSubexpression  , [FullNewExpression]));
+	g.push(new Item(FullNewSubexpression  , [FullNewSubexpression, MemberOperator]));
+	g.push(new Item(ShortNewSubexpression, [FullNewSubexpression]));
+	g.push(new Item(ShortNewSubexpression, [ShortNewExpression]));
+	g.push(new Item(MemberOperator, [F_LEFT,Expression,F_RIGHT]));
+	g.push(new Item(MemberOperator, [T_DOT,_Identifier ]));
+	g.push(new Item(Arguments, [B_LEFT,B_RIGHT ]));
+	g.push(new Item(Arguments, [B_LEFT,ArgumentList,B_RIGHT]));
+	g.push(new Item(ArgumentList, [AssignmentExpression]));
+	g.push(new Item(ArgumentList, [ArgumentList,AssignmentExpression]));
+	//Array Literals
+	g.push(new Item(ArrayLiteral, [F_LEFT,F_RIGHT]));
+	g.push(new Item(ArrayLiteral, [F_LEFT,ElementList,F_RIGHT]));
+	g.push(new Item(ElementList, [LiteralElement]));
+	g.push(new Item(ElementList, [ElementList,T_COMMON,LiteralElement]));
+	g.push(new Item(LiteralElement, [AssignmentExpression]));
+	//Object Literals
+	g.push(new Item(ObjectLiteral, [H_LEFT,H_RIGHT]));
+	g.push(new Item(ObjectLiteral, [H_LEFT,FieldList,H_RIGHT]));
+	g.push(new Item(FieldList , [LiteralField ]));
+	g.push(new Item(FieldList , [FieldList,T_COMMON,LiteralField ]));
+	g.push(new Item(LiteralField , [_Identifier,T_MAO,AssignmentExpression]));
+	//Function Expressions
+	g.push(new Item(FunctionExpression , [AnonymousFunction]));
+	g.push(new Item(FunctionExpression , [NamedFunction]));
+	//Primary Expressions
+	g.push(new Item(PrimaryExpression, [SimpleExpression ]));
+	g.push(new Item(PrimaryExpression, [FunctionExpression]));
+	g.push(new Item(PrimaryExpression, [ObjectLiteral]));
+	g.push(new Item(SimpleExpression , [_this]));
+	g.push(new Item(SimpleExpression, [_null]));
+	g.push(new Item(SimpleExpression, [_true]));
+	g.push(new Item(SimpleExpression, [_false]));
+	g.push(new Item(SimpleExpression, [_Number]));
+	g.push(new Item(SimpleExpression, [_String]));
+	g.push(new Item(SimpleExpression, [_Identifier]));
+	g.push(new Item(SimpleExpression, [_RegularExpression]));
+	g.push(new Item(SimpleExpression, [ParenthesizedExpression]));
+	g.push(new Item(SimpleExpression, [ ArrayLiteral]));
+	g.push(new Item(ParenthesizedExpression , [B_LEFT,Expression,B_RIGHT]));
 	
-	
-	g.push(new Item(TYPE,[TYPE,F_LEFT,NUM,F_RIGHT]));
-	g.push(new Item(TYPE,[BASIC]));
-	g.push(new Item(STMTS,[STMTS,STMT]));
-	g.push(new Item(STMTS,[Symbol.NULL]));
-
-	g.push(new Item(STMT,[LOC,OP_EQ,BOOL,ST_END]));
-	g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,IF_STMT]));
-	g.push(new Item(IF_STMT,[ELSE,STMT]));
-	g.push(new Item(IF_STMT,[Symbol.NULL]));
-	//g.push(new Item(STMT,[IF,B_LEFT,BOOL,B_RIGHT,STMT,ELSE,STMT]));
-	g.push(new Item(STMT,[WHILE,B_LEFT,BOOL,B_RIGHT,STMT]));
-	g.push(new Item(STMT,[DO,STMT,WHILE,B_LEFT,BOOL,B_RIGHT,ST_END]));
-	g.push(new Item(STMT,[BREAK,ST_END]));
-	g.push(new Item(STMT,[BLOCK]));
-
-	g.push(new Item(LOC,[LOC,F_LEFT,BOOL,F_RIGHT]));
-	g.push(new Item(LOC,[ID]));
-	g.push(new Item(BOOL,[BOOL,CON_OR,JOIN]));
-	g.push(new Item(BOOL,[JOIN]));
-	g.push(new Item(JOIN,[JOIN,CON_AND,EQUAL]));
-	g.push(new Item(JOIN,[EQUAL]));
-	g.push(new Item(EQUAL,[EQUAL,CON_EQ,REL]));
-	g.push(new Item(EQUAL,[REL]));
-	g.push(new Item(REL,[EXPR,CON_LT,EXPR]));
-	g.push(new Item(REL,[EXPR,CON_LE,EXPR]));
-	g.push(new Item(REL,[EXPR,CON_GT,EXPR]));
-	g.push(new Item(REL,[EXPR,CON_GE,EXPR]));
-	g.push(new Item(REL,[EXPR]));
-	g.push(new Item(EXPR,[EXPR,OP_PLUS,TERN]));
-	g.push(new Item(EXPR,[EXPR,OP_MINUS,TERN]));
-	g.push(new Item(EXPR,[TERN]));
-	g.push(new Item(TERN,[TERN,OP_MUL,UNARY]));
-	g.push(new Item(TERN,[TERN,OP_DIV,UNARY]));
-	g.push(new Item(TERN,[UNARY]));
-	g.push(new Item(UNARY,[OP_NOT,UNARY]));
-	g.push(new Item(UNARY,[OP_MINUS,UNARY]));
-	g.push(new Item(UNARY,[FACTOR]));
-	g.push(new Item(FACTOR,[B_LEFT,BOOL,B_RIGHT]));
-	g.push(new Item(FACTOR,[NUM]));
-	g.push(new Item(FACTOR,[LOC]));
-
-	//g.push(new Item(BLOCK,[BLOCK,STMT]));
-	//g.push(new Item(BLOCK,[Symbol.NULL]));
-	// g.push(new Item(STMT,[IF,ID,STMT,BLOCK]));
-	// g.push(new Item(BLOCK,[ELSE,STMT]));
-	// g.push(new Item(BLOCK,[Symbol.NULL]));
-	// g.push(new Item(STMT,[BASIC]));
-	/*
-	 var E=new Nonterminal("E");
-	 var T=new _n("T");
-	 var F=new _n("F");
-	 //var D=new Nonterminal("D");
-	 //var T=new Nonterminal("T");
-	 // var L=new Nonterminal("L");
-	 var t_i=new Terminator("i");
-	 var t_l=new Terminator("(");
-	 var t_r=new Terminator(")");
-	 var t_p=new Terminator("+");
-	 var t_m=new Terminator("*");
-	 //
-	 //
-	 g.push(new Item(E,[T,F]));
-	 g.push(new Item(T,[t_p]));
-	 g.push(new Item(T,[Symbol.NULL]));
-	 g.push(new Item(F,[t_m]));
-	 g.push(new Item(F,[Symbol.NULL]));
-	 //
-	 */
-	var Z=new Nonterminal("Z");
-	var g_root=new Item(Z);
+	var g_root=new Item(Program);
 	g_root.Right.Symbols=[BLOCK,Symbol.END];
 
 	AnalysisTableCreator.InitGrammer(g,g_root);

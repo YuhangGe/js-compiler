@@ -13,10 +13,19 @@ Abe.Node.prototype.newlabel= function() {
 	return ++Abe.Node.labels;
 }
 Abe.Node.prototype.emitlabel= function(i) {
-	Abe.Out.print("L"+i+":");
+	Abe.Out.print("L"+i+":\n");
+	this.emitIR(
+		new Abe.IROp(Abe.IROp.LABEL,"l"),
+		null,
+		null,
+		new Abe.IRArg(Abe.IRArg.CONST,i)
+	);
 }
 Abe.Node.prototype.emit= function(s) {
 	Abe.Out.print("\t"+s+"\n");
+}
+Abe.Node.prototype.emitIR=function(op,arg1,arg2,result){
+	Abe.IR.add(new Abe.IRCode(op,arg1,arg2,result));
 }
 Abe.Expr= function(token,type) {
 	this.base();
@@ -34,12 +43,15 @@ Abe.Expr.prototype.jumping= function(t,f) {
 }
 Abe.Expr.prototype.emitjumps= function(str,t,f) {
 	if(t!==0 && f!==0) {
-		this.emit("if "+str+" goto L"+t);
-		this.emit("goto L"+f);
+		this.emit("rel:"+str);
+		this.emit("jt L"+t);
+		this.emit("j L"+f);
 	} else if(t!==0) {
-		this.emit("if "+str+" goto L"+t);
+		this.emit("rel:"+str);
+		this.emit("jt L"+t);
 	} else if(f!==0) {
-		this.emit("iffalse "+str+" goto L"+f);
+		this.emit("rel:"+str);
+		this.emit("jnt L"+f);
 	} else {
 		//do nothing
 	}
@@ -64,8 +76,6 @@ Abe.Op= function(token,type) {
 Abe.Op.prototype= {
 	reduce: function() {
 		var x=this.gen();
-		if(x instanceof Abe.Constant)
-			return x;
 		var t=new Abe.Temp(this.type);
 		this.emit(t.toString()+" = "+x.toString());
 		return t;
@@ -100,6 +110,9 @@ Abe.Temp= function(type) {
 Abe.Temp.count=0;
 Abe.Temp.prototype.toString= function() {
 	return "t"+this.number;
+}
+Abe.Temp.prototype.toIR=function(){
+	return new Abe.IRVar(Abe.IRVar.TEMP,this.number);
 }
 $.inherit(Abe.Temp,Abe.Expr);
 
