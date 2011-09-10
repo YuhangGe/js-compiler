@@ -553,6 +553,7 @@ _ATCreator.prototype._create_item_set = function(id, base_item, name ,type){
  * @return {Array} 闭包项集（不包含基本项本身）
  */
 _ATCreator.prototype._get_closure = function(item, exists_items){
+
     var f = item.GetDotSymbol();
     var rtn = new Array();
     

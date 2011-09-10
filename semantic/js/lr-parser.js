@@ -95,7 +95,6 @@ Abe.LR_Parser.prototype= {
 				return false;
 				break;
 			case Abe.Table.Action.SHIFT:
-				
 				this._stack.push(new Abe.StackElement(this._table.states[act.value], sidx,look.value));
 				return false;
 				break;

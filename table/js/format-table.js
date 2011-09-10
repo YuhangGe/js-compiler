@@ -35,6 +35,8 @@ window.onload= function() {
 	var _with=new _t('with');
 	var _var=new _t('var');
 	var _if=new _t('if');
+	var _in=new _t('in');
+	var _for=new _t('for');
 	var _else=new _t('else');
 	var _while=new _t('while');
 	var _do=new _t('do');
@@ -48,7 +50,7 @@ window.onload= function() {
 	var F_RIGHT=new _t(']');
 	var H_LEFT=new _t('{');
 	var H_RIGHT=new _t('}');
-	var T_COMMOM=new _t(',');
+	var T_COMMON=new _t(',');
 	var T_FEN=new _t(';');
 	var T_DOT=new _t('.');
 	var T_MAO=new _t(':');
@@ -94,28 +96,11 @@ window.onload= function() {
 	var T_XOR=new _t('^');
 	
 
-
-	var CON_OR=new _t('OR');
-	var CON_AND=new _t('AND');
-	var CON_EQ=new _t('EQ');
-	var CON_NEQ=new _t('NE');
-	var CON_GE =new _t('GE');
-	var CON_LE=new _t('LE');
-	var CON_GT=new _t('>');
-	var CON_LT = new _t('<');
-	var OP_OR=new _t('|');
-	var OP_AND=new _t('&');
-	var OP_PLUS=new _t('+');
-	var OP_MINUS=new _t('-')
-	var OP_MUL=new _t('*');
-	var OP_DIV=new _t('/');
-	var OP_NOT=new _t('!');
-	var OP_EQ=new _t('=');
-
 	//Programs
 	var Program=new _n('Program');
 	var TopStatements=new _n('TopStatements');
 	var TopStatementsPrefix=new _n('TopStatementsPrefix');
+	var TopStatement=new _n('TopStatement');
 	var Statement=new _n('Statement');
 	//Function Definition
 	var FunctionDefinition=new _n('FunctionDefinition');
@@ -127,8 +112,9 @@ window.onload= function() {
 	var FormalParametersPrefix=new _n('FormalParametersPrefix');
 	var FormalParameter=new _n('FormalParameter');
 	//Try Statement
-	var TryStatement =new _n('TryStatement ');
+	var TryStatement =new _n('TryStatement');
 	var CatchClauses=new _n('CatchClauses');
+	var CatchClause=new _n('CatchClause');
 	var FinallyClause=new _n('FinallyClause');
 
 	//Throw and Return Statement
@@ -137,7 +123,7 @@ window.onload= function() {
 	//Continue and Break Statements
 	var ContinueStatement =new _n('ContinueStatement');
 	var OptionalLabel=new _n('OptionalLabel');
-	var BreakStatement =new _n('BreakStatement ');
+	var BreakStatement =new _n('BreakStatement');
 	var WithStatement=new _n('WithStatement');
 	//For
 	var ForStatement=new _n('ForStatement');
@@ -147,6 +133,7 @@ window.onload= function() {
 	var Block=new _n('Block');
 	var BlockStatementsPrefix=new _n('BlockStatementsPrefix');
 	var BlockStatements=new _n('BlockStatements');
+	var Statementfull=new _n('Statementfull');
 	//expression
 	var Expression=new _n('Expression');
 	var OptionalExpression=new _n('OptionalExpression');
@@ -218,28 +205,6 @@ window.onload= function() {
 	var ObjectLiteral =new _n('ObjectLiteral');
 	
 
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
-	
-	var FACTOR=new _n('factor');
-	var FACTOR=new _n('factor');
 	var g=new Array();
 	//Programs
 	g.push(new Item(Program,[TopStatements]));
@@ -257,7 +222,7 @@ window.onload= function() {
 	g.push(new Item(FormalParameters,[Symbol.NULL]));
 	g.push(new Item(FormalParameters,[FormalParametersPrefix]));
 	g.push(new Item(FormalParametersPrefix,[FormalParameter]));
-	g.push(new Item(FormalParametersPrefix,[FormalParametersPrefix ,COMMOM, FormalParameter]));
+	g.push(new Item(FormalParametersPrefix,[FormalParametersPrefix ,T_COMMON, FormalParameter]));
 	g.push(new Item(FormalParameter,[_Identifier]));
 	//Try Statement
 	g.push(new Item(TryStatement,[_try, Block, CatchClauses]));
@@ -269,8 +234,8 @@ window.onload= function() {
 	g.push(new Item(FinallyClause,[ _finally ,Block]));
 	//Throw Return With
 	g.push(new Item(ReturnStatement,[ _return ,OptionalExpression]));
-	g.push(new Item(ThrowStatement [ _throw,Expression]));
-	g.push(new Item(WithStatement [ _with, ParenthesizedExpression, Statement]));
+	g.push(new Item(ThrowStatement, [ _throw,Expression]));
+	g.push(new Item(WithStatement, [ _with, ParenthesizedExpression, Statement]));
 	//Continue and Break
 	g.push(new Item(ContinueStatement,[_continue, OptionalLabel]));
 	g.push(new Item(BreakStatement,[ _break, OptionalLabel]));
@@ -351,10 +316,10 @@ window.onload= function() {
 	g.push(new Item(Statement ,[  ReturnStatement ,OptionalSemicolon]));
 	g.push(new Item(Statement ,[ ThrowStatement ,OptionalSemicolon]));
 	g.push(new Item(Statement ,[  TryStatement]));
-	g.push(new Item(OptionalSemicolon,[FEN]));
+	g.push(new Item(OptionalSemicolon,[T_FEN]));
 	//Assignment Operators
 	g.push(new Item(AssignmentExpression,[ConditionalExpression]));
-	g.push(new Item(AssignmentExpression,[LeftSideExpression,T_EQ, AssignmentExpression]));
+	g.push(new Item(AssignmentExpression,[LeftSideExpression,T_E, AssignmentExpression]));
 	g.push(new Item(AssignmentExpression,[LeftSideExpression, CompoundAssignment, AssignmentExpression]));
 	g.push(new Item(CompoundAssignment ,[CHENG_D]));// *=
 	g.push(new Item(CompoundAssignment ,[CHU_D]));// /=
@@ -389,7 +354,7 @@ window.onload= function() {
 	g.push(new Item(EqualityExpression,[ EqualityExpression,T_EEE, RelationalExpression]));
 	g.push(new Item(EqualityExpression,[EqualityExpression,T_NEE,RelationalExpression]));
 	//Relational Operator
-	g.push(new Item(RelationalExpression,[ShiftExpressio]));
+	g.push(new Item(RelationalExpression,[ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_L,ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_G,ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_LE, ShiftExpression]));
@@ -476,9 +441,10 @@ window.onload= function() {
 	g.push(new Item(SimpleExpression, [ ArrayLiteral]));
 	g.push(new Item(ParenthesizedExpression , [B_LEFT,Expression,B_RIGHT]));
 	
-	var g_root=new Item(Program);
-	g_root.Right.Symbols=[BLOCK,Symbol.END];
-
+	var Z=new Nonterminal("Z");
+	var g_root=new Item(Z);
+	g_root.Right.Symbols=[Program,Symbol.END];
+	
 	AnalysisTableCreator.InitGrammer(g,g_root);
 	var result=AnalysisTableCreator.Create();
 	//$.dprint(result);
