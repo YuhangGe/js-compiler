@@ -435,6 +435,8 @@ _ATCreator.prototype._output_table = function(){
     }
    // return rtn+"<br/><p>"+s_table+"</p><p>"+s_grammar+"</p><p>"+s_tag+"</p>";
 }
+var KEY_REGEXP=/(^this$)|(^null$)|(^try$)|(^in$)|(^default$)|(^typeof$)|(^number$)|(^regexp$)|(^string$)|(^boolean$)|(^instanceof$)|(^void$)|(^new$)|(^catch$)|(^finally$)|(^throw$)|(^with$)|(^return$)|(^switch$)|(^case$)|(^delete$)|(^function$)|(^undefined$)|(^if$)|(^while$)|(^do$)|(^else$)|(^break$)|(^function$)|(^var$)|(^for$)|(^continue$)|(^true$)|(^false$)/i
+
 _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 	var rtn="ABE_LR_GRAMMARS["+index+"]= {\n";
 	var rtn_func=null;
@@ -462,8 +464,7 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 		var arg="";
 		var arg_2="";
 		var r_t=/[^a-zA-Z0-9_]+/
-		var r_key=/(^undefined$)|(^if$)|(^while$)|(^do$)|(^else$)|(^break$)|(^function$)|(^var$)|(^for$)|(^continue$)|(^true$)|(^false$)/i
-
+		
 		var p_table= {};
 		for(var i=idx-1;i>=0;i--) {
 			if(arg!=="") {
@@ -475,7 +476,7 @@ _ATCreator.prototype._generate_grammar=function(index,grammar,func){
 			if(r_t.test(n)===true)
 				arg_2+="p"+(idx-1-i);
 			else {
-				if(r_key.test(n)===true) {
+				if(KEY_REGEXP.test(n)===true) {
 					n='_'+n;
 				}
 				var p_i=p_table[n];

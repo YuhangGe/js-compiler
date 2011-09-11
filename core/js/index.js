@@ -2,12 +2,10 @@
  * @author Abraham
  */
 function check(){
-	var text=get$("input").value;
-	JSCompiler.Check(text);
+	console.clear();
+	var text=$.$("input").value;
+	JSCompiler=new Abe.Parser(new Abe.Lexer(text));
+	JSCompiler.compile();
+	
+	
 }
-
-
- 
-
-
- 
