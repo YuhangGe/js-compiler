@@ -5,28 +5,33 @@ Abe.Out = {
 }
 function func_Program(TopStatements) {
 	//Program->TopStatements
-	a = 10, b = 20;
-
+	$.dprint(TopStatements);
+	return TopStatements;
 }
 
 function func_TopStatements(p0) {
 	//TopStatements->ε
+	return "";
 }
 
 function func_TopStatements_0(TopStatementsPrefix) {
 	//TopStatements->TopStatementsPrefix
+	return TopStatementsPrefix;
 }
 
 function func_TopStatementsPrefix(TopStatement) {
 	//TopStatementsPrefix->TopStatement
+	return TopStatement;
 }
 
 function func_TopStatementsPrefix_0(TopStatementsPrefix, TopStatement) {
 	//TopStatementsPrefix->TopStatementsPrefix TopStatement
+	return TopStatementsPrefix + TopStatement;
 }
 
 function func_TopStatement(Statement) {
 	//TopStatement->Statement
+	return Statement;
 }
 
 function func_TopStatement_0(FunctionDefinition) {
@@ -255,22 +260,27 @@ function func_LabeledStatement(Identifier, p1, Statement) {
 
 function func_Block(p0, BlockStatements, p2) {
 	//Block->{ BlockStatements }
+	return '{\n' + BlockStatements + '\n}';
 }
 
 function func_BlockStatements(p0) {
 	//BlockStatements->ε
+	return "";
 }
 
 function func_BlockStatements_0(BlockStatementsPrefix) {
 	//BlockStatements->BlockStatementsPrefix
+	return BlockStatementsPrefix;
 }
 
 function func_BlockStatementsPrefix(Statementfull) {
 	//BlockStatementsPrefix->Statementfull
+	return Statementfull;
 }
 
 function func_BlockStatementsPrefix_0(BlockStatementsPrefix, Statementfull) {
 	//BlockStatementsPrefix->BlockStatementsPrefix Statementfull
+	return BlockStatementsPrefix + Statementfull;
 }
 
 function func_VariableDefinition(_var, VariableDeclarationList) {
@@ -299,6 +309,7 @@ function func_VariableInitializer_0(p0, AssignmentExpression) {
 
 function func_ExpressionStatement(Expression) {
 	//ExpressionStatement->Expression
+	return Expression;
 }
 
 function func_EmptyStatement(p0) {
@@ -307,6 +318,7 @@ function func_EmptyStatement(p0) {
 
 function func_Expression(AssignmentExpression) {
 	//Expression->AssignmentExpression
+	return AssignmentExpression;
 }
 
 function func_Expression_0(Expression, p1, AssignmentExpression) {
@@ -323,10 +335,12 @@ function func_OptionalExpression_0(p0) {
 
 function func_Statement(EmptyStatement) {
 	//Statement->EmptyStatement
+	return ';\n';
 }
 
 function func_Statement_0(ExpressionStatement, OptionalSemicolon) {
 	//Statement->ExpressionStatement OptionalSemicolon
+	return ExpressionStatement + ';\n';
 }
 
 function func_Statement_1(VariableDefinition, OptionalSemicolon) {
@@ -391,10 +405,12 @@ function func_OptionalSemicolon(p0) {
 
 function func_AssignmentExpression(ConditionalExpression) {
 	//AssignmentExpression->ConditionalExpression
+	return ConditionalExpression;
 }
 
 function func_AssignmentExpression_0(LeftSideExpression, p1, AssignmentExpression) {
 	//AssignmentExpression->LeftSideExpression = AssignmentExpression
+	return LeftSideExpression + " = " + AssignmentExpression;
 }
 
 function func_AssignmentExpression_1(LeftSideExpression, CompoundAssignment, AssignmentExpression) {
@@ -447,6 +463,7 @@ function func_CompoundAssignment_9(p0) {
 
 function func_ConditionalExpression(LogicalOrExpression) {
 	//ConditionalExpression->LogicalOrExpression
+	return LogicalOrExpression;
 }
 
 function func_ConditionalExpression_0(LogicalOrExpression, p1, AssignmentExpression, p3, AssignmentExpression0) {
@@ -455,6 +472,7 @@ function func_ConditionalExpression_0(LogicalOrExpression, p1, AssignmentExpress
 
 function func_LogicalAndExpression(BitwiseOrExpression) {
 	//LogicalAndExpression->BitwiseOrExpression
+	return BitwiseOrExpression;
 }
 
 function func_LogicalAndExpression_0(LogicalAndExpression, p1, BitwiseOrExpression) {
@@ -463,6 +481,7 @@ function func_LogicalAndExpression_0(LogicalAndExpression, p1, BitwiseOrExpressi
 
 function func_LogicalOrExpression(LogicalAndExpression) {
 	//LogicalOrExpression->LogicalAndExpression
+	return LogicalAndExpression;
 }
 
 function func_LogicalOrExpression_0(LogicalOrExpression, p1, LogicalAndExpression) {
@@ -471,6 +490,7 @@ function func_LogicalOrExpression_0(LogicalOrExpression, p1, LogicalAndExpressio
 
 function func_BitwiseAndExpression(EqualityExpression) {
 	//BitwiseAndExpression->EqualityExpression
+	return EqualityExpression;
 }
 
 function func_BitwiseAndExpression_0(BitwiseAndExpression, p1, EqualityExpression) {
@@ -479,6 +499,7 @@ function func_BitwiseAndExpression_0(BitwiseAndExpression, p1, EqualityExpressio
 
 function func_BitwiseXorExpression(BitwiseAndExpression) {
 	//BitwiseXorExpression->BitwiseAndExpression
+	return BitwiseAndExpression;
 }
 
 function func_BitwiseXorExpression_0(BitwiseXorExpression, p1, BitwiseAndExpression) {
@@ -487,6 +508,7 @@ function func_BitwiseXorExpression_0(BitwiseXorExpression, p1, BitwiseAndExpress
 
 function func_BitwiseOrExpression(BitwiseXorExpression) {
 	//BitwiseOrExpression->BitwiseXorExpression
+	return BitwiseXorExpression;
 }
 
 function func_BitwiseOrExpression_0(BitwiseOrExpression, p1, BitwiseXorExpression) {
@@ -495,6 +517,7 @@ function func_BitwiseOrExpression_0(BitwiseOrExpression, p1, BitwiseXorExpressio
 
 function func_EqualityExpression(RelationalExpression) {
 	//EqualityExpression->RelationalExpression
+	return RelationalExpression;
 }
 
 function func_EqualityExpression_0(EqualityExpression, p1, RelationalExpression) {
@@ -515,6 +538,7 @@ function func_EqualityExpression_3(EqualityExpression, p1, RelationalExpression)
 
 function func_RelationalExpression(ShiftExpression) {
 	//RelationalExpression->ShiftExpression
+	return ShiftExpression;
 }
 
 function func_RelationalExpression_0(RelationalExpression, p1, ShiftExpression) {
@@ -543,6 +567,7 @@ function func_RelationalExpression_5(RelationalExpression, _in, ShiftExpression)
 
 function func_ShiftExpression(AdditiveExpression) {
 	//ShiftExpression->AdditiveExpression
+	return AdditiveExpression;
 }
 
 function func_ShiftExpression_0(ShiftExpression, p1, AdditiveExpression) {
@@ -559,6 +584,7 @@ function func_ShiftExpression_2(ShiftExpression, p1, AdditiveExpression) {
 
 function func_AdditiveExpression(MultiplicativeExpression) {
 	//AdditiveExpression->MultiplicativeExpression
+	return MultiplicativeExpression;
 }
 
 function func_AdditiveExpression_0(AdditiveExpression, p1, MultiplicativeExpression) {
@@ -571,6 +597,7 @@ function func_AdditiveExpression_1(AdditiveExpression, p1, MultiplicativeExpress
 
 function func_MultiplicativeExpression(UnaryExpression) {
 	//MultiplicativeExpression->UnaryExpression
+	return UnaryExpression;
 }
 
 function func_MultiplicativeExpression_0(MultiplicativeExpression, p1, UnaryExpression) {
@@ -587,6 +614,7 @@ function func_MultiplicativeExpression_2(MultiplicativeExpression, p1, UnaryExpr
 
 function func_UnaryExpression(PostfixExpression) {
 	//UnaryExpression->PostfixExpression
+	return PostfixExpression;
 }
 
 function func_UnaryExpression_0(_delete, LeftSideExpression) {
@@ -619,18 +647,22 @@ function func_UnaryExpression_6(p0, UnaryExpression) {
 
 function func_UnaryExpression_7(p0, UnaryExpression) {
 	//UnaryExpression->~ UnaryExpression
+	return '~' + UnaryExpression;
 }
 
 function func_UnaryExpression_8(p0, UnaryExpression) {
 	//UnaryExpression->! UnaryExpression
+	return '!' + UnaryExpression;
 }
 
 function func_PostfixExpression(LeftSideExpression) {
 	//PostfixExpression->LeftSideExpression
+	return LeftSideExpression;
 }
 
 function func_PostfixExpression_0(LeftSideExpression, p1) {
 	//PostfixExpression->LeftSideExpression ++
+	return LeftSideExpression + "++";
 }
 
 function func_PostfixExpression_1(LeftSideExpression, p1) {
@@ -639,18 +671,22 @@ function func_PostfixExpression_1(LeftSideExpression, p1) {
 
 function func_LeftSideExpression(CallExpression) {
 	//LeftSideExpression->CallExpression
+	return CallExpression;
 }
 
 function func_LeftSideExpression_0(ShortNewExpression) {
 	//LeftSideExpression->ShortNewExpression
+	return ShortNewExpression;
 }
 
 function func_CallExpression(PrimaryExpression) {
 	//CallExpression->PrimaryExpression
+	return PrimaryExpression;
 }
 
 function func_CallExpression_0(FullNewExpression) {
 	//CallExpression->FullNewExpression
+	return FullNewExpression;
 }
 
 function func_CallExpression_1(CallExpression, MemberOperator) {
@@ -671,6 +707,8 @@ function func_ShortNewExpression(_new, ShortNewSubexpression) {
 
 function func_FullNewSubexpression(PrimaryExpression) {
 	//FullNewSubexpression->PrimaryExpression
+
+	return PrimaryExpression;
 }
 
 function func_FullNewSubexpression_0(FullNewExpression) {
@@ -763,6 +801,7 @@ function func_FunctionExpression_0(NamedFunction) {
 
 function func_PrimaryExpression(SimpleExpression) {
 	//PrimaryExpression->SimpleExpression
+	return SimpleExpression;
 }
 
 function func_PrimaryExpression_0(FunctionExpression) {
@@ -775,30 +814,37 @@ function func_PrimaryExpression_1(ObjectLiteral) {
 
 function func_SimpleExpression(_this) {
 	//SimpleExpression->this
+	return 'this';
 }
 
 function func_SimpleExpression_0(_null) {
 	//SimpleExpression->null
+	return 'null';
 }
 
 function func_SimpleExpression_1(_true) {
 	//SimpleExpression->true
+	return 'true';
 }
 
 function func_SimpleExpression_2(_false) {
 	//SimpleExpression->false
+	return "false";
 }
 
 function func_SimpleExpression_3(_Number) {
 	//SimpleExpression->Number
+	return _Number;
 }
 
 function func_SimpleExpression_4(_String) {
 	//SimpleExpression->String
+	return _String;
 }
 
 function func_SimpleExpression_5(Identifier) {
 	//SimpleExpression->Identifier
+	return Identifier;
 }
 
 function func_SimpleExpression_6(_RegExp) {

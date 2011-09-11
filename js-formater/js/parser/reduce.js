@@ -1445,6 +1445,7 @@ ABE_LR_GRAMMARS[120]= {
 //BitwiseOrExpression->BitwiseXorExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//BitwiseXorExpression
+
 var value=func_BitwiseOrExpression(p0);
 return {
 	symbolTag:Abe.Tag.BITWISEOREXPRESSION,
@@ -1877,6 +1878,7 @@ ABE_LR_GRAMMARS[155]= {
 //PostfixExpression->LeftSideExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//LeftSideExpression
+$.dprint(p0);
 var value=func_PostfixExpression(p0);
 return {
 	symbolTag:Abe.Tag.POSTFIXEXPRESSION,
@@ -1912,6 +1914,7 @@ ABE_LR_GRAMMARS[158]= {
 //LeftSideExpression->CallExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//CallExpression
+$.dprint(p0);
 var value=func_LeftSideExpression(p0);
 return {
 	symbolTag:Abe.Tag.LEFTSIDEEXPRESSION,

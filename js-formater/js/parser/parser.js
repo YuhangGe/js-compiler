@@ -103,7 +103,7 @@ Abe.Parser.prototype= {
 			case Abe.Action.ACCEPT:
 				$.dprint("Accept");
 				
-				document.getElementById("output").value="Success!\n"+Abe.Out.toString();//+this.stack.pop().value;
+				document.getElementById("output").value="Success!\n"+this.stack.pop().value;
 			
 				return false;
 				break;
@@ -113,8 +113,8 @@ Abe.Parser.prototype= {
 				return false;
 				break;
 			case Abe.Action.REDUCE:
-				//$.dprint('reduce');
-				var U = this.grammar[act.value-1].reduce();
+				$.dprint('reduce'+(act.value-1));
+				var U = this.grammar[act.value-1].reduce(look.value);
 				//$.dprint(U);
 				var go_state = this.stack[this.stack.length - 1].state.getGoto(U.symbolTag);
 				//$.dprint("GOTO:"+go_state);
