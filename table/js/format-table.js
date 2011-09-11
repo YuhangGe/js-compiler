@@ -210,7 +210,7 @@ window.onload= function() {
 	g.push(new Item(Program,[TopStatements]));
 	g.push(new Item(TopStatements,[Symbol.NULL]));
 	g.push(new Item(TopStatements,[TopStatementsPrefix]));
-	g.push(new Item(TopStatementsPrefix,[TopStatements]));
+	g.push(new Item(TopStatementsPrefix,[TopStatement]));
 	g.push(new Item(TopStatementsPrefix,[TopStatementsPrefix,TopStatement]));
 	g.push(new Item(TopStatement,[Statement]));
 	g.push(new Item(TopStatement,[FunctionDefinition]));
@@ -290,7 +290,7 @@ window.onload= function() {
 	g.push(new Item( VariableDeclarationList,[VariableDeclarationList,T_COMMON, VariableDeclaration]));
 	g.push(new Item( VariableDeclaration,[_Identifier,VariableInitializer]));
 	g.push(new Item(VariableInitializer,[Symbol.NULL]));
-	g.push(new Item(VariableInitializer,[AssignmentExpression]));
+	g.push(new Item(VariableInitializer,[T_E,AssignmentExpression]));
 	//Expression
 	g.push(new Item(ExpressionStatement ,[Expression]));
 	g.push(new Item(EmptyStatement,[T_FEN]));

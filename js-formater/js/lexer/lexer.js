@@ -20,6 +20,10 @@ Abe.Lexer=function(src){
 Abe.Lexer.line=0;
 
 Abe.Lexer.prototype={
+	key_words_list:['if','else','while','do','break',
+		'var','delete','void','function','continue','this','null','true','false',
+		'in','default','typeof','instanceof','try','catch','throw','with','new',
+		'finally','return','switch','case','undefined'],
 	reset:function(){
 		this.line=0;
 		this.peek=' ';
@@ -27,13 +31,8 @@ Abe.Lexer.prototype={
 		this.bufToken=null;
 	},
 	init:function(){
-		this.reserve(new Abe.Word("if",Abe.Tag.IF));
-		this.reserve(new Abe.Word("else",Abe.Tag.ELSE));
-		this.reserve(new Abe.Word("while",Abe.Tag.WHILE));
-		this.reserve(new Abe.Word("do",Abe.Tag.DO));
-		this.reserve(new Abe.Word("break",Abe.Tag.BREAK));
-		this.reserve(new Abe.Word('var',Abe.Tag.VAR));
-		this.reserve(new Abe.Word('delete',Abe.Tag.DELETE));
+		for(var i=0;i<this.key_words_list.length;i++)
+			this.reserve(new Abe.Word(this.key_words_list[i], Abe.Tag[this.key_words_list[i].toUpperCase()]));
 	},
  	reserve:function(word){
 		this.words[word.lexeme]=word;
@@ -84,6 +83,26 @@ Abe.Lexer.prototype={
 		this.bufToken=token;
 		//$.dprint("lexer back:"+token);
 	},
+	read_str:function(quote){
+		var rtn="";
+		var t_c=this.read_ch();
+		while(t_c!==quote && t_c!==null){
+			rtn+=t_c;
+			t_c=this.read_ch();
+		}
+		return rtn;
+	},
+	help_get_token:function(c1,c2,c3){
+		var t_c=this.read_ch();
+		if(t_c===c2)
+			return Abe.Token(c1+c2,Abe.Tag[c1+c2]);
+		else if(t_c===c3)
+			return new Abe.Token(c1+c3,Abe.Tag[c1+c3]);
+		else{
+			this.unread_ch();
+			return new Abe.Token(c1,Abe.Tag[c1]);
+		}	
+	},
 	get_token:function(){
 		while(this.read_ch()!==null){
 			if(this.peek===' ' || this.peek==='\t')
@@ -96,25 +115,29 @@ Abe.Lexer.prototype={
 		if(this.peek===null)
 			return null;
 			
-		
+		var cur_peek=this.peek;
 		switch(this.peek){
+		case '+':
+		case '-':
 		case '&':
-			if(this.read_the_ch('&')===true)
-				return Abe.Word.and;
-			else
-				return new Abe.Token('&',Abe.Tag['&']);
-			break;	
 		case '|':
-			if(this.read_the_ch('|')===true)
-				return Abe.Word.or;
-			else{
-				this.unread_ch();
-				return new Abe.Token('|',Abe.Tag['|']);
-			}
+			return this.help_get_token(cur_peek,'=',cur_peek);
+			break;
+		case '*':
+		case '/':
+		case '%':
+		case '^':
+			return this.help_get_token(cur_peek,'=',null);
 			break;
 		case '=':
-			if(this.read_the_ch('=')===true)
-				return Abe.Word.eq;
+			if(this.read_the_ch('=')===true){
+				if(this.read_the_ch('=')===true)
+					return new Abe.Token('===',Abe.Tag['===']);
+				else{
+					this.unread_ch();
+					return new Abe.Token('==', Abe.Tag['==']);
+				}
+			}
 			else{
 				this.unread_ch();
 				return new Abe.Token('=',Abe.Tag['=']);
@@ -122,28 +145,70 @@ Abe.Lexer.prototype={
 				
 			break;
 		case '!':
-			if(this.read_the_ch('=')===true)
-				return Abe.Word.ne;
-			else{
+			if(this.read_the_ch('=')===true){
+				if(this.read_the_ch('=')===true)
+					return new Abe.Token('!==',Abe.Tag['!==']);
+				else{
+					this.unread_ch();
+					return new Abe.Token('!=', Abe.Tag['!=']);
+				}
+			}else{
 				this.unread_ch();
 				return new Abe.Token('!',Abe.Tag['!']);
 			}
 			break;
 		case '<':
-			if(this.read_the_ch('=')===true)
-				return Abe.Word.le;
+			var t_c=this.read_ch();
+			if(t_c==='=')
+				return new Abe.Token('<=',Abe.Tag['<=']);
+			else if(t_c==='<'){
+				if(this.read_the_ch('=')===true)
+					return new Abe.Token('<<=', Abe.Tag['<<=']);
+				else{
+					this.unread_ch();
+					return new Abe.Token('<<', Abe.Tag['<<']);
+				}
+			}
 			else{
 				this.unread_ch();
 				return new Abe.Token('<',Abe.Tag['<']);
 			}
 			break;
 		case '>':
-			if(this.read_the_ch('=')===true)
-				return Abe.Word.ge;
+			var t_c=this.read_ch();
+			if(t_c==='=')
+				return new Abe.Token('>=',Abe.Tag['>=']);
+			else if(t_c==='>'){
+				var t_t_c=this.read_ch();
+				if(t_t_c==='=')
+					return new Abe.Token('>>=', Abe.Tag['>>=']);
+				else if(t_t_c==='>')
+					return new Abe.Token('>>>', Abe.Tag['>>>']);
+				else{
+					this.unread_ch();
+					return new Abe.Token('>>', Abe.Tag['>>']);
+				}
+			}
 			else{
 				this.unread_ch();
 				return new Abe.Token('>',Abe.Tag['>']);
 			}
+			break;
+		case '~':
+		case '(':
+		case ')':
+		case '[':
+		case ']':
+		case '{':
+		case '}':
+		case '?':
+		case ':':
+		case ';':
+			return new Abe.Token(cur_peek,Abe.Tag[cur_peek]);
+			break;
+		case '\'':
+		case '\"':
+			return new Abe.Token(this.read_str(cur_peek),Abe.Tag.STRING);
 			break;
 		}
 		
@@ -172,6 +237,6 @@ Abe.Lexer.prototype={
 			}
 		}
 
-		return new Abe.Token(this.peek,Abe.Tag[this.peek]);
+		throw 'wrong char:'+this.peek;
 	}
 }

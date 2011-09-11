@@ -80,21 +80,21 @@ Abe.Parser.prototype= {
 		
 		//如果action是null，检查是否可能存在ε推导
 		if(act==null && (act=state.getEmptyAction())!==null){
-			$.dprint(this.stack.length-1);
-			$.dprint(state);
-			$.dprint(look.tag);
+			// $.dprint(this.stack.length-1);
+			// $.dprint(state);
+			// $.dprint(look.tag);
 			this.lexer.back(look);//回退一个token
 		}
 			
 			
 		if (act == null) {
 			
-			$.dprint(look);
+			//$.dprint(look);
 		
 			this.err("匹配失败");
-			$.dprint(this.stack.length-1);
-			$.dprint(state);
-			$.dprint(look.tag);
+			//$.dprint(this.stack.length-1);
+			//$.dprint(state);
+			//$.dprint(look.tag);
 			return false;
 		}
 		$.dprint(act);
@@ -102,8 +102,8 @@ Abe.Parser.prototype= {
 		switch (act.type) {
 			case Abe.Action.ACCEPT:
 				$.dprint("Accept");
-				last_reduce();
-				document.getElementById("output").value="Success!\n"+Abe.Out.toString();//+this.stack.pop().value;
+
+				document.getElementById("output").value="Success!\n";//+this.stack.pop().value;
 			
 				return false;
 				break;
@@ -113,7 +113,7 @@ Abe.Parser.prototype= {
 				return false;
 				break;
 			case Abe.Action.REDUCE:
-				$.dprint('reduce');
+				//$.dprint('reduce');
 				var U = this.grammar[act.value-1].reduce();
 				$.dprint(U);
 				var go_state = this.stack[this.stack.length - 1].state.getGoto(U.symbolTag);

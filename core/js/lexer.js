@@ -20,6 +20,10 @@ Abe.Lexer=function(src){
 Abe.Lexer.line=0;
 
 Abe.Lexer.prototype={
+	key_words_list:['if','else','while','do','break',
+		'var','delete','void','function','continue','this','null','true','false',
+		'in','default','typeof','instanceof','try','catch','throw','with','new',
+		'finally','return','switch','case','undefined'],
 	reset:function(){
 		this.line=0;
 		this.peek=' ';
@@ -27,13 +31,8 @@ Abe.Lexer.prototype={
 		this.bufToken=null;
 	},
 	init:function(){
-		this.reserve(new Abe.Word("if",Abe.Tag.IF));
-		this.reserve(new Abe.Word("else",Abe.Tag.ELSE));
-		this.reserve(new Abe.Word("while",Abe.Tag.WHILE));
-		this.reserve(new Abe.Word("do",Abe.Tag.DO));
-		this.reserve(new Abe.Word("break",Abe.Tag.BREAK));
-		this.reserve(new Abe.Word('var',Abe.Tag.VAR));
-		this.reserve(new Abe.Word('delete',Abe.Tag.DELETE));
+		for(var i=0;i<this.key_words_list.length;i++)
+			this.reserve(new Abe.Word(this.key_words_list[i], Abe.Tag[this.key_words_list[i].toUpperCase()]));
 	},
  	reserve:function(word){
 		this.words[word.lexeme]=word;
@@ -100,13 +99,13 @@ Abe.Lexer.prototype={
 		switch(this.peek){
 		case '&':
 			if(this.read_the_ch('&')===true)
-				return Abe.Word.and;
+				return Abe.Token('&&',Abe.Tag['&&']);
 			else
 				return new Abe.Token('&',Abe.Tag['&']);
 			break;	
 		case '|':
 			if(this.read_the_ch('|')===true)
-				return Abe.Word.or;
+				return new Abe.Token('||',Abe.Tag['||']);
 			else{
 				this.unread_ch();
 				return new Abe.Token('|',Abe.Tag['|']);
