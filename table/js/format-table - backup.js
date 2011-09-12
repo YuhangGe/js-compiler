@@ -175,7 +175,7 @@ window.onload= function() {
 	var CaseGuard=new _n('CaseGuard');
 
 	var IfStatement=new _n('IfStatement');
-	var ElseStatement =new _n('ElseStatement');
+
 	var LabeledStatement=new _n('LabeledStatement');
 	var VariableDefinition =new _n('VariableDefinition');
 	var VariableDeclarationList=new _n('VariableDeclarationList');
@@ -273,9 +273,8 @@ window.onload= function() {
 	g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
 	g.push(new Item(CaseGuard,[ _default,T_MAO]));
 	//if
-	g.push(new Item(IfStatement,[ _if,ParenthesizedExpression ,Statement,ElseStatement]));
-	g.push(new Item(ElseStatement,[_else,Statement]));
-	g.push(new Item(ElseStatement,[Symbol.NULL]));
+	g.push(new Item(IfStatement,[ _if,ParenthesizedExpression ,Statement]));
+	g.push(new Item(IfStatement,[_if,ParenthesizedExpression ,Statement,_else,Statement]));
 	//labeled statements
 	g.push(new Item(LabeledStatement,[_Identifier,T_MAO,Statement]));
 	//block

@@ -806,9 +806,9 @@ value:value
 }
 }
 ABE_LR_GRAMMARS[65]= {
-//BlockStatementsPrefix->Statementfull 
+//BlockStatementsPrefix->Statement 
 reduce: function() {
-var p0=Abe.Stack.pop().value;//Statementfull
+var p0=Abe.Stack.pop().value;//Statement
 var value=func_BlockStatementsPrefix(p0);
 return {
 	symbolTag:Abe.Tag.BLOCKSTATEMENTSPREFIX,
@@ -817,9 +817,9 @@ value:value
 }
 }
 ABE_LR_GRAMMARS[66]= {
-//BlockStatementsPrefix->BlockStatementsPrefix Statementfull 
+//BlockStatementsPrefix->BlockStatementsPrefix Statement 
 reduce: function() {
-var p0=Abe.Stack.pop().value;//Statementfull
+var p0=Abe.Stack.pop().value;//Statement
 var p1=Abe.Stack.pop().value;//BlockStatementsPrefix
 var value=func_BlockStatementsPrefix_0(p1,p0);
 return {
@@ -1445,7 +1445,6 @@ ABE_LR_GRAMMARS[120]= {
 //BitwiseOrExpression->BitwiseXorExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//BitwiseXorExpression
-
 var value=func_BitwiseOrExpression(p0);
 return {
 	symbolTag:Abe.Tag.BITWISEOREXPRESSION,
@@ -1878,7 +1877,6 @@ ABE_LR_GRAMMARS[155]= {
 //PostfixExpression->LeftSideExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//LeftSideExpression
-$.dprint(p0);
 var value=func_PostfixExpression(p0);
 return {
 	symbolTag:Abe.Tag.POSTFIXEXPRESSION,
@@ -1914,7 +1912,6 @@ ABE_LR_GRAMMARS[158]= {
 //LeftSideExpression->CallExpression 
 reduce: function() {
 var p0=Abe.Stack.pop().value;//CallExpression
-$.dprint(p0);
 var value=func_LeftSideExpression(p0);
 return {
 	symbolTag:Abe.Tag.LEFTSIDEEXPRESSION,

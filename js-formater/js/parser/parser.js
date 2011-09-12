@@ -113,7 +113,7 @@ Abe.Parser.prototype= {
 				return false;
 				break;
 			case Abe.Action.REDUCE:
-				$.dprint('reduce'+(act.value-1));
+				//$.dprint('reduce'+(act.value-1));
 				var U = this.grammar[act.value-1].reduce(look.value);
 				//$.dprint(U);
 				var go_state = this.stack[this.stack.length - 1].state.getGoto(U.symbolTag);

@@ -133,7 +133,6 @@ window.onload= function() {
 	var Block=new _n('Block');
 	var BlockStatementsPrefix=new _n('BlockStatementsPrefix');
 	var BlockStatements=new _n('BlockStatements');
-	var Statementfull=new _n('Statementfull');
 	//expression
 	var Expression=new _n('Expression');
 	var OptionalExpression=new _n('OptionalExpression');
@@ -213,11 +212,8 @@ window.onload= function() {
 	g.push(new Item(TopStatementsPrefix,[TopStatement]));
 	g.push(new Item(TopStatementsPrefix,[TopStatementsPrefix,TopStatement]));
 	g.push(new Item(TopStatement,[Statement]));
-	g.push(new Item(TopStatement,[FunctionDefinition]));
-	
-
-	g.push(new Item(FunctionDefinition,[_function]));
-/*	//Function Definition
+//	g.push(new Item(TopStatement,[FunctionDefinition]));
+	//Function Definition
 	g.push(new Item(FunctionDefinition,[NamedFunction]));
 	g.push(new Item(AnonymousFunction,[_function, FormalParametersAndBody]));
 	g.push(new Item(NamedFunction,[_function, _Identifier, FormalParametersAndBody]));
@@ -246,72 +242,70 @@ window.onload= function() {
 	g.push(new Item(OptionalLabel,[_Identifier]));
 	//For Statements
 	g.push(new Item(ForStatement ,[_for ,B_LEFT,ForInitializer ,T_FEN, OptionalExpression,T_FEN, OptionalExpression,B_RIGHT,Statement]));
-	g.push(new Item(ForStatement ,[_for,B_LEFT, ForInBinding ,_in ,Expression,B_RIGHT, Statement]));
+//	g.push(new Item(ForStatement ,[_for,B_LEFT, ForInBinding ,_in ,Expression,B_RIGHT, Statement]));
 	g.push(new Item(ForInitializer ,[Symbol.NULL]));
 	g.push(new Item(ForInitializer ,[Expression]));
 	g.push(new Item(ForInitializer ,[_var,VariableDeclarationList]));
-	g.push(new Item(ForInBinding,[LeftSideExpression]));
-	g.push(new Item(ForInBinding,[_var, VariableDeclaration]));
+//	g.push(new Item(ForInBinding,[LeftSideExpression]));
+//	g.push(new Item(ForInBinding,[_var, VariableDeclaration]));
 	//While and Do-While
 	g.push(new Item(DoStatement ,[_do,Statement,_while,ParenthesizedExpression]));
 	g.push(new Item(WhileStatement,[_while,ParenthesizedExpression,Statement]));
 	//Switch Statement
-	g.push(new Item(SwitchStatement,[ _switch, ParenthesizedExpression ,H_LEFT,H_RIGHT]));
-	g.push(new Item(SwitchStatement,[ _switch ,ParenthesizedExpression ,H_LEFT,CaseGroups ,LastCaseGroup,H_RIGHT]));
+	//g.push(new Item(SwitchStatement,[ _switch, ParenthesizedExpression ,H_LEFT,H_RIGHT]));
+	var CasePrefix=new _n('CasePrefix');
+	g.push(new Item(SwitchStatement,[ _switch, ParenthesizedExpression ,H_LEFT,CasePrefix,H_RIGHT]));
+	g.push(new Item(CasePrefix,[ CaseGroups ,LastCaseGroup]));
+	g.push(new Item(CasePrefix,[Symbol.NULL]));
+	
+	//g.push(new Item(SwitchStatement,[ _switch ,ParenthesizedExpression ,H_LEFT,CaseGroups ,LastCaseGroup,H_RIGHT]));
 	g.push(new Item(CaseGroups ,[Symbol.NULL]));
 	g.push(new Item(CaseGroups ,[CaseGroups, CaseGroup]));
 	g.push(new Item(CaseGroup,[ CaseGuards, BlockStatementsPrefix]));
 	g.push(new Item(LastCaseGroup ,[CaseGuards, BlockStatements]));
 	g.push(new Item(CaseGuards ,[ CaseGuard]));
 	g.push(new Item(CaseGuards ,[ CaseGuards, CaseGuard]));
-	g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
-	g.push(new Item(CaseGuard,[ _default,T_MAO]));
-	g.push(new Item(SwitchStatement,[ _switch, ParenthesizedExpression ,H_LEFT,H_RIGHT]));
-	g.push(new Item(SwitchStatement,[ _switch ,ParenthesizedExpression ,H_LEFT,CaseGroups ,LastCaseGroup,H_RIGHT]));
-	g.push(new Item(CaseGroups ,[Symbol.NULL]));
-	g.push(new Item(CaseGroups ,[CaseGroups, CaseGroup]));
-	g.push(new Item(CaseGroup,[ CaseGuards, BlockStatementsPrefix]));
-	g.push(new Item(LastCaseGroup ,[CaseGuards, BlockStatements]));
-	g.push(new Item(CaseGuards ,[ CaseGuard]));
-	g.push(new Item(CaseGuards ,[ CaseGuards, CaseGuard]));
-	g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
-	g.push(new Item(CaseGuard,[ _default,T_MAO]));
+	
+	//g.push(new Item(CaseGuard ,[_case, Expression,T_MAO]));
+	var CaseGuardPrefix=new _n('CGP');
+	g.push(new Item(CaseGuard ,[CaseGuardPrefix,T_MAO]));
+	g.push(new Item(CaseGuardPrefix ,[_case, Expression]));
+	g.push(new Item(CaseGuardPrefix ,[_default]));
+	//g.push(new Item(CaseGuard,[ _default,T_MAO]));
+
 	//if
-	g.push(new Item(IfStatement,[ _if,ParenthesizedExpression ,Statement]));
-	g.push(new Item(IfStatement,[_if,ParenthesizedExpression ,Statement,_else,Statement]));
+	var ElseStatement=new _n('ElseStatement');
+	g.push(new Item(IfStatement,[ _if,ParenthesizedExpression ,Statement,ElseStatement]));
+	g.push(new Item(ElseStatement,[_else,Statement]));
+	g.push(new Item(ElseStatement,[Symbol.NULL]));
 	//labeled statements
 	g.push(new Item(LabeledStatement,[_Identifier,T_MAO,Statement]));
 	//block
 	g.push(new Item(Block ,[H_LEFT, BlockStatements ,H_RIGHT]));
 	g.push(new Item(BlockStatements,[Symbol.NULL]));
 	g.push(new Item(BlockStatements,[BlockStatementsPrefix]));
-	g.push(new Item(BlockStatementsPrefix,[ Statementfull]));
-	g.push(new Item(BlockStatementsPrefix,[BlockStatementsPrefix, Statementfull]));
-	//Variable Definition	g.push(new Item(VariableDefinition ,[_var, VariableDeclarationList]));
+	g.push(new Item(BlockStatementsPrefix,[ Statement]));
+	g.push(new Item(BlockStatementsPrefix,[BlockStatementsPrefix, Statement]));
+	//Variable Definition
+	g.push(new Item(VariableDefinition ,[_var, VariableDeclarationList]));
 	g.push(new Item(VariableDeclarationList,[VariableDeclaration]));
 	g.push(new Item( VariableDeclarationList,[VariableDeclarationList,T_COMMON, VariableDeclaration]));
 	g.push(new Item( VariableDeclaration,[_Identifier,VariableInitializer]));
 	g.push(new Item(VariableInitializer,[Symbol.NULL]));
 	g.push(new Item(VariableInitializer,[T_E,AssignmentExpression]));
-	
-
-*/
 	//Expression
 	g.push(new Item(ExpressionStatement ,[Expression]));
 	g.push(new Item(EmptyStatement,[T_FEN]));
 	g.push(new Item(Expression ,[AssignmentExpression]));
 	g.push(new Item(Expression ,[ Expression,T_COMMON, AssignmentExpression]));
-//	g.push(new Item(OptionalExpression ,[ Expression]));
-//	g.push(new Item(OptionalExpression ,[ Symbol.NULL]));
+	g.push(new Item(OptionalExpression ,[ Expression]));
+	g.push(new Item(OptionalExpression ,[ Symbol.NULL]));
 
 	//Statements
 	g.push(new Item(Statement ,[EmptyStatement]));
 	g.push(new Item(Statement ,[ ExpressionStatement, OptionalSemicolon]));
-	
-
-	
-//	g.push(new Item(Statement ,[VariableDefinition, OptionalSemicolon]));
-/*	g.push(new Item(Statement ,[Block]));
+	g.push(new Item(Statement ,[VariableDefinition, OptionalSemicolon]));
+	g.push(new Item(Statement ,[Block]));
 	g.push(new Item(Statement ,[ LabeledStatement]));
 	g.push(new Item(Statement ,[IfStatement]));
 	g.push(new Item(Statement ,[ SwitchStatement]));
@@ -325,13 +319,10 @@ window.onload= function() {
 	g.push(new Item(Statement ,[ ThrowStatement ,OptionalSemicolon]));
 	g.push(new Item(Statement ,[  TryStatement]));
 	g.push(new Item(OptionalSemicolon,[T_FEN]));
-*/	//Assignment Operators
+	//Assignment Operators
 	g.push(new Item(AssignmentExpression,[ConditionalExpression]));
-/*	g.push(new Item(AssignmentExpression,[LeftSideExpression,T_E, AssignmentExpression]));
+	g.push(new Item(AssignmentExpression,[LeftSideExpression,T_E, AssignmentExpression]));
 	g.push(new Item(AssignmentExpression,[LeftSideExpression, CompoundAssignment, AssignmentExpression]));
-	
-	g.push(new Item(LeftSideExpression,[_Identifier]));
-	
 	g.push(new Item(CompoundAssignment ,[CHENG_D]));// *=
 	g.push(new Item(CompoundAssignment ,[CHU_D]));// /=
 	g.push(new Item(CompoundAssignment ,[BAIFEN_D]));// %=
@@ -343,9 +334,9 @@ window.onload= function() {
 	g.push(new Item(CompoundAssignment ,[AND_D]));// &=
 	g.push(new Item(CompoundAssignment ,[MAO_D]));// ^=
 	g.push(new Item(CompoundAssignment ,[HUO_D]));// |=
-*/	//Conditional Operator
+	//Conditional Operator
 	g.push(new Item(ConditionalExpression,[  LogicalOrExpression]));
-//	g.push(new Item(ConditionalExpression,[LogicalOrExpression,T_WEN, AssignmentExpression,T_MAO,AssignmentExpression]));
+	g.push(new Item(ConditionalExpression,[LogicalOrExpression,T_WEN, AssignmentExpression,T_MAO,AssignmentExpression]));
 	//Binary Logical Operator
 	g.push(new Item(LogicalAndExpression,[BitwiseOrExpression]));
 	g.push(new Item(LogicalAndExpression,[LogicalAndExpression ,L_AND,BitwiseOrExpression]));
@@ -367,45 +358,43 @@ window.onload= function() {
 	//Relational Operator
 	g.push(new Item(RelationalExpression,[ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_L,ShiftExpression]));
-/*	g.push(new Item(RelationalExpression,[RelationalExpression,T_G,ShiftExpression]));
+	g.push(new Item(RelationalExpression,[RelationalExpression,T_G,ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_LE, ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,T_GE,ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,_instanceof, ShiftExpression]));
 	g.push(new Item(RelationalExpression,[RelationalExpression,_in, ShiftExpression]));
-*/	//Bitwise Shift Operator
+	//Bitwise Shift Operator
 	g.push(new Item(ShiftExpression,[AdditiveExpression]));
 	g.push(new Item(ShiftExpression,[ShiftExpression,T_LS,AdditiveExpression]));
-//	g.push(new Item(ShiftExpression,[ShiftExpression,T_RS, AdditiveExpression]));
-//	g.push(new Item(ShiftExpression,[ShiftExpression,T_RRS, AdditiveExpression]));
+	g.push(new Item(ShiftExpression,[ShiftExpression,T_RS, AdditiveExpression]));
+	g.push(new Item(ShiftExpression,[ShiftExpression,T_RRS, AdditiveExpression]));
 	//Additive Operators
 	g.push(new Item(AdditiveExpression , [MultiplicativeExpression ]));
-//	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIA, MultiplicativeExpression]));
-//	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIAN, MultiplicativeExpression]));
+	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIA, MultiplicativeExpression]));
+	g.push(new Item(AdditiveExpression , [AdditiveExpression,T_JIAN, MultiplicativeExpression]));
 	//Multiplicative Operators
 	g.push(new Item(MultiplicativeExpression , [  UnaryExpression]));
-//	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHENG, UnaryExpression ]));
-//	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHU,UnaryExpression]));
-//	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_BAIFEN,UnaryExpression ]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHENG, UnaryExpression ]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_CHU,UnaryExpression]));
+	g.push(new Item(MultiplicativeExpression , [ MultiplicativeExpression,T_BAIFEN,UnaryExpression ]));
 	//Unary Operators
-	g.push(new Item(UnaryExpression , [PostfixExpression ]));
-	// g.push(new Item(UnaryExpression , [_delete,LeftSideExpression ]));
-	// g.push(new Item(UnaryExpression , [_void,UnaryExpression ]));
-	// g.push(new Item(UnaryExpression , [_typeof,UnaryExpression ]));
-	// g.push(new Item(UnaryExpression , [T_PP,LeftSideExpression ]));
-	// g.push(new Item(UnaryExpression , [T_MM ,LeftSideExpression]));
-	// g.push(new Item(UnaryExpression , [T_JIA ,UnaryExpression]));
-	// g.push(new Item(UnaryExpression , [T_JIAN ,UnaryExpression]));
-	// g.push(new Item(UnaryExpression , [T_BO ,UnaryExpression]));
+	//g.push(new Item(UnaryExpression , [PostfixExpression ]));
+	g.push(new Item(UnaryExpression , [_delete,LeftSideExpression ]));
+	g.push(new Item(UnaryExpression , [_void,UnaryExpression ]));
+	g.push(new Item(UnaryExpression , [_typeof,UnaryExpression ]));
+	g.push(new Item(UnaryExpression , [T_PP,LeftSideExpression ]));
+	g.push(new Item(UnaryExpression , [T_MM ,LeftSideExpression]));
+	g.push(new Item(UnaryExpression , [T_JIA ,UnaryExpression]));
+	g.push(new Item(UnaryExpression , [T_JIAN ,UnaryExpression]));
+	g.push(new Item(UnaryExpression , [T_BO ,UnaryExpression]));
 	g.push(new Item(UnaryExpression , [T_NOT ,UnaryExpression]));
 	//Postfix Operators
 	g.push(new Item(PostfixExpression , [LeftSideExpression ]));
 	g.push(new Item(PostfixExpression , [LeftSideExpression,T_PP ]));
 	g.push(new Item(PostfixExpression, [LeftSideExpression,T_MM ]));
-	
-	g.push(new Item(LeftSideExpression , [_Number ]));
 	//Left-Side Expressions
-/*	g.push(new Item(LeftSideExpression , [CallExpression ]));
-	g.push(new Item(LeftSideExpression , [ShortNewExpression]));
+	g.push(new Item(LeftSideExpression , [CallExpression ]));
+	//g.push(new Item(LeftSideExpression , [ShortNewExpression]));
 	g.push(new Item(CallExpression , [PrimaryExpression]));
 	g.push(new Item( CallExpression, [ FullNewExpression ]));
 	g.push(new Item(CallExpression , [CallExpression ,MemberOperator]));
@@ -419,19 +408,23 @@ window.onload= function() {
 	g.push(new Item(ShortNewSubexpression, [ShortNewExpression]));
 	g.push(new Item(MemberOperator, [F_LEFT,Expression,F_RIGHT]));
 	g.push(new Item(MemberOperator, [T_DOT,_Identifier ]));
-	g.push(new Item(Arguments, [B_LEFT,B_RIGHT ]));
+	//g.push(new Item(Arguments, [B_LEFT,B_RIGHT ]));
 	g.push(new Item(Arguments, [B_LEFT,ArgumentList,B_RIGHT]));
+	g.push(new Item(ArgumentList,[Symbol.NULL]));
 	g.push(new Item(ArgumentList, [AssignmentExpression]));
 	g.push(new Item(ArgumentList, [ArgumentList,AssignmentExpression]));
 	//Array Literals
-	g.push(new Item(ArrayLiteral, [F_LEFT,F_RIGHT]));
+	//g.push(new Item(ArrayLiteral, [F_LEFT,F_RIGHT]));
 	g.push(new Item(ArrayLiteral, [F_LEFT,ElementList,F_RIGHT]));
+	g.push(new Item(ElementList,[Symbol.NULL]));
 	g.push(new Item(ElementList, [LiteralElement]));
 	g.push(new Item(ElementList, [ElementList,T_COMMON,LiteralElement]));
 	g.push(new Item(LiteralElement, [AssignmentExpression]));
 	//Object Literals
-	g.push(new Item(ObjectLiteral, [H_LEFT,H_RIGHT]));
+	//g.push(new Item(ObjectLiteral, [H_LEFT,H_RIGHT]));
+	
 	g.push(new Item(ObjectLiteral, [H_LEFT,FieldList,H_RIGHT]));
+	g.push(new Item(FieldList,[Symbol.NULL]));
 	g.push(new Item(FieldList , [LiteralField ]));
 	g.push(new Item(FieldList , [FieldList,T_COMMON,LiteralField ]));
 	g.push(new Item(LiteralField , [_Identifier,T_MAO,AssignmentExpression]));
@@ -440,7 +433,7 @@ window.onload= function() {
 	g.push(new Item(FunctionExpression , [NamedFunction]));
 	//Primary Expressions
 	g.push(new Item(PrimaryExpression, [SimpleExpression ]));
-	g.push(new Item(PrimaryExpression, [FunctionExpression]));
+//	g.push(new Item(PrimaryExpression, [FunctionExpression]));
 	g.push(new Item(PrimaryExpression, [ObjectLiteral]));
 	g.push(new Item(SimpleExpression , [_this]));
 	g.push(new Item(SimpleExpression, [_null]));
@@ -453,7 +446,7 @@ window.onload= function() {
 	g.push(new Item(SimpleExpression, [ParenthesizedExpression]));
 	g.push(new Item(SimpleExpression, [ ArrayLiteral]));
 	g.push(new Item(ParenthesizedExpression , [B_LEFT,Expression,B_RIGHT]));
-*/	
+	
 	var Z=new Nonterminal("Z");
 	var g_root=new Item(Z);
 	g_root.Right.Symbols=[Program,Symbol.END];

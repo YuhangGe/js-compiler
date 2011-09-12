@@ -14,7 +14,6 @@ Abe.Lexer = function(src) {
 	this.init();
 }
 Abe.Lexer.line = 0;
-Abe.Lexer.curValue=null;
 
 Abe.Lexer.prototype = {
 	key_words_list : ['if', 'else', 'while', 'do', 'break', 'var', 'delete', 'void', 'function', 'continue', 'this', 'null', 'true', 'false', 'in', 'default', 'typeof', 'instanceof', 'try', 'catch', 'throw', 'with', 'new', 'finally', 'return', 'switch', 'case', 'undefined'],
@@ -60,16 +59,12 @@ Abe.Lexer.prototype = {
 		this.peek = this.source[this.cur_idx];
 	},
 	scan : function() {
-		var rtn=null;
 		if(this.bufToken !== null) {
-			rtn = this.bufToken;
+			var rtn = this.bufToken;
 			this.bufToken = null;
-		} else {
-			rtn= this.get_token();
-		}
-		if(rtn!==null)
-			Abe.Lexer.curValue=rtn.value;
-		return rtn;
+			return rtn;
+		} else
+			return rtn= this.get_token();
 	},
 	/**
 	 * 回退一个token，当遇到 empty符号时，需要
